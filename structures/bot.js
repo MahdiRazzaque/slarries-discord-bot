@@ -10,7 +10,6 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const client = new DiscordJS.Client({ intents: 32767, partials: ["REACTION", "CHANNEL", "MESSAGE"] });
-module.exports = client;
 
 //Command Handler
 client.commands = new DiscordJS.Collection();
@@ -24,6 +23,7 @@ require("../systems/giveawaySystem")(client);
 
 //Maintenance mode
 client.maintenance = false;
+client.customStatus = false;
 
 //Music
 const { DisTube } = require("distube");

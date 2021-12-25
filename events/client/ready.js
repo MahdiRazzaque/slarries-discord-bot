@@ -16,7 +16,7 @@ module.exports = {
         client.user.setActivity("Maintenance");
         return;
       }
-      if (!client.maintenance) {
+      if (!client.maintenance && !client.customStatus){
         client.user.setStatus("online");
         client.user.setActivity("Slarries Discord Server", { type: "PLAYING" });
       }
