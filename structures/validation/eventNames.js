@@ -3,23 +3,23 @@ module.exports = {
         "applicationCommandCreate",
         "applicationCommandDelete",
         "applicationCommandUpdate",
-        "channelCreate",
-        "channelDelete",
+        "channelCreate", //Created log
+        "channelDelete", //Created log
         "channelPinsUpdate",
-        "channelUpdate",
+        "channelUpdate", //Created log
         "debug",
-        "emojiCreate",
-        "emojiDelete",
-        "emojiUpdate",
+        "emojiCreate", //Created log
+        "emojiDelete", //Created log
+        "emojiUpdate", //Created log
         "error",
-        "guildBanAdd",
-        "guildBanRemove",
-        "guildCreate",
+        "guildBanAdd", //Created log
+        "guildBanRemove", //Created log
+        "guildCreate", 
         "guildDelete",
         "guildIntegrationsUpdate",
-        "guildMemberAdd",
-        "guildMemberAvailable",
-        'guildMemberRemove',
+        "guildMemberAdd", //Created log
+        "guildMemberAvailable", 
+        'guildMemberRemove', //Created log
         'guildMembersChunk',
         'guildMemberUpdate',
         'guildUnavailable',
@@ -32,18 +32,18 @@ module.exports = {
         'inviteDelete',
         "message",
         'messageCreate',
-        'messageDelete',
+        'messageDelete', //Created log
         'messageDeleteBulk',
         'messageReactionAdd',
         'messageReactionRemove',
         'messageReactionRemoveAll',
         'messageReactionRemoveEmoji',
-        'messageUpdate',
+        'messageUpdate', //Created log
         'presenceUpdate',
         'rateLimit',
         'ready',
-        'roleCreate',
-        'roleDelete',
+        'roleCreate', //Created log
+        'roleDelete', //Created log
         'roleUpdate',
         'shardDisconnect',
         "shardError",
