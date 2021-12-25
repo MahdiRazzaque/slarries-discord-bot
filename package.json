@@ -1,0 +1,57 @@
+{
+  "name": "slarries",
+  "version": "1.0.0",
+  "description": "A bot created for the Slarries discord server.",
+  "main": "./structures/bot.js",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=6.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ."
+  },
+  "author": "Mahdi",
+  "license": "ISC",
+  "dependencies": {
+    "@discordjs/opus": "^0.5.3",
+    "@discordjs/voice": "^0.7.5",
+    "@distube/spotify": "^1.0.0",
+    "ascii-table": "^0.0.9",
+    "axios": "^0.24.0",
+    "captcha-canvas": "^3.1.0",
+    "chalk": "^4.1.2",
+    "common-tags": "^1.8.0",
+    "discord-giveaways": "^5.0.1",
+    "discord-html-transcripts": "^1.1.1",
+    "discord.js": "^13.1.0",
+    "distube": "^3.0.3",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "ffmpeg": "^0.0.4",
+    "ffmpeg-static": "^4.4.0",
+    "fs": "^0.0.1-security",
+    "glob": "^7.2.0",
+    "got": "^11.8.2",
+    "libsodium-wrappers": "^0.7.9",
+    "moment": "^2.29.1",
+    "mongoose": "^6.0.12",
+    "ms": "^2.1.3",
+    "reconlx": "^2.5.1",
+    "superagent": "^6.1.0",
+    "yt-search": "^2.10.2",
+    "ytdl-core": "^4.9.1"
+  },
+  "devDependencies": {
+    "node": "^16.10.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MahdiRazzaque/fast-and-furious-discord-bot.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/MahdiRazzaque/fast-and-furious-discord-bot/issues"
+  },
+  "homepage": "https://github.com/MahdiRazzaque/fast-and-furious-discord-bot#readme"
+}
