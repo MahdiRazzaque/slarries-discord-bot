@@ -15,6 +15,7 @@ module.exports = {
 
       return interaction.reply({ embeds: [Response], ephemeral: true });
     }
+
     if (interaction.isCommand() || interaction.isContextMenu()) {
       const command = client.commands.get(interaction.commandName);
       if (!command)

@@ -22,7 +22,7 @@ module.exports = {
           { name: "Ping", value: `${ping}ms` },
           { name: "API Latency", value: `${Math.round(client.ws.ping)}ms` }
         );
-      await interaction.followUp({ embeds: [response] });
+      await interaction.reply({ embeds: [response] });
       resultMessage.delete();
     });
   },

@@ -5,7 +5,8 @@ const { serverinfo_disabled } = require("../../structures/config.json")
 module.exports = {
     name: "serverinfo",
     description: 'Sends data about the server.',
-    usage: "/serverifno",
+    usage: "/serverinfo",
+    cooldown: "10",
     async execute(message, client) {
         if(serverinfo_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setTitle("**Command Disabled** ❌")], ephemeral: true})};
 

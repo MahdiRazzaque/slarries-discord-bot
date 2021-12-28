@@ -16,7 +16,7 @@ module.exports = {
 
         if(!["close-ticket", "lock-ticket", "unlock-ticket"].includes(customId)) return;
 
-        if (!member.roles.cache.has("917054077869912177")) {return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("You cannot use these buttons.")], ephemeral: true})};
+        if (!member.roles.cache.has("917054077869912177") && !member.roles.cache.has("925013507546693632")) {return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("You cannot use these buttons.")], ephemeral: true})};
         
         if(!ticket_enabled) return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("Tickets are currently disabled.")], ephemeral: true})
 
@@ -49,15 +49,22 @@ module.exports = {
                     const attachment = await createTranscript(channel, {limit: -1, returnBuffer: false, fileName: `${docs.Type} - ${docs.TicketID}.html`})
                     await DB.updateOne({ ChannelID: channel.id }, { Closed: true });
 
-                    const MEMBER = guild.members.cache.get(docs.MemberID);
-                    const Message = await guild.channels.cache.get(transcripts_channel_id).send({ embeds: [Embed.setAuthor(MEMBER.user.tag, MEMBER.user.displayAvatarURL({ dynamic: true })).setTitle(`Transcript type: ${docs.Type}\nID: ${docs.TicketID}`)], files: [attachment]});
-
-                    interaction.reply({ embeds: [Embed.setDescription(`The transcript is now saved [TRANSCRIPT](${Message.url})`)]});
                     
-                    const dmEmbed = new MessageEmbed().setColor("DARK_AQUA").setTitle(`Your ticket was closed in ${guild.name}`).addFields({name: "Transcript Type", value: `${docs.Type}`, inline: true}, {name: "Ticket ID", value: `${docs.TicketID}`, inline: true})
-                    MEMBER.send({embeds: [dmEmbed], files: [attachment]})
+                    try {
+                        const MEMBER = guild.members.cache.get(docs.MemberID);
+                        const Message = await guild.channels.cache.get(transcripts_channel_id).send({ embeds: [Embed.setAuthor(MEMBER.user.tag, MEMBER.user.displayAvatarURL({ dynamic: true })).setTitle(`Transcript type: ${docs.Type}\nID: ${docs.TicketID}`)], files: [attachment]});
+                        
+                        interaction.reply({ embeds: [Embed.setDescription(`The transcript is now saved [TRANSCRIPT](${Message.url})`)]});
                     
-                    setTimeout(() => {channel.delete()}, 10 * 1000)
+                        const dmEmbed = new MessageEmbed().setColor("DARK_AQUA").setTitle(`Your ticket was closed in ${guild.name}`).addFields({name: "Transcript Type", value: `${docs.Type}`, inline: true}, {name: "Ticket ID", value: `${docs.TicketID}`, inline: true})
+                        MEMBER.send({embeds: [dmEmbed], files: [attachment]})
+                    
+                        setTimeout(() => {channel.delete()}, 10 * 500)
+                    } catch (e) {
+                        interaction.channel.send({embeds: [new MessageEmbed().setColor("RED").setDescription("An error occurred (Most likely the member left). \n\n This channel will now be deleted in 10sec and a transcript will automatically be generated.")]});
+                        const failedMessage = await guild.channels.cache.get(transcripts_channel_id).send({ embeds: [Embed.setAuthor(docs.MemberID).setTitle(`Transcript type: ${docs.Type}\nID: ${docs.TicketID}`)], files: [attachment]});
+                        setTimeout(() => {channel.delete()}, 10 * 1000)      
+                    }
             }
         });
     }
