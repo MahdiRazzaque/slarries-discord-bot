@@ -42,7 +42,7 @@
     "announce_disabled": false,
     "rr_menu_disabled" : false,
     "send_embed_disabled": false,
-    "send_message_disabled": true,
+    "send_message_disabled": false,
     "send_preset_embed_disabled" : false,
     "ticket_panel_disabled": false,
     "userinfo_diabled": false,
