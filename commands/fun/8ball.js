@@ -20,14 +20,14 @@ module.exports = {
    * @param {CommandInteraction} interaction
    */
   async execute(interaction) {
-    if(eight_ball_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setTitle("**Command Disabled** ❌")], ephemeral: true})};
+    if(eight_ball_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
     
     let { body } = await superagent.get(`https://nekos.life/api/v2/8ball`);
 
     const question = interaction.options.getString("question");
 
     if (question.length > 2000){
-      return interaction.reply({embeds: [new MessageEmbed().setTitle("❌ Can't Run Code With The Strings Given ❌").setColor("RED").setDescription("Question Can't Be More Than 2000 Characters")]});
+      return interaction.reply({embeds: [new MessageEmbed().setTitle("Can't run code with the strings given. <a:animated_cross:925091847905366096> ").setColor("RED").setDescription("Question Can't Be More Than 2000 Characters")]});
     }
 
     const Response = new MessageEmbed()

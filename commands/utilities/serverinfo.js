@@ -7,11 +7,10 @@ module.exports = {
     description: 'Sends data about the server.',
     usage: "/serverinfo",
     cooldown: "10",
-    async execute(message, client) {
-        if(serverinfo_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setTitle("**Command Disabled** ❌")], ephemeral: true})};
+    async execute(interaction, client) {
+        if(serverinfo_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
 
-        // Get guild from message
-        const { guild } = message;
+        const { guild } = interaction;
 
         // Owner Variables
         const owner = await guild.fetchOwner();
@@ -57,6 +56,6 @@ module.exports = {
             );
 
         // Send embed
-        message.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
+        interaction.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
     },
 };

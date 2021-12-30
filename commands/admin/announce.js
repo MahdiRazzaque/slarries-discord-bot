@@ -24,7 +24,7 @@ module.exports = {
    * @param {Client} client
    */
   async execute(interaction, client) {
-    if (announce_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setTitle("**Command Disabled** ❌")], ephemeral: true})};
+    if (announce_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled** ")], ephemeral: true})};
     
     const { options } = interaction;
 
@@ -33,6 +33,6 @@ module.exports = {
     let announcementChannel = client.channels.cache.get(announcement_channel);
     announcementChannel.send(`${announcement}\n ||@everyone||`); 
 
-    interaction.reply({embeds: [new MessageEmbed().setColor(admin_embed_colour).setDescription(`The announcement was successfully sent to ${announcementChannel}. ✅`)],ephemeral: true});
+    interaction.reply({embeds: [new MessageEmbed().setColor(admin_embed_colour).setDescription(`<a:animated_tick:925091839030231071> The announcement was successfully sent to ${announcementChannel}.`)],ephemeral: true});
   },
 };

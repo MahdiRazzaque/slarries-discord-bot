@@ -26,17 +26,15 @@ module.exports = {
    * @param {Client} client
    */
   async execute(interaction, client) {
-    if (send_message_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setTitle("**Command Disabled** ❌")], ephemeral: true})};
+    if (send_message_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
     
     const { options } = interaction;
 
     const message = options.getString("message") || "none";
     const gChannel = options.getChannel("channel") || interaction.channel;
-
-    if (message === "none") {interaction.reply({embeds: [new MessageEmbed().setColor("RED").setTitle("Error ❌").setDescription("Please set a message to be sent!")]})};
     
     const sendMessage = await client.channels.cache.get(gChannel.id).send(message);
 
-    interaction.reply({embeds: [new MessageEmbed().setColor(admin_embed_colour).setDescription(`The message was successfully sent to ${gChannel} ✅`)],ephemeral: true});
+    interaction.reply({embeds: [new MessageEmbed().setColor(admin_embed_colour).setDescription(`<a:animated_tick:925091839030231071> The message was successfully sent to ${gChannel}. `)],ephemeral: true});
   },
 };

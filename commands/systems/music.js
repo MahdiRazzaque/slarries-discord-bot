@@ -82,16 +82,16 @@ module.exports = {
      * @param {CommandInteraction} interaction
      */
     async execute(interaction, client) {
-        if(music_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setTitle("**Command Disabled** ❌")], ephemeral: true})};
+        if(music_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
 
         const { options, member, guild, channel } = interaction;
         const VoiceChannel = member.voice.channel;
 
         if(!VoiceChannel)
-        return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("You must be in a voice channel to be able to use music commands.")], ephemeral: true});
+        return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("<a:animated_cross:925091847905366096> You must be in a voice channel to be able to use music commands.")], ephemeral: true});
 
         if(guild.me.voice.channelId && VoiceChannel.id !== guild.me.voice.channelId)
-        return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`I'm already playing music in <#${guild.me.voice.channelId}>.`)], ephemeral: true});
+        return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`<a:animated_cross:925091847905366096> I'm already playing music in <#${guild.me.voice.channelId}>.`)], ephemeral: true});
 
         try {
             switch(options.getSubcommand()) {
@@ -102,7 +102,7 @@ module.exports = {
                 case "volume" : {
                     const Volume = options.getNumber("percent");
                     if(!Volume > 100 || Volume < 1)
-                    return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setTitle("You have to specify a number between 1 and 100.")], ephemeral: true});
+                    return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setTitle("You have to specify a number between 1 and 100. <a:animated_cross:925091847905366096>")], ephemeral: true});
 
                     client.distube.setVolume(VoiceChannel, Volume);
                     return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setTitle(`📶 Volume has been set to \`${Volume}%\``)]});
@@ -112,17 +112,17 @@ module.exports = {
                     const Time = options.getNumber("time");
 
                     if(!queue)
-                    return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setTitle("❌ There is no queue.")]});
+                    return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setTitle("There is no queue. <a:animated_cross:925091847905366096>")]});
 
                     await queue.seek(Time);
-                    return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setTitle(`🪄 **Seeked to \`${Time}\`**`)]});
+                    return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setTitle(`⌛ **Seeked to \`${Time}\`**`)]});
                 }
 
                 case "settings" : {
                     const queue = await client.distube.getQueue(VoiceChannel);
 
                     if(!queue)
-                    return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setTitle("❌ There is no queue.")]});
+                    return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setTitle("There is no queue. <a:animated_cross:925091847905366096>")]});
 
                     switch(options.getString("options")) {
                         case "skip" : 
@@ -175,59 +175,59 @@ module.exports = {
                     switch(options.getString("set")) {
                         case "false" : 
                         await queue.setFilter(false);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`:animated_tick: Turned off all filters.`)]});
+                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839030231071> Turned off all filters.`)]});
                         case "8d" : 
                         await queue.setFilter(`3d`);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839860682794> Toggled the 8D filter.`)]});
+                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839030231071> Toggled the 8D filter.`)]});
                         case "karaoke" : 
                         await queue.setFilter(`karaoke`);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839860682794> Toggled the karaoke filter.`)]});                        
+                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839030231071> Toggled the karaoke filter.`)]});                        
                         case "vaporwave" : 
                         await queue.setFilter(`vaporwave`);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839860682794> Toggled the vaporwave filter.`)]});
+                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839030231071> Toggled the vaporwave filter.`)]});
                         case "flanger" : 
                         await queue.setFilter(`flanger`);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839860682794> Toggled the flanger filter.`)]});
+                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839030231071> Toggled the flanger filter.`)]});
                         case "gate" : 
                         await queue.setFilter(`gate`);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839860682794> Toggled the gate filter.`)]});
+                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839030231071> Toggled the gate filter.`)]});
                         case "haas" : 
                         await queue.setFilter(`haas`);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839860682794> Toggled the hass filter.`)]});
+                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839030231071> Toggled the hass filter.`)]});
                         case "reverse" : 
                         await queue.setFilter(`reverse`);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839860682794> Toggled the reverse filter.`)]});
+                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839030231071> Toggled the reverse filter.`)]});
                         case "mcompand" : 
                         await queue.setFilter(`mcompand`);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839860682794> Toggled the mcoapand filter.`)]});
+                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839030231071> Toggled the mcoapand filter.`)]});
                         case "phaser" : 
                         await queue.setFilter(`phaser`);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839860682794> Toggled the phaser filter.`)]});
+                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839030231071> Toggled the phaser filter.`)]});
 
                         case "tremolo" : 
                         await queue.setFilter(`tremolo`);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839860682794> Toggled the tremelo filter.`)]});
+                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839030231071> Toggled the tremelo filter.`)]});
 
 
                         case "earwax" : 
                         await queue.setFilter(`earwax`);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839860682794> Toggled the earwax filter.`)]});
+                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839030231071> Toggled the earwax filter.`)]});
 
                         case "bassboost" : 
                         await queue.setFilter(`bassboost`);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839860682794> Toggled the bassboost filter.`)]});
+                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839030231071> Toggled the bassboost filter.`)]});
                         
                         case "echo" : 
                         await queue.setFilter(`echo`);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839860682794> Toggled the echo filter.`)]});
+                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839030231071> Toggled the echo filter.`)]});
                         
                         case "nightcore" : 
                         await queue.setFilter(`nightcore`);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839860682794> Toggled the nightcore filter.`)]});
+                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839030231071> Toggled the nightcore filter.`)]});
                         
                         case "surround" : 
                         await queue.setFilter(`surround`);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839860682794> Toggled the surround filter.`)]});
+                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839030231071> Toggled the surround filter.`)]});
                         
                     }
                 }
@@ -235,7 +235,8 @@ module.exports = {
         } catch (e) {
             const errorEmbed = new MessageEmbed()
             .setColor("RED")
-            .setDescription(`⛔ Alert: ${e}`)
+            .setTitle("<a:animated_cross:925091847905366096> Error")
+            .setDescription(`${e}`)
             return interaction.reply({embeds: [errorEmbed]});
         }
     }

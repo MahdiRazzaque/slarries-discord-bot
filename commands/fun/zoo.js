@@ -31,7 +31,7 @@ module.exports = {
    * @param {Client} client
    */
   async execute(interaction, client) {
-    if (zoo_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setTitle("**Command Disabled** ❌")], ephemeral: true})};;
+    if (zoo_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
             
     const animal = interaction.options.getString("animal");
     const animalString = animal.replace("_", " ");
@@ -40,7 +40,7 @@ module.exports = {
 
     const errembed = new MessageEmbed()
       .setColor("RED")
-      .setDescription(`❌ **|** An error occured while running this command ╰（‵□′）╯`)
+      .setDescription(`<a:animated_cross:925091847905366096> **|** An error occured while running this command ╰（‵□′）╯`)
       .addField("Error Info", `\`\`\`The API that we're using probably in maintenance\`\`\``);
 
     let data, response;

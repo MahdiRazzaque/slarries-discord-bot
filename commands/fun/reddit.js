@@ -19,7 +19,7 @@ module.exports = {
    * @param {CommandInteraction} interaction
    */
   async execute(interaction) {
-    if (reddit_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setTitle("**Command Disabled** ❌")], ephemeral: true})};
+    if (reddit_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
             
     const { options } = interaction;
 
@@ -38,14 +38,14 @@ module.exports = {
       if (e) {
         if (e.message.startsWith("Request failed with status code")) {
           const Response = new MessageEmbed()
-            .setTitle("ERROR")
+            .setTitle("Error <a:animated_cross:925091847905366096>")
             .setColor("RED")
             .addField(`Subreddit does not exist:`, `\`\`\`${name}\`\`\``);
 
           await interaction.reply({ embeds: [Response], fetchReply: true });
         } else if (e) {
           const errorEmbed = new MessageEmbed()
-            .setTitle("Oh no...")
+            .setTitle("Oh no... <a:animated_cross:925091847905366096>")
             .setColor("RED")
             .addField("Error", `\`\`\`Please try again\`\`\``);
           console.log(e.message);

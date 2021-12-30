@@ -10,8 +10,6 @@ module.exports = {
     if (!messageDelete_logging) return;
 
     try {
-
-    
       if (message.author.bot) return;
 
       const Log = new MessageEmbed()
@@ -40,7 +38,7 @@ module.exports = {
         .send({ embeds: [Log] });
       
     } catch (e) {
-      const error_logs = client.channels.cache.get(error_logs_id).send({ embeds: [new MessageEmbed().setColor("RED").setTitle("<a:animated_cross:925091847905366096> messageDelete event").setDescription(`${e}`)]}); 
+      const error_logs = client.channels.cache.get(error_logs_id).send({ embeds: [new MessageEmbed().setColor("RED").setTitle("<a:animated_cross:925091847905366096> messageDelete event").setDescription(`${e}`).setFooter("This error was caught to prevent the bot from crashing.")]}); 
     }
     
   },

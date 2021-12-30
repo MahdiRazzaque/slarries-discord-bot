@@ -37,7 +37,7 @@ module.exports = {
       const message_logs = client.channels.cache.get(message_logs_id).send({ embeds: [Log] });
         
     } catch (e) { 
-      const error_logs = client.channels.cache.get(error_logs_id).send({ embeds: [new MessageEmbed().setColor("RED").setTitle("<a:animated_cross:925091847905366096> messageUpdate event").setDescription(`${e}`)]});
+      const error_logs = client.channels.cache.get(error_logs_id).send({ embeds: [new MessageEmbed().setColor("RED").setTitle("<a:animated_cross:925091847905366096> messageUpdate event").setDescription(`${e}`).setFooter("This error was caught to prevent the bot from crashing.")]});
     }
     
 },

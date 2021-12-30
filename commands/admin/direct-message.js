@@ -26,17 +26,17 @@ module.exports = {
    * @param {Client} client
    */
   async execute(interaction, client) {
-    if (direct_message_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setTitle("**Command Disabled** ❌")], ephemeral: true})};
+    if (!direct_message_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled** ")], ephemeral: true})};
     
     const { options } = interaction;
 
     const message = options.getString("message") || "none";
     const member = options.getUser("user")
 
-    if (message === "none") {interaction.reply({embeds: [new MessageEmbed().setColor("RED").setTitle("Error ❌").setDescription("Please set a message to be sent!")]})};
+    if(member.id === client.user.id) return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setTitle("Error <a:animated_cross:925091847905366096>").setDescription("🙄 I cannot DM myself.")]})
     
     const sendMessage = await member.send(message);
 
-    interaction.reply({embeds: [new MessageEmbed().setColor(admin_embed_colour).setDescription(`The message was successfully sent to ${member} ✅`)],ephemeral: true});
+    interaction.reply({embeds: [new MessageEmbed().setColor(admin_embed_colour).setDescription(`<a:animated_tick:925091839030231071> The message was successfully sent to ${member}.`)],ephemeral: true});
   },
 };

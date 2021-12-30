@@ -12,8 +12,8 @@ module.exports = {
    * @param {Message} message
    */
   async execute(interaction, message) {
-    if (meme_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setTitle("**Command Disabled** ❌")], ephemeral: true})};
-        
+    if (meme_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
+    
     got("https://www.reddit.com/r/memes/random/.json").then((response) => {
         const [list] = JSON.parse(response.body);
         const [post] = list.data.children;

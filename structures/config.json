@@ -48,6 +48,7 @@
     "ticket_panel_disabled": false,
     "userinfo_diabled": false,
 
+    "activity_disabled": false,
     "emmit_disabled": false,
     "maintenance_disabled": false,
     "status_disabled": false,

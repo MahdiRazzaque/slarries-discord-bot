@@ -30,7 +30,8 @@ module.exports = {
     },
   ],
   async execute(interaction) {
-    if(slowmode_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setTitle("**Command Disabled** ❌")], ephemeral: true})};
+    if(slowmode_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
+    
     let message;
     const { channel, options } = interaction;
     const minRate = ms("5s");
@@ -46,10 +47,10 @@ module.exports = {
         : 0;
     const reason = options.getString("reason") || "None provided";
     const description = duration
-      ? `Slow mode has been enabled with a rate of ${ms(rate, {
+      ? `<a:animated_tick:925091839030231071> Slow mode has been enabled with a rate of ${ms(rate, {
           long: true,
         })} for ${ms(duration, { long: true })}`
-      : `Slow mode has been enabled with a rate of ${ms(rate, { long: true })}`;
+      : `<a:animated_tick:925091839030231071> Slow mode has been enabled with a rate of ${ms(rate, { long: true })}`;
     const response = new MessageEmbed()
       .setTitle("🐌 Slow mode 🐌")
       .setColor(moderation_embed_colour)
@@ -58,9 +59,9 @@ module.exports = {
       .setTimestamp();
     if (!rate) {
       channel.rateLimitPerUser
-        ? response.setDescription(`Slow mode has been disabled.`)
+        ? response.setDescription(`<a:animated_tick:925091839030231071> Slow mode has been disabled.`)
         : response.setDescription(
-            `Slow mode has been enabled with a rate of ${ms(minRate, {
+            `<a:animated_tick:925091839030231071> Slow mode has been enabled with a rate of ${ms(minRate, {
               long: true,
             })}.`
           );
@@ -76,7 +77,7 @@ module.exports = {
 
     if (rate < minRate || rate > maxRate) {
       response.setDescription(
-        `Rate must be between ${ms(minRate, { long: true })} and ${ms(maxRate, {
+        `<a:animated_cross:925091847905366096> Rate must be between ${ms(minRate, { long: true })} and ${ms(maxRate, {
           long: true,
         })}. The rate can be supplied like so: *10s, 1m, 2h*, etc., or alternatively in milliseconds.`
       );
@@ -89,7 +90,7 @@ module.exports = {
 
     if (duration && duration < minDuration) {
       response.setDescription(
-        `Duration must be at least ${ms(minDuration, {
+        `<a:animated_cross:925091847905366096> Duration must be at least ${ms(minDuration, {
           long: true,
         })}. The duration can be supplied like so: *10s, 1m, 2h*, etc., or alternatively in milliseconds.`
       );

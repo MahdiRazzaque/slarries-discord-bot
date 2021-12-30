@@ -24,7 +24,7 @@ module.exports = {
      * @param {CommandInteraction} interaction
      */
     async execute(interaction, client) {
-        if(poll_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setTitle("**Command Disabled** ❌")], ephemeral: true})};
+        if(poll_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
         
         const { options } = interaction;
 
@@ -43,6 +43,6 @@ module.exports = {
         sendMessage.react("👎")
         sendMessage.react("🤷‍♂️")
 
-        interaction.reply({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`The poll was successfully sent to ${gChannel} ✅`)],ephemeral: true})
+        interaction.reply({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`<a:animated_tick:925091839030231071> The poll was successfully sent to ${gChannel}.`)],ephemeral: true})
     }
 }

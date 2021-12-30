@@ -19,8 +19,8 @@ module.exports = {
     * @param {CommandInteraction} interaction
     */
     async execute (interaction, client) {
-        if(close_mail_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setTitle("**Command Disabled** ❌")], ephemeral: true})};
-        if (!interaction.member.roles.cache.has("920027065133187094")) {return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("You need the <@&920027065133187094> role to use this command.")], ephemeral: true})};
+        if(close_mail_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
+        if (!interaction.member.roles.cache.has("920027065133187094")) {return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("<a:animated_cross:925091847905366096> You need the <@&920027065133187094> role to use this command.")], ephemeral: true})};
 
         const reason = interaction.options.getString("reason");
         modmailClient.deleteMail({

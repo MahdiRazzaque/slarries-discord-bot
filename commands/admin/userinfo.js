@@ -12,7 +12,7 @@ module.exports = {
    * @param {ContextMenuInteraction} interaction
    */
   async execute(interaction) {
-    if (userinfo_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setTitle("**Command Disabled** ❌")], ephemeral: true})};
+    if (userinfo_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
     
     const target = await interaction.guild.members.fetch(interaction.targetId);
 

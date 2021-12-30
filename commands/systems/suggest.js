@@ -43,7 +43,7 @@ module.exports = {
    * @param {CommandInteraction} interaction
    */
   async execute(interaction, client) {
-    if (suggest_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setTitle("**Command Disabled** ❌")], ephemeral: true})};
+    if (suggest_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
     
     const { options, guildId, member, user } = interaction;
 
@@ -81,7 +81,7 @@ module.exports = {
           Suggestion: suggestion
         }
       ]})
-      interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`Your suggestion was successfully created and sent to ${suggestionsChannel}`)], ephemeral: true})
+      interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839030231071> Your suggestion was successfully created and sent to ${suggestionsChannel}`)], ephemeral: true})
     } catch (err) {
       console.log(err);
     }

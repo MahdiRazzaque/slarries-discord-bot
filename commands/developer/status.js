@@ -13,7 +13,7 @@ module.exports = {
    * @param {Client} client
    */
   async execute(interaction, client) {
-    if (status_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setTitle("**Command Disabled** ❌")], ephemeral: true})};
+    if (status_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
       
     const Response = new MessageEmbed()
       .setColor(developer_embed_colour)

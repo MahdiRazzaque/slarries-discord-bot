@@ -1,5 +1,5 @@
 const { MessageEmbed, CommandInteraction, MessageActionRow, MessageButton } = require("discord.js");
-const { open_ticket_channel, ticket_panel_colour } = require("../../structures/config.json");
+const { open_ticket_channel, ticket_panel_colour, ticket_panel_disabled } = require("../../structures/config.json");
 
 module.exports = {
     name: "ticket-panel",
@@ -10,6 +10,8 @@ module.exports = {
     * @param {CommandInteraction} interaction
     */
     async execute(interaction) {
+        if(ticket_panel_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
+
         const { guild } = interaction;
 
         const Embed = new MessageEmbed()
@@ -40,6 +42,6 @@ module.exports = {
 
         await guild.channels.cache.get(open_ticket_channel).send({embeds: [Embed], components: [Buttons]});
 
-        interaction.reply({embeds: [new MessageEmbed().setColor("GREEN").setDescription("Ticket panel has been sent. ✅")], ephemeral: true})
+        interaction.reply({embeds: [new MessageEmbed().setColor("GREEN").setDescription("<a:animated_tick:925091839030231071> Ticket panel has been sent.")], ephemeral: true})
     }
 }

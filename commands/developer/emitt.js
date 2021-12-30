@@ -30,19 +30,19 @@ module.exports = {
    * @param {Client} client
    */
   execute(interaction, client) {
-    if (emmit_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setTitle("**Command Disabled** ❌")], ephemeral: true})};
+    if (emmit_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
     
     const choices = interaction.options.getString("member");
 
     switch (choices) {
       case "guildMemberAdd": {
         client.emit("guildMemberAdd", interaction.member);
-        interaction.reply({embeds: [new MessageEmbed().setColor(developer_embed_colour).setDescription("Emmited a guildMemberAdd event. ✅")],ephemeral: true})
+        interaction.reply({embeds: [new MessageEmbed().setColor(developer_embed_colour).setDescription("<a:animated_tick:925091839030231071> Emmited a guildMemberAdd event.")],ephemeral: true})
       }
         break;
       case "guildMemberRemove": {
         client.emit("guildMemberRemove", interaction.member);
-        interaction.reply({embeds: [new MessageEmbed().setColor(developer_embed_colour).setDescription("Emmited a guildMemberRemove event. ✅")],ephemeral: true})
+        interaction.reply({embeds: [new MessageEmbed().setColor(developer_embed_colour).setDescription("<a:animated_tick:925091839030231071> Emmited a guildMemberRemove event.")],ephemeral: true})
       }
         break;
     }

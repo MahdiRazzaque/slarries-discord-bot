@@ -80,7 +80,7 @@ module.exports = {
      * @param {CommandInteraction} interaction 
      */
     async execute (interaction, client) {
-        if (rr_menu_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setTitle("**Command Disabled** ❌")], ephemeral: true})};
+        if (rr_menu_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("**Command Disabled** <a:animated_cross:925091847905366096>")], ephemeral: true})};
         
         await interaction.reply({ content: `${client.user.username} is thinking...` });
 

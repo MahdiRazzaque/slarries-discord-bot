@@ -38,7 +38,7 @@ module.exports = {
    * @param {Client} client
    */
   execute(interaction, client) {
-    if (kick_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setTitle("**Command Disabled** ❌")], ephemeral: true})};
+    if (kick_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
       
     const { options } = interaction;
     const Target = options.getMember("target");
@@ -48,7 +48,7 @@ module.exports = {
     const success = new MessageEmbed()
       .setColor(moderation_embed_colour)
       .addFields(
-        { name: "Member kicked", value: `${Target}` },
+        { name: "Member kicked 🦶", value: `${Target}` },
         { name: "Reason", value: `${Reason}` },
         { name: "Kicked by", value: `${interaction.member.user}` }
       )
@@ -56,13 +56,13 @@ module.exports = {
       .setThumbnail(Target.user.avatarURL({ dynamic: true, size: 512 }));
 
     if (Target.id === interaction.member.id)
-      return interaction.reply({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle("❌ Error ❌").setDescription("🙄 You can't kick yourself")], ephemeral: true});
+      return interaction.reply({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle("Error <a:animated_cross:925091847905366096>").setDescription("🙄 You can't kick yourself")], ephemeral: true});
 
     if (Target.permissions.has("ADMINISTRATOR"))
-      return interaction.reply({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle("❌ Error ❌").setDescription("🙄 You can't kick an Admin")], ephemeral: true});
+      return interaction.reply({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle("Error <a:animated_cross:925091847905366096>").setDescription("🙄 You can't kick an Admin")], ephemeral: true});
 
     if (Target.permissions.has("MANAGE_GUILD"))
-      return interaction.reply({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle("❌ Error ❌").setDescription("🙄 You can't kick an Moderator")], ephemeral: true});
+      return interaction.reply({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle("Error <a:animated_cross:925091847905366096>").setDescription("🙄 You can't kick an Moderator")], ephemeral: true});
 
     Target.send({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle(`👮 You've been kicked From ${interaction.guild.name}!`).addFields({name: "Reason", value: Reason}, {name: "Kicked by", value: interaction.member.user.tag})]})
 

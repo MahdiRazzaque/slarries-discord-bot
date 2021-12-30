@@ -47,11 +47,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MahdiRazzaque/fast-and-furious-discord-bot.git"
+    "url": "git+https://github.com/MahdiRazzaque/slarries-discord-bot.git"
   },
   "keywords": [],
   "bugs": {
-    "url": "https://github.com/MahdiRazzaque/fast-and-furious-discord-bot/issues"
+    "url": "https://github.com/MahdiRazzaque/slarries-discord-bot/issues"
   },
-  "homepage": "https://github.com/MahdiRazzaque/fast-and-furious-discord-bot#readme"
+  "homepage": "https://github.com/MahdiRazzaque/slarries-discord-bot#readme"
 }

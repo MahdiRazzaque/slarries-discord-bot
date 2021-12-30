@@ -30,7 +30,7 @@ module.exports = {
      * @param {CommandInteraction} interaction
      */
     async execute(interaction) {
-        if(afk_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setTitle("**Command Disabled** ❌")], ephemeral: true})};
+        if(afk_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
         const { guild, options, user, createdTimestamp} = interaction;
 
         const Embed = new MessageEmbed()
@@ -47,7 +47,7 @@ module.exports = {
                         {new: true, upsert: true}
                     )
 
-                    Embed.setColor("GREEN").setDescription(`Your AFK status has been updated to: ${afkStatus}`)
+                    Embed.setColor("GREEN").setDescription(`<a:animated_tick:925091839030231071> Your AFK status has been updated to: ${afkStatus}`)
 
                     return interaction.reply({embeds: [Embed], ephemeral: true})
                 }
@@ -56,7 +56,7 @@ module.exports = {
                         {GuildID: guild.id, UserID: user.id},
                     )
 
-                    Embed.setColor("RED").setDescription(`Your AFK status has been removed.`)
+                    Embed.setColor("GREEN").setDescription(`<a:animated_tick:925091839030231071> Your AFK status has been removed.`)
 
                     return interaction.reply({embeds: [Embed], ephemeral: true})
 
