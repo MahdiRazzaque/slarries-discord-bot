@@ -15,6 +15,7 @@
     "guild_logs_id": "916385874068000856",
     "message_logs_id": "916385874068000857",
     "role_logs_id": "916385874068000858",
+    "error_logs_id": "926096538172805130",
 
     "channelUpdate_logging" : true,
     "channelCreate_logging": true,

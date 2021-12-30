@@ -1,9 +1,5 @@
 const { Client, MessageEmbed, Message } = require("discord.js");
-const {
-  role_log_colour,
-  role_logs_id,
-  roleDelete_logging,
-} = require("../../structures/config");
+const { role_log_colour, role_logs_id, roleDelete_logging } = require("../../structures/config.json");
 
 module.exports = {
   name: "roleDelete",

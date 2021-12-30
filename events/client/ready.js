@@ -28,17 +28,9 @@ module.exports = {
     console.log("Ready! 🟢");
 
     if (!process.env.Database) return;
-    mongoose
-      .connect(process.env.Database, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      })
-      .then(() => {
-        console.log("The client is now connected to the database. 📚");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    mongoose.connect(process.env.Database, { useNewUrlParser: true, useUnifiedTopology: true })
+      .then(() => { console.log("The client is now connected to the database. 📚") })
+      .catch((err) => { console.log(err) });
 
     app.get("/", function (req, res) {
       res.write("<h1> Connected as " + client.user.tag + "</h1>");

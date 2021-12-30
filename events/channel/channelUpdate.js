@@ -1,9 +1,5 @@
 const { Client, MessageEmbed, Message } = require("discord.js");
-const {
-  channel_log_colour,
-  channel_logs_id,
-  channelUpdate_logging,
-} = require("../../structures/config");
+const { channel_log_colour, channel_logs_id, channelUpdate_logging } = require("../../structures/config.json");
 
 module.exports = {
   name: "channelUpdate",

@@ -1,9 +1,5 @@
 const { Client, MessageEmbed, Message } = require("discord.js");
-const {
-  guild_log_colour,
-  guild_logs_id,
-  emojiDelete_logging,
-} = require("../../structures/config");
+const { guild_log_colour, guild_logs_id, emojiDelete_logging } = require("../../structures/config.json");
 
 module.exports = {
   name: "emojiDelete",

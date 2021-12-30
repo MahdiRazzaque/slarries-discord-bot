@@ -1,6 +1,6 @@
 const { Client, MessageEmbed, MessageAttachment } = require("discord.js");
 //const { Captcha } = require ("captcha-canvas");
-const { guild_log_colour, guild_logs_id, guildMemberAdd_logging, guild_welcome_message } = require("../../structures/config");
+const { guild_log_colour, guild_logs_id, guildMemberAdd_logging, guild_welcome_message } = require("../../structures/config.json");
 
 function delay(time) {
   return new Promise((resolve) => setTimeout(resolve, time));
