@@ -150,7 +150,7 @@ module.exports = {
                         return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription("🔀 Queue has been shuffled.")]});
 
                         case "AutoPlay" : 
-                        let mode = await queue.toggleAutoPlay(VoiceChannel);
+                        let Mode = await queue.toggleAutoplay(VoiceChannel);
                         return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`🔃 AutoPlay mode has been set to: ${Mode ? "On" : "Off"}`)]});
 
                         case "RelatedSong" : 

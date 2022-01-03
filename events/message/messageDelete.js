@@ -1,5 +1,6 @@
 const { Client, MessageEmbed, Message } = require("discord.js");
 const { message_log_colour, message_logs_id, messageDelete_logging, error_logs_id } = require("../../structures/config.json");
+const { blacklistedWords } = require("../../structures/blacklistedWords")
 
 module.exports = {
   name: "messageDelete",
@@ -11,6 +12,10 @@ module.exports = {
 
     try {
       if (message.author.bot) return;
+
+      for (var i = 0; i < blacklistedWords.length; i++) {
+        if (message.content.toLowerCase().includes(blacklistedWords[i])) return;
+      }
 
       const Log = new MessageEmbed()
         .setColor(message_log_colour)
@@ -43,3 +48,4 @@ module.exports = {
     
   },
 };
+
