@@ -7,6 +7,7 @@ module.exports = {
     usage: "/ticket-panel",
     permission: "ADMINISTRATOR",
     disabled: false,
+    ownerOnly: true,
     /**
     * @param {CommandInteraction} interaction
     */

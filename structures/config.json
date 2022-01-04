@@ -1,4 +1,7 @@
 {
+    "owners": ["381791690454859778"],
+    "botOwners": ["381791690454859778"],
+    
     "admin_embed_colour": "AQUA",
     "developer_embed_colour": "PURPLE",
     "fun_embed_colour": "BLUE",
@@ -16,6 +19,7 @@
     "message_logs_id": "916385874068000857",
     "role_logs_id": "916385874068000858",
     "error_logs_id": "926096538172805130",
+    "command_logs_id": "927944595336220682",
 
     "channelUpdate_logging" : true,
     "channelCreate_logging": true,

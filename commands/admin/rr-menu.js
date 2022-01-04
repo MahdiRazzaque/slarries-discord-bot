@@ -73,6 +73,7 @@ module.exports = {
     usage: "/rr-menu",
     permission: "ADMINISTRATOR",
     disabled: false,
+    ownerOnly: true,
 
     /**
      * 

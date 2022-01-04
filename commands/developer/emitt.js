@@ -7,6 +7,7 @@ module.exports = {
   usage: "/emit",
   permission: "ADMINISTRATOR",
   disabled: false,
+  botOwnerOnly: true,
   options: [
     {
       name: "member",

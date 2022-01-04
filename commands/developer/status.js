@@ -8,6 +8,7 @@ module.exports = {
   usage: "/status",
   permission: "ADMINISTRATOR",
   disabled: false,
+  botOwnerOnly: true,
   /**
    *
    * @param {CommandInteraction} interaction

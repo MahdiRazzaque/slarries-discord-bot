@@ -1,4 +1,4 @@
-const { Message, Guild, Message, CommandInteraction, MessageEmbed } = require("discord.js");
+const { CommandInteraction, MessageEmbed } = require("discord.js");
 const { moderation_embed_colour } = require("../../structures/config.json");
 
 module.exports = {

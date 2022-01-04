@@ -7,6 +7,7 @@ module.exports = {
   usage: "/send-preset-embed",
   permission: "ADMINISTRATOR",
   disabled: false,
+  ownerOnly: true,
   options: [
     {
         name: "embed",

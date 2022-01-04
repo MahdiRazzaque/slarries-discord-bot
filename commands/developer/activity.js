@@ -7,6 +7,7 @@ module.exports = {
     usage: "/activity",
     permission: "ADMINISTRATOR",
     disabled: false,
+    botOwnerOnly: true,
     options: [
         {
             name: 'type',

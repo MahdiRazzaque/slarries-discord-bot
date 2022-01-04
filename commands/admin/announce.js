@@ -7,6 +7,7 @@ module.exports = {
   usage: "/announce",
   permission: "ADMINISTRATOR",
   disabled: false,
+  ownerOnly: true,
   options: [
     {
       name: "announcement",

@@ -13,7 +13,7 @@ module.exports = {
 
         for (var i = 0; i < blacklistedWords.length; i++) {
             if (message.content.toLowerCase().includes(blacklistedWords[i])) {
-                await message.channel.send({content: `${message.author}`, embeds: [new MessageEmbed().setColor("RED").setTitle("Blacklisted Word").setDescription(`${message.author} please do not use that word(s) as it is included in this server's blacklisted words.`)]})
+                await message.channel.send({content: `${message.author}`, embeds: [new MessageEmbed().setColor("RED").setTitle("Blacklisted Word").setDescription(`${message.author} please do not use that word(s) as it is included in this server's blacklisted words.`).addField("Blacklisted Word", `\`\`\`${blacklistedWords[i]}\`\`\``)]})
                 .then((m) => {setTimeout(() => {m.delete().catch(() => {})}, 1 * 5000)})
 
                 message.delete()
