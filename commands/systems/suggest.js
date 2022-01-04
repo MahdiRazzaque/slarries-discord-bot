@@ -1,11 +1,12 @@
 const { CommandInteraction, MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
 const DB = require("../../structures/schemas/suggestDB")
-const { suggest_disabled, system_embed_colour } = require("../../structures/config.json");
+const { system_embed_colour } = require("../../structures/config.json");
 
 module.exports = {
   name: "suggest",
   description: "Create a suggestion.",
   usage: "/suggest",
+  disabled: false,
   options: [
     {
       name: "type",
@@ -42,9 +43,7 @@ module.exports = {
    *
    * @param {CommandInteraction} interaction
    */
-  async execute(interaction, client) {
-    if (suggest_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
-    
+  async execute(interaction, client) {   
     const { options, guildId, member, user } = interaction;
 
     const type = options.getString("type");

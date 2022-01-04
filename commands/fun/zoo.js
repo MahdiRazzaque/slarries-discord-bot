@@ -1,11 +1,12 @@
 const { CommandInteraction, MessageEmbed } = require("discord.js");
 const axios = require("axios");
-const { zoo_disabled, fun_embed_colour } = require("../../structures/config.json");
+const { fun_embed_colour } = require("../../structures/config.json");
 
 module.exports = {
   name: "zoo",
   description: "Gives images and facts about animals",
   usage: "/zoo",
+  disabled: false,
   options: [
     {
       name: "animal",
@@ -30,9 +31,7 @@ module.exports = {
    * @param {CommandInteraction} interaction
    * @param {Client} client
    */
-  async execute(interaction, client) {
-    if (zoo_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
-            
+  async execute(interaction, client) {         
     const animal = interaction.options.getString("animal");
     const animalString = animal.replace("_", " ");
     const capitalized = animalString.charAt(0).toUpperCase() + animalString.slice(1);

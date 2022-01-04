@@ -1,11 +1,12 @@
 const { CommandInteraction, MessageEmbed, MessageAttachment } = require("discord.js");
-const { reaction_role_embed_colour, send_preset_embed_disabled } = require("../../structures/config.json");
+const { reaction_role_embed_colour } = require("../../structures/config.json");
 
 module.exports = {
   name: "send-preset-embed",
   description: "Send a preset embed to a specific channel.",
   usage: "/send-preset-embed",
   permission: "ADMINISTRATOR",
+  disabled: false,
   options: [
     {
         name: "embed",

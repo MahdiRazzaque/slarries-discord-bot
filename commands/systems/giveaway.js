@@ -1,12 +1,13 @@
 const { CommandInteraction, MessageEmbed, Client } = require("discord.js");
 const ms = require("ms");
-const { giveaway_disabled, system_embed_colour } = require("../../structures/config.json");
+const { system_embed_colour } = require("../../structures/config.json");
 
 module.exports = {
   name: "giveaway",
   description: "A complete giveaway system.",
   usage: "/giveaway",
   permission: "ADMINISTRATOR",
+  disabled: false,
   options: [
     {
       name: "start",
@@ -86,9 +87,7 @@ module.exports = {
    * @param {CommandInteraction} interaction
    * @param {Client} client
    */
-  execute(interaction, client) {
-    if (giveaway_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
-    
+  execute(interaction, client) {    
     const { options } = interaction;
 
     const Sub = options.getSubcommand();

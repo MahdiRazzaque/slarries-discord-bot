@@ -1,12 +1,12 @@
 const { CommandInteraction, MessageEmbed } = require("discord.js");
 const superagent = require("superagent");
-const { fun_embed_colour, eight_ball_disabled } = require("../../structures/config.json");
+const { fun_embed_colour } = require("../../structures/config.json");
 
 module.exports = {
   name: "8ball",
   description: "Answers All Your Questions",
   usage: "/8ball [question]",
-  cooldown: 10000,
+  disabled: false,
   options: [
     {
       name: "question",
@@ -19,9 +19,7 @@ module.exports = {
    *
    * @param {CommandInteraction} interaction
    */
-  async execute(interaction) {
-    if(eight_ball_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
-    
+  async execute(interaction) {    
     let { body } = await superagent.get(`https://nekos.life/api/v2/8ball`);
 
     const question = interaction.options.getString("question");

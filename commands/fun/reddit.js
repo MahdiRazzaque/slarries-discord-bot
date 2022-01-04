@@ -1,11 +1,12 @@
 const { CommandInteraction, MessageEmbed } = require("discord.js");
 const axios = require("axios");
-const { reddit_disabled, fun_embed_colour } = require("../../structures/config.json");
+const { fun_embed_colour } = require("../../structures/config.json");
 
 module.exports = {
   name: "reddit",
   description: "request a meme from reddit via subreddits.",
   usage: "/reddit",
+  disabled: false,
   options: [
     {
       name: "name",
@@ -18,9 +19,7 @@ module.exports = {
    *
    * @param {CommandInteraction} interaction
    */
-  async execute(interaction) {
-    if (reddit_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
-            
+  async execute(interaction) {            
     const { options } = interaction;
 
     const url = "https://meme-api.herokuapp.com/gimme/";

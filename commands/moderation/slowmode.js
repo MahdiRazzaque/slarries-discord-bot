@@ -1,12 +1,13 @@
 const { MessageEmbed, CommandInteraction } = require("discord.js");
 const ms = require("ms");
-const { moderation_embed_colour, slowmode_disabled } = require("../../structures/config.json");
+const { moderation_embed_colour } = require("../../structures/config.json");
 
 module.exports = {
   name: "slowmode",
   description: "Slows down the rate at which messages can be sent.",
   usage: "/slowmode",
   permission: "MANAGE_MESSAGES",
+  disabled: false,
   options: [
     {
       name: "rate",
@@ -30,7 +31,6 @@ module.exports = {
     },
   ],
   async execute(interaction) {
-    if(slowmode_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
     
     let message;
     const { channel, options } = interaction;

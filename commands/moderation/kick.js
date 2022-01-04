@@ -1,13 +1,5 @@
-const {
-  Client,
-  CommandInteraction,
-  MessageEmbed,
-  Guild,
-} = require("discord.js");
-const {
-  kick_disabled,
-  moderation_embed_colour,
-} = require("../../structures/config.json");
+const { Client, CommandInteraction, MessageEmbed, Guild } = require("discord.js");
+const { moderation_embed_colour } = require("../../structures/config.json");
 
 function delay(time) {
   return new Promise((resolve) => setTimeout(resolve, time));
@@ -18,6 +10,7 @@ module.exports = {
   description: "Used to kick a target",
   usage: "/kick",
   permission: "KICK_MEMBERS",
+  disabled: false,
   options: [
     {
       name: "target",
@@ -37,9 +30,7 @@ module.exports = {
    * @param {CommandInteraction} interaction
    * @param {Client} client
    */
-  execute(interaction, client) {
-    if (kick_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
-      
+  execute(interaction, client) {      
     const { options } = interaction;
     const Target = options.getMember("target");
     const Reason = options.getString("reason");

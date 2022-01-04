@@ -1,11 +1,11 @@
 const { CommandInteraction, MessageEmbed, Message } = require("discord.js");
-const { poll_disabled } = require("../../structures/config.json")
 
 module.exports = {
     name: "poll",
     description: "Create a poll",
     usage: "/poll",
     permission: "ADMINISTRATOR",
+    disabled: false,
     options: [
       {
           name: "poll",
@@ -23,9 +23,7 @@ module.exports = {
     /**
      * @param {CommandInteraction} interaction
      */
-    async execute(interaction, client) {
-        if(poll_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
-        
+    async execute(interaction, client) {        
         const { options } = interaction;
 
         const poll = options.getString("poll");

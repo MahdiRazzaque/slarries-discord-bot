@@ -1,15 +1,13 @@
 const { MessageEmbed } = require('discord.js');
 const moment = require('moment');
-const { serverinfo_disabled } = require("../../structures/config.json")
 
 module.exports = {
     name: "serverinfo",
     description: 'Sends data about the server.',
     usage: "/serverinfo",
-    cooldown: "10",
+    disabled: false,
+    
     async execute(interaction, client) {
-        if(serverinfo_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
-
         const { guild } = interaction;
 
         // Owner Variables

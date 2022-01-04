@@ -1,17 +1,16 @@
 const { MessageEmbed, CommandInteraction, MessageActionRow, MessageButton } = require("discord.js");
-const { open_ticket_channel, ticket_panel_colour, ticket_panel_disabled } = require("../../structures/config.json");
+const { open_ticket_channel, ticket_panel_colour } = require("../../structures/config.json");
 
 module.exports = {
     name: "ticket-panel",
     description: "Setup your ticketing message.",
     usage: "/ticket-panel",
     permission: "ADMINISTRATOR",
+    disabled: false,
     /**
     * @param {CommandInteraction} interaction
     */
     async execute(interaction) {
-        if(ticket_panel_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
-
         const { guild } = interaction;
 
         const Embed = new MessageEmbed()

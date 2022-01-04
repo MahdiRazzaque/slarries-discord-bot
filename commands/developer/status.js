@@ -1,20 +1,19 @@
 const { CommandInteraction, Client, MessageEmbed } = require("discord.js");
 const { connection } = require("mongoose");
-const { status_disabled, developer_embed_colour } = require("../../structures/config.json");
+const { developer_embed_colour } = require("../../structures/config.json");
 
 module.exports = {
   name: "status",
   description: "Displays the status of the client and database connection.",
   usage: "/status",
   permission: "ADMINISTRATOR",
+  disabled: false,
   /**
    *
    * @param {CommandInteraction} interaction
    * @param {Client} client
    */
-  async execute(interaction, client) {
-    if (status_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
-      
+  async execute(interaction, client) {      
     const Response = new MessageEmbed()
       .setColor(developer_embed_colour)
       .setTitle("Status")

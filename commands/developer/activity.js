@@ -1,11 +1,12 @@
 const { Client, MessageEmbed, CommandInteraction } = require('discord.js');
-const { developer_embed_colour, activity_disabled } = require("../../structures/config.json")
+const { developer_embed_colour } = require("../../structures/config.json")
 
 module.exports = {
     name: 'activity',
     description: 'Sets the activity for the bot.',
-    permission: "ADMINISTRATOR",
     usage: "/activity",
+    permission: "ADMINISTRATOR",
+    disabled: false,
     options: [
         {
             name: 'type',
@@ -40,7 +41,6 @@ module.exports = {
      * @param {client} Client
      */
     async execute(interaction, client) {
-        if(activity_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
         if (interaction.member.id === "381791690454859778") {
             const type     = interaction.options.getString('type');
             const activity = interaction.options.getString('activity');

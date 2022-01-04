@@ -1,6 +1,5 @@
 const { MessageActionRow, MessageButton } = require('discord.js');
 const menus = require('../../structures/schemas/reactionRoleDB');
-const { rr_menu_disabled } = require("../../structures/config.json");
 
 module.exports = {
     name: "rr-menu",
@@ -73,15 +72,14 @@ module.exports = {
     }],
     usage: "/rr-menu",
     permission: "ADMINISTRATOR",
+    disabled: false,
 
     /**
      * 
      * @param {Client} client 
      * @param {CommandInteraction} interaction 
      */
-    async execute (interaction, client) {
-        if (rr_menu_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("**Command Disabled** <a:animated_cross:925091847905366096>")], ephemeral: true})};
-        
+    async execute (interaction, client) {   
         await interaction.reply({ content: `${client.user.username} is thinking...` });
 
         const option = interaction.options.getSubcommand(true).toLowerCase();

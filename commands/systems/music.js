@@ -1,9 +1,11 @@
 const { CommandInteraction, Client, MessageEmbed } = require('discord.js');
-const { music_disabled, system_embed_colour } = require("../../structures/config.json");
+const { system_embed_colour } = require("../../structures/config.json");
 
 module.exports = {
     name: "music",
     description: "Complete music system",
+    usage: "/music",
+    disabled: false,
     options: [
         {
             name: "play",
@@ -82,8 +84,6 @@ module.exports = {
      * @param {CommandInteraction} interaction
      */
     async execute(interaction, client) {
-        if(music_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
-
         const { options, member, guild, channel } = interaction;
         const VoiceChannel = member.voice.channel;
 

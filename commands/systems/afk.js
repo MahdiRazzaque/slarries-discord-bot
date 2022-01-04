@@ -1,11 +1,11 @@
 const { CommandInteraction, MessageEmbed } = require("discord.js");
 const DB = require("../../structures/schemas/AFKSystem");
-const { afk_disabled } = require("../../structures/config.json");
 
 module.exports = {
     name: "afk",
     description: "Set your status as AFK.",
     usage: "/afk",
+    disabled: false,
     options: [
         {
             name: "set",
@@ -30,7 +30,6 @@ module.exports = {
      * @param {CommandInteraction} interaction
      */
     async execute(interaction) {
-        if(afk_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
         const { guild, options, user, createdTimestamp} = interaction;
 
         const Embed = new MessageEmbed()

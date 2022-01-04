@@ -1,5 +1,5 @@
 const { CommandInteraction, MessageEmbed } = require("discord.js");
-const { clear_disabled, moderation_embed_colour } = require("../../structures/config.json");
+const { moderation_embed_colour } = require("../../structures/config.json");
 
 function delay(time) {
   return new Promise((resolve) => setTimeout(resolve, time));
@@ -10,6 +10,7 @@ module.exports = {
   description: "Deletes a specified number of messages from a channel or a target.",
   usage: "/clear",
   permission: "MANAGE_MESSAGES",
+  disabled: false,
   options: [
     {
       name: "amount",
@@ -29,9 +30,7 @@ module.exports = {
    *
    * @param {CommandInteraction} interaction
    */
-  async execute(interaction) {
-    if (clear_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
-      
+  async execute(interaction) {     
     const { channel, options } = interaction;
 
     const Amount = options.getNumber("amount");

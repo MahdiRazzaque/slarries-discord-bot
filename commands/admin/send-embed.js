@@ -1,11 +1,12 @@
 const {CommandInteraction, MessageEmbed } = require("discord.js")
-const { send_embed_disabled, admin_embed_colour } = require("../../structures/config.json")
+const { admin_embed_colour } = require("../../structures/config.json")
 
 module.exports = {
     name: "send-embed",
     description: "Generate a custom embed!",
     usage: "/send-embed",
     permission: "ADMINISTRATOR",
+    disabled: false,
     options: [
         { name: "colour", description: "Provide a colour for the embed.", type: "STRING"},
         { name: "title", description: "Provide a title for the embed.", type: "STRING"},
@@ -24,8 +25,6 @@ module.exports = {
      * @param {CommandInteraction} interaction 
      */
     async execute(interaction, client) {
-        if (send_embed_disabled){return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled** ")], ephemeral: true})};
-
         const { options } = interaction;
 
         const eFields     = [[], [], []];

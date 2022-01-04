@@ -1,15 +1,12 @@
 const { MessageEmbed, Message } = require("discord.js");
-const {
-  announce_disabled,
-  announcement_channel,
-  admin_embed_colour,
-} = require("../../structures/config.json");
+const { announcement_channel, admin_embed_colour } = require("../../structures/config.json");
 
 module.exports = {
   name: "announce",
   description: "Announce a message to the announcement channel.",
   usage: "/announce",
   permission: "ADMINISTRATOR",
+  disabled: false,
   options: [
     {
       name: "announcement",
@@ -24,7 +21,6 @@ module.exports = {
    * @param {Client} client
    */
   async execute(interaction, client) {
-    if (announce_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled** ")], ephemeral: true})};
     
     const { options } = interaction;
 

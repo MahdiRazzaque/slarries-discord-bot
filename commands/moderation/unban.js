@@ -1,11 +1,12 @@
 const {Client, CommandInteraction, MessageEmbed} = require("discord.js");
-const { moderation_embed_colour, guild_logs_id, unban_disabled} = require("../../structures/config.json");
+const { moderation_embed_colour, guild_logs_id } = require("../../structures/config.json");
 
 module.exports = {
 	name: "unban",
 	description: "Used to unban a target id.",
 	permission: "BAN_MEMBERS",
 	usage: "/unban",
+	disabled: false,
 	options: [{
 			name: "id",
 			description: "Provide a user id to unban.",
@@ -24,8 +25,6 @@ module.exports = {
      * @param {Client} client
 	 */
 	execute(interaction, client) {
-		if(unban_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
-
 		const options = interaction.options
 		const userID = options.getString("id");
 		const user = interaction.member

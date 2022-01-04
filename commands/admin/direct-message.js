@@ -1,5 +1,5 @@
 const { MessageEmbed, Message } = require("discord.js");
-const { direct_message_disabled, admin_embed_colour } = require("../../structures/config.json");
+const { admin_embed_colour } = require("../../structures/config.json");
 
 module.exports = {
   name: "direct-message",
@@ -26,7 +26,6 @@ module.exports = {
    * @param {Client} client
    */
   async execute(interaction, client) {
-    if (!direct_message_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled** ")], ephemeral: true})};
     
     const { options } = interaction;
 
@@ -35,8 +34,11 @@ module.exports = {
 
     if(member.id === client.user.id) return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setTitle("Error <a:animated_cross:925091847905366096>").setDescription("🙄 I cannot DM myself.")]})
     
-    const sendMessage = await member.send(message);
-
-    interaction.reply({embeds: [new MessageEmbed().setColor(admin_embed_colour).setDescription(`<a:animated_tick:925091839030231071> The message was successfully sent to ${member}.`)],ephemeral: true});
+    try {
+      const sendMessage = await member.send(message);
+      interaction.reply({embeds: [new MessageEmbed().setColor(admin_embed_colour).setDescription(`<a:animated_tick:925091839030231071> The message was successfully sent to ${member}.`)],ephemeral: true});
+    } catch (error) {
+      return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("<a:animated_cross:925091847905366096> An error occured. Mostly likely, the users DMs are closed.")], ephemeral: true}) 
+    }
   },
 };

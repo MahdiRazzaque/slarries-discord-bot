@@ -1,19 +1,18 @@
 const { ContextMenuInteraction, MessageEmbed, Message } = require("discord.js");
-const { userinfo_disabled, admin_embed_colour } = require("../../structures/config.json");
+const { admin_embed_colour } = require("../../structures/config.json");
 
 module.exports = {
   name: "userinfo",
   type: "USER",
   usage: "Profile > Apps > userinfo",
   permission: "ADMINISTRATOR",
+  disabled: false,
 
   /**
    *
    * @param {ContextMenuInteraction} interaction
    */
-  async execute(interaction) {
-    if (userinfo_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
-    
+  async execute(interaction) {    
     const target = await interaction.guild.members.fetch(interaction.targetId);
 
     const Response = new MessageEmbed()

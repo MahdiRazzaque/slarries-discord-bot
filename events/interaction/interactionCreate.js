@@ -21,6 +21,9 @@ module.exports = {
       if (!command)
         return (interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("🛑 An error has occured whilst running this command")]}) && client.commands.delete(interaction.commandName));
 
+      if(command.disabled == true) {
+        return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`<a:animated_cross:925091847905366096> **This command (/${command.name}) is currently disabled**`)], ephemeral: true})
+      }
       const cmd = client.commands.get(interaction.commandName);
 
       command.execute(interaction, client);

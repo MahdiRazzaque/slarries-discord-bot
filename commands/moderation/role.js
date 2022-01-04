@@ -1,20 +1,12 @@
-const {
-  Message,
-  guild,
-  message,
-  CommandInteraction,
-  MessageEmbed,
-} = require("discord.js");
-const {
-  role_disabled,
-  moderation_embed_colour,
-} = require("../../structures/config.json");
+const { Message, Guild, Message, CommandInteraction, MessageEmbed } = require("discord.js");
+const { moderation_embed_colour } = require("../../structures/config.json");
 
 module.exports = {
   name: "role",
   description: "Add or remove the role from the member",
   usage: "/role",
   permission: "MANAGE_ROLES",
+  disabled: false,
   options: [
     {
       name: "type",
@@ -51,9 +43,7 @@ module.exports = {
    * @param {CommandInteraction} interaction
    * @param {arguments} arguments
    */
-  async execute(interaction, guild, client) {
-    if (role_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
-    
+  async execute(interaction, guild, client) {   
     const type = interaction.options.getString("type");
     const rolee = interaction.options.getRole("role");
     const target = interaction.options.getMember("member");

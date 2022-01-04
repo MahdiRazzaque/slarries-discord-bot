@@ -1,19 +1,14 @@
-const {
-  MessageEmbed,
-  Message,
-  CommandInteraction,
-  Client,
-} = require("discord.js");
+const { MessageEmbed, Message, CommandInteraction, Client } = require("discord.js");
 const { readdirSync } = require("fs");
 const { stripIndent } = require("common-tags");
 let color = "AQUA";
 const create_mh = require(`../../functions/menu.js`);
-const { help_disabled } = require("../../structures/config.json");
 
 module.exports = {
   name: "help",
-  usage: "/help",
   description: "Shows all available bot commands",
+  usage: "/help",
+  disabled: false,
   options: [
     {
       name: "command",
@@ -25,8 +20,6 @@ module.exports = {
   ],
 
   async execute(interaction, client) {
-    if (help_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
-
     const helpcmd = interaction.options.getString("command");
     const mbr = interaction.user.tag;
 

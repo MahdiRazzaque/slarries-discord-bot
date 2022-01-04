@@ -1,19 +1,18 @@
 const { CommandInteraction, MessageEmbed, Message } = require("discord.js");
 const got = require("got");
-const { meme_disabled, fun_embed_colour } = require("../../structures/config.json");
+const { fun_embed_colour } = require("../../structures/config.json");
 
 module.exports = {
   name: "meme",
   description: "Get some memes",
   usage: "/meme",
+  disabled: false,
   /**
    *
    * @param {CommandInteraction} interaction
    * @param {Message} message
    */
-  async execute(interaction, message) {
-    if (meme_disabled) {return interaction.reply({embeds: [new MessageEmbed().setColor("DARK_RED").setDescription("<a:animated_cross:925091847905366096> **Command Disabled**")], ephemeral: true})};
-    
+  async execute(interaction, message) {   
     got("https://www.reddit.com/r/memes/random/.json").then((response) => {
         const [list] = JSON.parse(response.body);
         const [post] = list.data.children;
