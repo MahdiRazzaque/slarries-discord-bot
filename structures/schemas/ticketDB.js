@@ -1,14 +1,16 @@
 const { model, Schema } = require("mongoose");
 
 module.exports = model(
-    "Tickets",
+    "ticketDB",
     new Schema({
         GuildID: String,
-        MemberID: String,
+        MembersID: [String],
         TicketID: String,
         ChannelID: String,
         Closed: Boolean,
         Locked: Boolean,
-        Type: String
+        Type: String,
+        Claimed: Boolean,
+        ClaimedBy: String,
     })
 )

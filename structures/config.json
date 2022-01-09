@@ -32,7 +32,7 @@
     "guildMemberAdd_logging": true,
     "guildMemberRemove_logging": true,
     "guildBanRemove_logging": true,
-    "guildMemberUpdate_logging": false,
+    "nicknameChange_logging": true,
 
     "messageDelete_logging": true,
     "messageUpdate_logging": true,
@@ -41,6 +41,7 @@
 
     "reactionRole_enabled": true,
 
+    "memberRoleChange_logging": true,
     "roleCreate_logging": true,
     "roleDelete_logging": true,
   

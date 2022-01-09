@@ -19,7 +19,7 @@ module.exports = {
       .setAuthor(target.user.tag, target.user.avatarURL({ dynamic: true, size: 512 }))
       .setThumbnail(target.user.avatarURL({ dynamic: true, size: 512 }))
       .addField("ID", `${target.user.id}`)
-      .addField("Roles", `${target.roles.cache.map((r) => r).join(" ").replace("@everyone", " ") || "None"}`)
+      .addField("Roles", `${target.roles.cache.map((r) => r).join(" ").replace("@everyone", "") || "None"}`)
       .addField("Member since", `<t:${parseInt(target.joinedTimestamp / 1000)}:R>`, true)
       .addField("Discord User since", `<t:${parseInt(target.user.createdTimestamp / 1000)}:R>`, true);
 

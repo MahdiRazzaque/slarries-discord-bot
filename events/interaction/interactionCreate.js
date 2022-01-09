@@ -50,7 +50,7 @@ module.exports = {
         }
       }
       if(!valid)
-        return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`<a:animated_cross:925091847905366096> **This command (/${command.name}) can only be used by members with the <@&${command.roles.map((r) => r).join(">, <@&")}> role(s)**`)], ephemeral: true})  
+        return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`<a:animated_cross:925091847905366096> **To use this command (/${command.name}), you need one of the following roles:\n<@&${command.roles.map((r) => r).join(">, <@&")}>**`)], ephemeral: true});
       }
 
       const cmd = client.commands.get(interaction.commandName);

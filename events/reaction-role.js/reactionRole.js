@@ -14,8 +14,6 @@ module.exports = {
 
         const { customId } = interaction
 
-        //if(["slayer-ticket", "dungeon-ticket", "close-ticket", "lock-ticket", "unlock-ticket", "suggest-accept", "suggest-decline"].includes(customId)) return;
-
         const emoji = interaction?.component?.emoji;
 
         const menu = await reactionRole.findOne({ message: interaction.message.id });

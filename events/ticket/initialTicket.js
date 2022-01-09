@@ -41,7 +41,12 @@ module.exports = {
                 .setCustomId("unlock-ticket")
                 .setLabel("Unlock")
                 .setStyle("SUCCESS")
-                .setEmoji("🔓")
+                .setEmoji("🔓"),
+            new MessageButton()
+                .setCustomId("claim-ticket")
+                .setLabel("Claim")
+                .setStyle("PRIMARY")
+                .setEmoji("🛄")
         )
 
         const Embed = new MessageEmbed()
@@ -50,7 +55,7 @@ module.exports = {
             case "slayer-ticket":
                 var helperRoleId = "917054077869912177"
 
-                Embed.setAuthor(`${guild.name} | Ticket: ${ID}`, guild.iconURL({dynamic:true}))
+                Embed.setAuthor({name: `${guild.name} | TicketID: ${ID}`, iconURL: guild.iconURL({dynamic:true})})
                 Embed.setTitle(`Hello and welcome to your slayer carrying service.`)
                 Embed.setDescription(`**A <@&917054077869912177> will be with you shortly.** \n \n While you wait please follow the following for requesting your carry: \n> IGN: \n> Slayer which you want killed: \n> Number of bosses: \n> If you need to borrow goblin armour and wither cloak sword:`)
                 Embed.addFields(
@@ -58,15 +63,15 @@ module.exports = {
                     {name: "🏕 How to survive", value: "<#917063326587031603>", inline: true},
                     {name: "❔ Frequent Questions", value: "<#917073516677967903>", inline: true}
                 )
-                Embed.setFooter("The buttons below are staff only buttons.")
+                Embed.setFooter({text: "The buttons below are staff only buttons."})
                 Embed.setColor(open_ticket_embed_colour)
                 Embed.setTimestamp()
                 break;
             case "dungeon-ticket":
                 var helperRoleId = "925013507546693632"
-                Embed.setAuthor(`${guild.name} | Ticket: ${ID}`, guild.iconURL({dynamic:true}))
+                Embed.setAuthor({name: `${guild.name} | TicketID: ${ID}`, iconURL: guild.iconURL({dynamic:true})})
                 Embed.setDescription("This is a dungeon ticket (WIP)!")
-                Embed.setFooter("The buttons below are staff only buttons.")
+                Embed.setFooter({text: "The buttons below are staff only buttons."})
                 Embed.setColor(open_ticket_embed_colour)
 
         }
@@ -89,15 +94,15 @@ module.exports = {
             ],
         })
         .then(async(channel) => {
-            await DB.create({ GuildID: guild.id, MemberID: member.id, TicketID: ID, ChannelID: channel.id, Closed: false, Locked: false, Type: customId })
+            await DB.create({ GuildID: guild.id, MembersID: member.id, TicketID: ID, ChannelID: channel.id, Closed: false, Locked: false, Type: customId, Claimed: false })
 
             channel.send({content: `Welcome <@${interaction.user.id}> ||<@&${helperRoleId}>||`, embeds: [Embed], components: [Buttons]})
 
-            await channel.send({content: `${member} here is your ticket.`}).then((m) => {
-                setTimeout(() => {
-                    m.delete().catch(() => {})
-                }, 1 * 10000)
-            })
+            // await channel.send({content: `${member} here is your ticket.`}).then((m) => {
+            //     setTimeout(() => {
+            //         m.delete().catch(() => {})
+            //     }, 1 * 10000)
+            // })
 
             interaction.reply({embeds: [new MessageEmbed().setDescription(`${member} your ticket has been created: ${channel}`).setColor("GREEN")], ephemeral: true})
         })
