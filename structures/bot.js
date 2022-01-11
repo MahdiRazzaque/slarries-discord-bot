@@ -29,6 +29,10 @@ client.customStatus = false;
 const { DisTube } = require("distube");
 const { SpotifyPlugin } = require("@distube/spotify");
 
+//Discord Together
+const { DiscordTogether } = require('discord-together'); 
+client.discordTogether = new DiscordTogether(client); 
+
 client.distube = new DisTube(client, {
   emitNewSongOnly: true,
   leaveOnFinish: true,
