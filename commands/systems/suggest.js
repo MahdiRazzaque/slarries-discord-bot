@@ -52,7 +52,7 @@ module.exports = {
 
     const Embed = new MessageEmbed()
       .setColor(system_embed_colour)
-      .setAuthor(user.tag, user.displayAvatarURL({dynamic: true}))
+      .setAuthor({name: `${user.tag}`, url: user.displayAvatarURL({dynamic: true})})
       .addFields(
         {name: "Suggestion", value: suggestion, inline: false},
         {name: "Type", value: type, inline: true},

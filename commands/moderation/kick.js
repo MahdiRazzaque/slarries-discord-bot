@@ -30,7 +30,7 @@ module.exports = {
    * @param {CommandInteraction} interaction
    * @param {Client} client
    */
-  execute(interaction, client) {      
+  async execute(interaction, client) {      
     const { options } = interaction;
     const Target = options.getMember("target");
     const Reason = options.getString("reason");
@@ -57,7 +57,7 @@ module.exports = {
 
     Target.send({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle(`👮 You've been kicked From ${interaction.guild.name}!`).addFields({name: "Reason", value: Reason}, {name: "Kicked by", value: interaction.member.user.tag})]})
 
-    delay(1000).then(() => Target.kick({ reason: Reason }));
+    await delay(1000).then(() => Target.kick({ reason: Reason }));
 
     interaction.reply({ embeds: [success] });
   },

@@ -52,14 +52,14 @@ module.exports = {
     }
 
     const embed = new MessageEmbed()
-      .setAuthor(`Here is a photo of a cute ${animalString}!`)
+      .setAuthor({name: `Here is a photo of a cute ${animalString}!`})
       .setColor(fun_embed_colour)
       .setImage(data.image)
-      .setFooter(`Executed by ${interaction.user.tag}`)
+      .setFooter({text: `Executed by ${interaction.user.tag}`})
       .setTimestamp();
     
       const factsembed = new MessageEmbed()
-      .setAuthor(`${capitalized} facts`)
+      .setAuthor({name: `${capitalized} facts`})
       .setColor(fun_embed_colour)
       .setDescription(`${data.fact}`);
     

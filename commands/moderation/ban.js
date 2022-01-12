@@ -28,7 +28,7 @@ module.exports = {
    * @param {CommandInteraction} interaction
    * @param {Client} client
    */
-  execute(interaction, client) {    
+  async execute(interaction, client) {    
     const { options } = interaction;
     const Target = options.getMember("target");
     const Reason = options.getString("reason");
@@ -41,7 +41,7 @@ module.exports = {
         { name: "Reason", value: `${Reason}` },
         { name: "Banned by", value: `${interaction.member.user}` }
       )
-      .setAuthor(Target.user.tag, Target.user.avatarURL({ dynamic: true, size: 512 }))
+      .setAuthor({name: `${Target.user.tag}`, iconURL: Target.user.avatarURL({ dynamic: true, size: 512 })})
       .setThumbnail(Target.user.avatarURL({ dynamic: true, size: 512 }));
 
     if (Target.id === interaction.member.id)
@@ -54,11 +54,11 @@ module.exports = {
       return interaction.reply({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle("Error <a:animated_cross:925091847905366096>").setDescription("🙄 You can't ban a Moderator")], ephemeral: true});
 
     if (Reason.length > 512)
-		return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setTitle("Error <a:animated_cross:925091847905366096>").setDescription("Reason can't be more than 512 characters.")], ephemeral: true});
+		  return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setTitle("Error <a:animated_cross:925091847905366096>").setDescription("Reason can't be more than 512 characters.")], ephemeral: true});
 
     Target.send({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle(`👮 You've been banned From ${interaction.guild.name}!`).addFields({name: "Reason", value: Reason}, {name: "Banned by", value: interaction.member.user.tag})]})
 
-    delay(1000).then(() => Target.ban({ reason: Reason }));
+    await delay(1000).then(() => Target.ban({ reason: Reason }));
 
     interaction.reply({ embeds: [success] });
   },

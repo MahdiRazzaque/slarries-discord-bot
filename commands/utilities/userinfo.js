@@ -16,7 +16,7 @@ module.exports = {
 
     const Response = new MessageEmbed()
       .setColor(admin_embed_colour)
-      .setAuthor(target.user.tag, target.user.avatarURL({ dynamic: true, size: 512 }))
+      .setAuthor({name: `${target.user.tag}`, url: target.user.avatarURL({ dynamic: true, size: 512 })})
       .setThumbnail(target.user.avatarURL({ dynamic: true, size: 512 }))
       .addField("ID", `${target.user.id}`)
       .addField("Roles", `${target.roles.cache.map((r) => r).join(" ").replace("@everyone", "") || "None"}`)

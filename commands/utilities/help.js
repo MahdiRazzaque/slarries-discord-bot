@@ -69,12 +69,7 @@ module.exports = {
         .setTitle(`Bot Commands`)
         .setDescription(`\`\`\`asciidoc\n${description}\`\`\``)
         .addFields(categories)
-        .setFooter(
-          `Requested by ${mbr}`,
-          interaction.user.displayAvatarURL({
-            dynamic: true,
-          })
-        )
+        .setFooter({text: `Requested by ${mbr}`, iconURL: interaction.user.displayAvatarURL({dynamic: true})})
         .setTimestamp()
         .setColor(color);
 
@@ -268,12 +263,7 @@ module.exports = {
             ? command.description
             : "No description for this command."
         )
-        .setFooter(
-          `Requested by ${mbr}`,
-          interaction.user.displayAvatarURL({
-            dynamic: true,
-          })
-        )
+        .setFooter({text: `Requested by ${mbr}`, iconURL: interaction.user.displayAvatarURL({dynamic: true})})
         .setTimestamp()
         .setColor(color);
       return await interaction.reply({

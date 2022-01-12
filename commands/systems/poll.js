@@ -70,8 +70,6 @@ module.exports = {
             if (splitOptions.length > 9)
               return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("<a:animated_cross:925091847905366096> Polls can only have 9 options.")], ephemeral: true})
 
-    
-
             let pollOptions = ` `
             
             for (let i = 0; i < splitOptions.length; i++) {
@@ -82,21 +80,21 @@ module.exports = {
               .setColor("AQUA")
               .setTitle(`**${question}** 📊`)
               .setDescription(pollOptions)
-              .setFooter("Please react with the an emoji based on your opinion.")
+              .setFooter({text: "Please react with the an emoji based on your opinion."})
               .setTimestamp()
     
             const sendMessage = await client.channels.cache.get(gChannel.id).send({embeds: [pollEmbed]});
             for (let i = 0; i < splitOptions.length; i++) {
                 sendMessage.react(`${emoji[i]}`);
               }    
-            interaction.reply({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`<a:animated_tick:925091839030231071> The poll was successfully sent to ${gChannel}.`)],ephemeral: true})
+            return interaction.reply({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`<a:animated_tick:925091839030231071> The poll was successfully sent to ${gChannel}.`)],ephemeral: true})
             break;
 
           case "true":
             const pollEmbedYOrNo = new MessageEmbed()
             .setColor("AQUA")
             .setTitle(`**${question}** 📊`)
-            .setFooter("Please react with the 👍,👎 or 🤷‍♂️ based on your opinion.")
+            .setFooter({text: "Please react with the 👍,👎 or 🤷‍♂️ based on your opinion."})
             .setTimestamp()
 
             const sendMessageYOrNo = await client.channels.cache.get(gChannel.id).send({embeds: [pollEmbedYOrNo]});
@@ -104,7 +102,11 @@ module.exports = {
             sendMessageYOrNo.react("👎")
             sendMessageYOrNo.react("🤷‍♂️")
 
-            interaction.reply({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`<a:animated_tick:925091839030231071> The poll was successfully sent to ${gChannel}.`)],ephemeral: true})
+            if(options) {
+              return interaction.reply({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`<a:animated_tick:925091839030231071> The poll was successfully sent to ${gChannel}. \n*Since this a y/n poll, the options you provided were ignored.*`)],ephemeral: true})
+            } else {
+              return interaction.reply({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`<a:animated_tick:925091839030231071> The poll was successfully sent to ${gChannel}.`)],ephemeral: true})
+            }            
             break;
         }       
     }

@@ -50,10 +50,10 @@ module.exports = {
         if(image && image.includes("http"))         embed.setImage(image);
         if(colour)                                  embed.setColor(colour.toUpperCase());
         if(title)                                   embed.setTitle(title);
-        if(author)                                  embed.setAuthor(author);
+        if(author)                                  embed.setAuthor({name: `${author}`});
         if(description)                             embed.setDescription(description);
         if(timestamp)                               embed.setTimestamp();
-        if(footer)                                  embed.setFooter(footer);
+        if(footer)                                  embed.setFooter({text: `${footer}`});
         if(fields) {
             fields = fields.split("^");
             fields.forEach(e => {

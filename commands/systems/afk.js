@@ -33,7 +33,7 @@ module.exports = {
         const { guild, options, user, createdTimestamp} = interaction;
 
         const Embed = new MessageEmbed()
-        .setAuthor(user.tag, user.displayAvatarURL({dynamic: true}));
+        .setAuthor({name: `${user.tag}`, url: user.displayAvatarURL({dynamic: true})})
 
         const afkStatus = options.getString("status");
 
