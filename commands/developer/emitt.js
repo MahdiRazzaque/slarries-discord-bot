@@ -10,8 +10,8 @@ module.exports = {
   botOwnerOnly: true,
   options: [
     {
-      name: "member",
-      description: "Guild Member Events.",
+      name: "event",
+      description: "State the event you want to emmit",
       type: "STRING",
       required: true,
       choices: [
@@ -23,6 +23,10 @@ module.exports = {
           name: "guildMemberRemove",
           value: "guildMemberRemove",
         },
+        {
+          name: "guildCreate",
+          value: "guildCreate",
+        },
       ],
     },
   ],
@@ -32,7 +36,8 @@ module.exports = {
    * @param {Client} client
    */
   execute(interaction, client) {    
-    const choices = interaction.options.getString("member");
+    const choices = interaction.options.getString("event");
+
 
     switch (choices) {
       case "guildMemberAdd": {
@@ -43,6 +48,11 @@ module.exports = {
       case "guildMemberRemove": {
         client.emit("guildMemberRemove", interaction.member);
         interaction.reply({embeds: [new MessageEmbed().setColor(developer_embed_colour).setDescription("<a:animated_tick:925091839030231071> Emmited a guildMemberRemove event.")],ephemeral: true})
+      }
+        break;
+      case "guildCreate": {
+        client.emit("guildCreate", interaction.guild);
+        interaction.reply({embeds: [new MessageEmbed().setColor(developer_embed_colour).setDescription("<a:animated_tick:925091839030231071> Emmited a guildCreate event.")],ephemeral: true})
       }
         break;
     }
