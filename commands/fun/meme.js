@@ -7,6 +7,7 @@ module.exports = {
   description: "Get some memes",
   usage: "/meme",
   disabled: false,
+  botCommandChannelOnly: true,
   /**
    *
    * @param {CommandInteraction} interaction

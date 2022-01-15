@@ -9,6 +9,7 @@ module.exports = {
   description: "Shows all available bot commands",
   usage: "/help",
   disabled: false,
+  botCommandChannelOnly: true,
   options: [
     {
       name: "command",

@@ -6,6 +6,7 @@ module.exports = {
     description: 'Sends data about the server.',
     usage: "/serverinfo",
     disabled: false,
+    botCommandChannelOnly: true,
     
     async execute(interaction, client) {
         const { guild } = interaction;
@@ -52,8 +53,7 @@ module.exports = {
                 { name: `**Server Boosts Amount:**`, value: `\`\`\`${totalBoosts}\`\`\``, inline: true },
                 { name: `**Creation Date:**`, value: `\`\`\`${moment(guild.createdTimestamp).format("LT")} ${moment(guild.createdTimestamp).format("LL")} (${moment(guild.createdTimestamp).fromNow()})\`\`\``, inline: false },
             );
-
-        // Send embed
+            
         interaction.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
     },
 };

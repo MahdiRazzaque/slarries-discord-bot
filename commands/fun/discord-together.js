@@ -6,6 +6,9 @@ const { fun_embed_colour } = require("../../structures/config.json")
 module.exports = {
     name: "discord-together",
     description: "discord together activities",
+    usage: "/discord-together",
+    disabled: false,
+    botCommandChannelOnly: true,
     options: [
         {
             name: "activity",

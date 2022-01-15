@@ -5,6 +5,7 @@ module.exports = {
   description: "Sends the bot's ping.",
   usage: "/ping",
   disabled: false,
+  botCommandChannelOnly: true,
   /**
    *
    * @param {CommandInteraction} interaction

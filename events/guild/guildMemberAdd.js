@@ -16,6 +16,8 @@ module.exports = {
     if(guild_welcome_message) {
       const { user, guild } = member;
 
+      await member.roles.add("931883459834699817")
+
       const welcomeMessage = new MessageEmbed()
       .setColor("AQUA")
       .setTitle(`**Welcome to Slarries**`)
@@ -25,7 +27,7 @@ module.exports = {
         { name: "Verify", value: "<#916661502163963964>", inline: true },
       )
       .setThumbnail(user.avatarURL({ dynamic: true, size: 512 }))
-      .setFooter(`ID: ${user.id}`);
+      .setFooter({text: `ID: ${user.id}`});
 
     const channel = client.channels.cache.get("916385873120079914")
 

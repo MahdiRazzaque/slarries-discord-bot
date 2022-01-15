@@ -1,6 +1,6 @@
 const { ButtonInteraction, MessageEmbed, MessageActionRow, MessageButton} = require("discord.js");
 const DB = require("../../structures/schemas/ticketDB");
-const { parent_id, everyone_id, open_ticket_embed_colour, ticket_enabled } = require("../../structures/config.json");
+const { parent_id, everyone_id, open_ticket_embed_colour, ticket_enabled, unverified_id } = require("../../structures/config.json");
 
 module.exports = {
     name: "interactionCreate",
@@ -88,7 +88,11 @@ module.exports = {
                     allow: ["SEND_MESSAGES", "VIEW_CHANNEL", "READ_MESSAGE_HISTORY"]
                 },
                 {
-                    id: everyone_id,
+                    id: everyone_id, 
+                    deny: ["SEND_MESSAGES", "VIEW_CHANNEL", "READ_MESSAGE_HISTORY"]
+                },
+                {
+                    id: unverified_id,
                     deny: ["SEND_MESSAGES", "VIEW_CHANNEL", "READ_MESSAGE_HISTORY"]
                 },
             ],

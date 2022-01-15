@@ -29,7 +29,11 @@ module.exports = {
 
             if (!member.roles.cache.has(role.id)) {
                 member.roles.add(role).then(() => {
+                    if(member.roles.cache.has("931883459834699817") && member.roles.cache.has("916385872562229325")) {
+                        member.roles.remove(interaction.guild.roles.cache.get("931883459834699817"))
+                    }
                     interaction.reply({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`You have been given the **${role.name}** role.`)], ephemeral: true })
+
                 }).catch(() => {
                     interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`Failed to give you the **${role.name}** role.`)], ephemeral: true })
                 })

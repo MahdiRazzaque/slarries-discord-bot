@@ -7,6 +7,7 @@ module.exports = {
   description: "Gives images and facts about animals",
   usage: "/zoo",
   disabled: false,
+  botCommandChannelOnly: true,
   options: [
     {
       name: "animal",

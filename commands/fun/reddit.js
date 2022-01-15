@@ -7,6 +7,7 @@ module.exports = {
   description: "request a meme from reddit via subreddits.",
   usage: "/reddit",
   disabled: false,
+  botCommandChannelOnly: true,
   options: [
     {
       name: "name",

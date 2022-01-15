@@ -7,6 +7,7 @@ module.exports = {
   description: "Answers All Your Questions",
   usage: "/8ball [question]",
   disabled: false,
+  botCommandChannelOnly: true,
   options: [
     {
       name: "question",
@@ -29,12 +30,12 @@ module.exports = {
     }
 
     const Response = new MessageEmbed()
-      .setAuthor(interaction.member.user.username, interaction.member.user.avatarURL({dynamic: true, size: 512}))
+      .setAuthor({name: `${interaction.member.user.username}`, iconURL: `${interaction.member.user.avatarURL({dynamic: true, size: 512})}`})
       .setColor(fun_embed_colour)
       .setTimestamp()
       .setFields({name: "Question", value: question})
       .setImage(body.url)
-      .setFooter(`Requested by: ${interaction.member.user.username}`);
+      .setFooter({text: `Requested by: ${interaction.member.user.username}`});
 
     interaction.reply({embeds: [Response]});
   },

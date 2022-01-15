@@ -7,8 +7,11 @@ function delay(time) {
   }
 
 module.exports = {
-  name: "coinflip",
+  name: "coin-flip",
   description: "Heads or tails?",
+  usage: "/coin-flip",
+  disabled: false,
+  botCommandChannelOnly: true,
   options: [
     {
       name: "choice",

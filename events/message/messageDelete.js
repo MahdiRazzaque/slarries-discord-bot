@@ -27,7 +27,7 @@ module.exports = {
           name: "**Deleted message**",
           value: `${message.content ? message.content : "None"}`,
         })
-        .setFooter(`Member: ${message.author.tag} | ID: ${message.author.id}`)
+        .setFooter({text: `Member: ${message.author.tag} | ID: ${message.author.id}`})
         .setTimestamp();
 
       if (message.attachments.size >= 1) {
@@ -43,7 +43,7 @@ module.exports = {
         .send({ embeds: [Log] });
       
     } catch (e) {
-      const error_logs = client.channels.cache.get(error_logs_id).send({ embeds: [new MessageEmbed().setColor("RED").setTitle("<a:animated_cross:925091847905366096> messageDelete event").setDescription(`${e}`).setFooter("This error was caught to prevent the bot from crashing.")]}); 
+      const error_logs = client.channels.cache.get(error_logs_id).send({ embeds: [new MessageEmbed().setColor("RED").setTitle("<a:animated_cross:925091847905366096> messageDelete event").setDescription(`${e}`).setFooter({text: "This error was caught to prevent the bot from crashing."})]}); 
     }
     
   },

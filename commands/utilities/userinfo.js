@@ -6,6 +6,7 @@ module.exports = {
   type: "USER",
   usage: "Profile > Apps > userinfo",
   disabled: false,
+  botCommandChannelOnly: true,
 
   /**
    *

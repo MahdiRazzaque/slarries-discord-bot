@@ -1,4 +1,4 @@
-const { Client, Message } = require("discord.js");
+const { Client, Message, MessageEmbed } = require("discord.js");
 const { modMail_enabled } = require("../../structures/config.json")
 const modmailClient = require("./modmail")
 

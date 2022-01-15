@@ -24,4 +24,4 @@ const modmailClient = new ModMailClient({
     }
 });
 
-module.exports = modmailClient;
+module.exports = modmailClient

@@ -1,6 +1,8 @@
 {
     "owners": ["381791690454859778"],
     "botOwners": ["381791690454859778"],
+    "botCommandChannels": ["916385873405309012", "922074045149757500", "916385874068000850"],
+    "unverified_id": "931883459834699817",
     
     "admin_embed_colour": "AQUA",
     "developer_embed_colour": "PURPLE",
@@ -45,7 +47,7 @@
     "roleCreate_logging": true,
     "roleDelete_logging": true,
   
-    "guild_welcome_message": false,
+    "guild_welcome_message": true,
   
     "reaction_role_embed_colour": "BLURPLE",
     "announcement_channel": "916385873120079915",

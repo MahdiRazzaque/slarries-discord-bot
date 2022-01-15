@@ -6,6 +6,7 @@ module.exports = {
     description: "Complete music system",
     usage: "/music",
     disabled: false,
+    botCommandChannelOnly: true,
     options: [
         {
             name: "play",
