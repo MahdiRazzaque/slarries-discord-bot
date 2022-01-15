@@ -35,7 +35,7 @@ module.exports = {
     let memberIds = members.map(m => m.id);
 
     if(memberIds.length == 0)
-      return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${role} has been given to 0 members, so I did not attempt to DM anyone.`).setFooter({text: "Thank you for using my code. | M4HD1#6336"})], ephemeral: true})
+      return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${role} has been given to 0 members, so I did not attempt to DM anyone.`)], ephemeral: true})
 
     const Embed = new MessageEmbed().setColor(admin_embed_colour)
 
@@ -60,11 +60,11 @@ module.exports = {
         failedMembersList.push(member)
       }
 
-      interaction.editReply({embeds: [Embed.setDescription(`**Sending dm to all users.**\n\n> Successful DMs: ${successfulMembers}\n\n> Failed DMs: ${failedMembers}\n\n> Latest member: ${member}`)]})
+      interaction.editReply({embeds: [Embed.setDescription(`**Sending dm to all users with the role ${role}**\n\n> Successful DMs: ${successfulMembers}\n\n> Failed DMs: ${failedMembers}\n\n> Latest member: ${member}`)]})
     
       await delay(3000)
     }
 
-    interaction.editReply({content: `${interaction.member}`, embeds: [Embed.setDescription("**Finished sending dm to all users.**").addFields({name: "Successful DMs", value: `${successfulMembers}`}, {name: "Failed DMs", value: `${failedMembers}`, inline: true}, {name: "Successful members", value: `${successfulMembersList.map((m) => m).join(", ") || "None"}`}, {name: "Failed members", value: `${failedMembersList.map((m) => m).join(", ") || "None"}`})]})
+    interaction.editReply({content: `${interaction.member}`, embeds: [Embed.setDescription(`**Finished sending dm to all users with the role ${role}**`).addFields({name: "Successful DMs", value: `${successfulMembers}`}, {name: "Failed DMs", value: `${failedMembers}`, inline: true}, {name: "Successful members", value: `${successfulMembersList.map((m) => m).join(", ") || "None"}`}, {name: "Failed members", value: `${failedMembersList.map((m) => m).join(", ") || "None"}`})]})
   },
 };
