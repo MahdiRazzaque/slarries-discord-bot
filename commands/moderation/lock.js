@@ -5,6 +5,7 @@
  module.exports = {
      name: "lock",
      description: "Lockdown this channel",
+     usage: "/lock",
      permission: "MANAGE_CHANNELS",
      options: [
          {

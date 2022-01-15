@@ -3,7 +3,8 @@ const DB = require("../../structures/schemas/lockdownDB");
 
 module.exports = {
     name: "unlock",
-    description: "Life a lockdown from a channel",
+    description: "Lift a lockdown from a channel",
+    usage: "/unlock",
     permission: "MANAGE_CHANNELS",
     /**
      * 
