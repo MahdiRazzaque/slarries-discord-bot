@@ -13,6 +13,8 @@ module.exports = async (client, PG, Ascii) => {
 
     if (event.once) {
       client.once(event.name, (...args) => event.execute(...args, client));
+    } else if (event.disabled == true) {
+      
     } else {
       client.on(event.name, (...args) => event.execute(...args, client));
     }

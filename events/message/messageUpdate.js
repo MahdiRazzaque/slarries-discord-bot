@@ -1,8 +1,9 @@
 const { Client, MessageEmbed, Message } = require("discord.js");
-const { message_log_colour, message_logs_id, messageUpdate_logging, error_logs_id } = require("../../structures/config.json");
+const { message_log_colour, message_logs_id, error_logs_id } = require("../../structures/config.json");
 
 module.exports = {
   name: "messageUpdate",
+  disabled: false,
   /**
    *
    * @param {Message} oldMessage
@@ -10,7 +11,6 @@ module.exports = {
    * @param {Client} client
    */
   execute(oldMessage, newMessage, client) {
-    if (!messageUpdate_logging) return;
 
     try {
     

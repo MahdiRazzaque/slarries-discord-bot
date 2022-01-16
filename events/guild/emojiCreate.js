@@ -1,14 +1,14 @@
 const { Client, MessageEmbed, Message } = require("discord.js");
-const { guild_log_colour, guild_logs_id, emojiCreate_logging } = require("../../structures/config.json");
+const { guild_log_colour, guild_logs_id } = require("../../structures/config.json");
 
 module.exports = {
   name: "emojiCreate",
+  disabled: false,
   /**
    * @param {Client} client
    * @param {guildMember} member
    */
   execute(emoji, client) {
-    if (!emojiCreate_logging) return;
 
     const Log = new MessageEmbed()
     .setColor(guild_log_colour)

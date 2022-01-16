@@ -2,6 +2,7 @@ const { Client, MessageEmbed, Message, Guild } = require("discord.js");
 
 module.exports = {
   name: "guildCreate",
+  disabled: false,
   /**
    * @param {Client} client
    * @param {Guild} guild

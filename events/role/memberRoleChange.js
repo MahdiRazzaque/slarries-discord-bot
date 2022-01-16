@@ -1,15 +1,15 @@
 const { Client, MessageEmbed, Message, GuildMember } = require("discord.js");
-const { role_logs_colour, role_logs_id, memberRoleChange_logging } = require("../../structures/config.json");
+const { role_logs_colour, role_logs_id } = require("../../structures/config.json");
 
 module.exports = {
   name: "guildMemberUpdate",
+  disabled: false,
   /**
    * @param {Client} client
    * @param {GuildMember} oldMember
    * @param {GuildMember} newMember
    */
   execute(oldMember, newMember, client) {
-    if (!memberRoleChange_logging) return;
     if(oldMember.roles == newMember.roles) return;
 
     const Log = new MessageEmbed()

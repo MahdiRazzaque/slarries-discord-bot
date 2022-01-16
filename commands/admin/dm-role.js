@@ -1,4 +1,5 @@
 const { MessageEmbed, Client, CommandInteraction } = require("discord.js");
+const { create } = require("sourcebin")
 const { admin_embed_colour } = require("../../structures/config.json");
 
 function delay(time) {return new Promise((resolve) => setTimeout(resolve, time))}
@@ -64,7 +65,22 @@ module.exports = {
     
       await delay(3000)
     }
+    const failedMembersMapped = failedMembersList.map((m) => m).join(", ") || "None";
+    const successfulMembersMapped = successfulMembersList.map((m) => m).join(", ") || "None"
 
-    interaction.editReply({content: `${interaction.member}`, embeds: [Embed.setDescription(`**Finished sending dm to all users with the role ${role}**`).addFields({name: "Successful DMs", value: `${successfulMembers}`}, {name: "Failed DMs", value: `${failedMembers}`, inline: true}, {name: "Successful members", value: `${successfulMembersList.map((m) => m).join(", ") || "None"}`}, {name: "Failed members", value: `${failedMembersList.map((m) => m).join(", ") || "None"}`})]})
+    var failedMembersMessage = failedMembersMapped
+    var successfulMembersMessage = successfulMembersMapped
+
+    if (failedMembersMapped.length > 1024) {
+      const failedMembersSourcebin = await create([{name: "failedMembers", content: failedMembersMapped}])
+      failedMembersMessage = failedMembersSourcebin.url
+    }
+
+    if (successfulMembersMapped.length > 1024) {
+      const successfulMembersSourcebin = await create([{name: "successfulMembers", content: successfulMembersMapped}])
+      successfulMembersMessage = successfulMembersSourcebin.url
+    }
+
+    interaction.editReply({content: `${interaction.member}`, embeds: [Embed.setDescription(`**Finished sending dm to all users with the role ${role}**`).addFields({name: "Successful DMs", value: `${successfulMembers}`}, {name: "Failed DMs", value: `${failedMembers}`, inline: true}, {name: "Successful members", value: `${successfulMembersMessage}`}, {name: "Failed members", value: `${failedMembersMessage}`})]})
   },
 };

@@ -1,5 +1,5 @@
 const reactionRole = require("../../structures/schemas/reactionRoleDB");
-const { reactionRole_enabled} = require("../../structures/config.json")
+const { reactionRole_enabled } = require("../../structures/config.json")
 const { MessageEmbed } = require("discord.js")
 
 module.exports = {

@@ -7,8 +7,8 @@
     "admin_embed_colour": "AQUA",
     "developer_embed_colour": "PURPLE",
     "fun_embed_colour": "BLUE",
+    "minecraft_embed_colour": "DARK_GREEN",
     "moderation_embed_colour": "LUMINOUS_VIVID_PINK",
-    "music_embed_colour": "ORANGE",
     "system_embed_colour": "ORANGE",
 
     "channel_log_colour": "YELLOW",
@@ -23,31 +23,7 @@
     "error_logs_id": "926096538172805130",
     "command_logs_id": "927944595336220682",
 
-    "channelUpdate_logging" : true,
-    "channelCreate_logging": true,
-    "channelDelete_logging": true,
-
-    "emojiCreate_logging": true,
-    "emojiDelete_logging": true,
-    "emojiUpdate_logging": true,
-    "guildBanAdd_logging": true,
-    "guildMemberAdd_logging": true,
-    "guildMemberRemove_logging": true,
-    "guildBanRemove_logging": true,
-    "nicknameChange_logging": true,
-
-    "messageDelete_logging": true,
-    "messageUpdate_logging": true,
-
-    "modMail_enabled": true,
-
     "reactionRole_enabled": true,
-
-    "memberRoleChange_logging": true,
-    "roleCreate_logging": true,
-    "roleDelete_logging": true,
-  
-    "guild_welcome_message": true,
   
     "reaction_role_embed_colour": "BLURPLE",
     "announcement_channel": "916385873120079915",

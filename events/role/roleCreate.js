@@ -1,14 +1,14 @@
 const { Client, MessageEmbed, Message } = require("discord.js");
-const { role_log_colour, role_logs_id, roleCreate_logging,} = require("../../structures/config.json");
+const { role_log_colour, role_logs_id} = require("../../structures/config.json");
 
 module.exports = {
   name: "roleCreate",
+  disabled: false,
   /**
    * @param {Role} role
    * @param {Client} client
    */
   execute(role, client) {
-    if (!roleCreate_logging) return;
     
     const Log = new MessageEmbed()
       .setColor(role_log_colour)

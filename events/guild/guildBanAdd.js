@@ -1,14 +1,14 @@
 const { Client, MessageEmbed, Message } = require("discord.js");
-const { guild_log_colour, guild_logs_id, guildBanAdd_logging } = require("../../structures/config.json");
+const { guild_log_colour, guild_logs_id } = require("../../structures/config.json");
 
 module.exports = {
   name: "guildBanAdd",
+  disabled: false,
   /**
    * @param {Client} client
    * @param {guildMember} member
    */
   execute(ban, client) {
-    if (!guildBanAdd_logging) return;
     const { user, guild, reason } = ban;
 
     const Log = new MessageEmbed()

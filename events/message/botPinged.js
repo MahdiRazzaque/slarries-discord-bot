@@ -2,6 +2,7 @@ const { MessageEmbed, Message, Client } = require('discord.js');
 
 module.exports = {
     name: "messageCreate",
+    disabled: false,
     /**
      * 
      * @param {Message} message 

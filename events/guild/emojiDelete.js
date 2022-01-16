@@ -1,15 +1,15 @@
 const { Client, MessageEmbed, Message } = require("discord.js");
-const { guild_log_colour, guild_logs_id, emojiDelete_logging } = require("../../structures/config.json");
+const { guild_log_colour, guild_logs_id } = require("../../structures/config.json");
 
 module.exports = {
   name: "emojiDelete",
+  disabled: false,
   /**
    * @param {Client} client
    * @param {guildMember} member
    */
   execute(emoji, client) {
-    if (!emojiDelete_logging) return;
-
+    
     const Log = new MessageEmbed()
     .setColor(guild_log_colour)
     .setTitle("__Emoji Deleted__ 😃")

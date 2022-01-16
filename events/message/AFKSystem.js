@@ -1,14 +1,13 @@
 const { Message, MessageEmbed } = require("discord.js");
-const { afk_disabled } = require("../../structures/config.json")
 const DB = require("../../structures/schemas/AFKSystem");
 
 module.exports = {
     name: "messageCreate",
+    disabled: false,
     /**
      * @param {Message} message
      */
     async execute(message) {
-        if(afk_disabled) return
         
         if(message.author.bot) return;
         if(message.guild === null) return;

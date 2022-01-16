@@ -10,6 +10,7 @@ module.exports = {
      */
     async execute(interaction) {
         if(!interaction.isButton()) return;
+        if(!ticket_enabled) return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("Tickets are currently disabled.")], ephemeral: true})
         
         const { guild, member, customId } = interaction
 

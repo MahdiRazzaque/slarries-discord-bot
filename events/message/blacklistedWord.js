@@ -4,13 +4,13 @@ const { message_logs_id, message_log_colour } = require("../../structures/config
 
 module.exports = {
     name: "messageCreate",
+    disabled: false,
     /**
      * 
      * @param {Message} message 
      * @param {Client} client 
      */
     async execute(message, client) {
-
         for (var i = 0; i < blacklistedWords.length; i++) {
             if (message.content.toLowerCase().includes(blacklistedWords[i])) {
                 await message.channel.send({content: `${message.author}`, embeds: [new MessageEmbed().setColor("RED").setTitle("Blacklisted Word").setDescription(`${message.author} please do not use that word(s) as it is included in this server's blacklisted words.`).addField("Blacklisted Word", `\`\`\`${blacklistedWords[i]}\`\`\``)]})

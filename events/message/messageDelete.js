@@ -1,14 +1,14 @@
 const { Client, MessageEmbed, Message } = require("discord.js");
-const { message_log_colour, message_logs_id, messageDelete_logging, error_logs_id } = require("../../structures/config.json");
+const { message_log_colour, message_logs_id, error_logs_id } = require("../../structures/config.json");
 const { blacklistedWords } = require("../../structures/blacklistedWords")
 
 module.exports = {
   name: "messageDelete",
+  disabled: false,
   /**
    * @param {Message} message
    */
   execute(message, client) {
-    if (!messageDelete_logging) return;
 
     try {
       if (message.author.bot) return;
