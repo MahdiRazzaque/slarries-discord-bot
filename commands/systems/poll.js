@@ -153,7 +153,7 @@ module.exports = {
             }
 
             if(custompollOptions.length > 4096)
-              return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`<a:animated_cross:925091847905366096> This poll is ${custompollOptions - 4096} characters too long.`)], ephemeral: true})
+              return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`<a:animated_cross:925091847905366096> This poll is ${custompollOptions.length - 4096} characters too long.`)], ephemeral: true})
 
             const customPollEmbed = new MessageEmbed()
             .setColor("AQUA")
@@ -164,7 +164,12 @@ module.exports = {
   
           const sendMessageCustomEmojis = await client.channels.cache.get(gChannel.id).send({embeds: [customPollEmbed]});
           for (let i = 0; i < optionNames.length; i++) {
-              sendMessageCustomEmojis.react(`${customEmojis[i]}`);
+            try {
+              await sendMessageCustomEmojis.react(`${customEmojis[i]}`);
+            } catch (error) {
+              sendMessageCustomEmojis.delete()
+              return interaction.reply({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`<a:animated_cross:925091847905366096> The poll was deleted as the emojis you provided were invalid. \n\nOptions: ${optionNames.map(e => e).join(", ")} \nEmojis: ${customEmojis.map(e => e).join(", ")}`)],ephemeral: true})
+            } 
             }  
           
           return interaction.reply({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`<a:animated_tick:925091839030231071> The poll was successfully sent to ${gChannel}.`)],ephemeral: true})
