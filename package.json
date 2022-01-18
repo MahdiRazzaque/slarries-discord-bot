@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A bot created for the Slarries discord server.",
   "main": "./structures/bot.js",
+  "type": "module",
   "engines": {
     "node": ">=16.0.0",
     "npm": ">=6.0.0"
