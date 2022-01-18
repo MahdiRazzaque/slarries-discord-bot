@@ -3,14 +3,13 @@ const { guild_log_colour, guild_logs_id, nicknameChange_logging } = require("../
 
 module.exports = {
   name: "guildMemberUpdate",
+  disabled: false,
   /**
    * @param {Client} client
    * @param {GuildMember} oldMember
    * @param {GuildMember} newMember
    */
   execute(oldMember, newMember, client) {
-    if (!nicknameChange_logging) return;
-    if(oldMember.nickname == newMember.nickname) return;
 
     const Log = new MessageEmbed()
     .setColor(guild_log_colour)
