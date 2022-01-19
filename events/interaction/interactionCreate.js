@@ -3,6 +3,7 @@ const { owners, botOwners, command_logs_id, botCommandChannels } = require("../.
 
 module.exports = {
   name: "interactionCreate",
+  disabled: false,
   /**
    * @param {Client} client
    * @param {CommandInteraction} interaction

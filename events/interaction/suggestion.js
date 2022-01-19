@@ -3,6 +3,7 @@ const DB = require("../../structures/schemas/suggestDB");
 
 module.exports = {
     name:"interactionCreate",
+    disabled: false,
     /**
      * 
      * @param {ButtonInteraction} interaction

@@ -7,6 +7,7 @@ const port = 3000;
 
 module.exports = {
   name: "ready",
+  disabled: false,
   once: true,
   execute(client) {
     modmailClient.ready()

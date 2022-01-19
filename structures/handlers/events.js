@@ -11,10 +11,20 @@ module.exports = async (client, PG, Ascii) => {
       return Table.addRow(file.split("/")[7], "🔸 FAILED", "Event name is missing.");
   }
 
-    if (event.once) {
-      client.once(event.name, (...args) => event.execute(...args, client));
-    } else if (event.disabled == false) {
-      client.on(event.name, (...args) => event.execute(...args, client));
+    if(event.disabled) {
+      if(event.disabled == false) {
+        if (event.once) {
+          client.once(event.name, (...args) => event.execute(...args, client));
+        } else {
+          client.on(event.name, (...args) => event.execute(...args, client));
+        }
+      }
+    } else {
+      if (event.once) {
+        client.once(event.name, (...args) => event.execute(...args, client));
+      } else  {
+        client.on(event.name, (...args) => event.execute(...args, client));
+      }
     }
 
     await Table.addRow(event.name, "🔹 SUCCESSFUL");
