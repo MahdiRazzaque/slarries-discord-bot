@@ -9,7 +9,7 @@ module.exports = {
      * 
      * @param {ButtonInteraction} interaction
      */
-    async execute(interaction) {
+    async execute(interaction, client) {
         if(!interaction.isButton()) return;
        
         const { guild, customId, channel, member } = interaction;
@@ -55,19 +55,43 @@ module.exports = {
 
                     
                     try {
-                        //const MEMBER = guild.members.cache.get(docs.MembersID);
 
-                        const Message = await guild.channels.cache.get(transcripts_channel_id).send({ embeds: [Embed.setTitle(`Transcript type: ${docs.Type}\nID: ${docs.TicketID}`)], files: [attachment]}); //.setAuthor(MEMBER.user.tag, MEMBER.user.displayAvatarURL({ dynamic: true }))
+                        var claimedBy
+
+                        if(!docs.ClaimedBy) {
+                            claimedBy = "No one claimed this ticket."
+                        } else {
+                            claimedBy = `<@!${docs.ClaimedBy}>`
+                        }
+
+                        const transcriptEmbed = new MessageEmbed()
+                            .setColor("BLUE")
+                            .setTitle("Ticket Closed")
+                            .addFields(
+                                {name: "Ticket ID", value: `${docs.TicketID}`, inline: true},
+                                {name: "Type", value: `${docs.Type}`, inline: true},
+                                {name: "Claimed by", value: `${claimedBy}`, inline: true},
+                                {name: "Open time", value: `<t:${docs.OpenTime}:R>`, inline: true},
+                                {name: "Closed time", value: `<t:${parseInt(Date.now() / 1000)}:R>`, inline: true},
+                                {name: "Opened by", value: `<@!${docs.MembersID[0]}>`, inline: true},
+                                {name: "Members", value: `<@!${docs.MembersID.map(m => m).join(">, <@!")}>`, inline: true},
+                            )
+
+                        const Message = await guild.channels.cache.get(transcripts_channel_id).send({ embeds: [transcriptEmbed], files: [attachment]}); 
                         
                         interaction.reply({ embeds: [Embed.setDescription(`The transcript is now saved [TRANSCRIPT](${Message.url})`)]});
-                    
-                        //const dmEmbed = new MessageEmbed().setColor("DARK_AQUA").setTitle(`Your ticket was closed in ${guild.name}`).addFields({name: "Transcript Type", value: `${docs.Type}`, inline: true}, {name: "Ticket ID", value: `${docs.TicketID}`, inline: true})
-                        
+
+                        for (var i = 0; i < docs.MembersID.length; i++) {
+                            var member = client.users.cache.get(docs.MembersID[i]);
+
+                            member.send({embeds: [transcriptEmbed.setTitle(`Ticket closed in ${interaction.guild.name}`)]}).catch((e) => {})
+                        }
                     
                         setTimeout(() => {channel.delete()}, 10 * 500)
                     } catch (e) {
+                        console.log(e)
                         interaction.channel.send({embeds: [new MessageEmbed().setColor("RED").setDescription("An error occurred (Most likely the member left). \n\n This channel will now be deleted in 10sec and a transcript will automatically be generated.")]});
-                        const failedMessage = await guild.channels.cache.get(transcripts_channel_id).send({ embeds: [Embed.setAuthor({name: `${docs.MembersID}`}).setTitle(`Transcript type: ${docs.Type}\nID: ${docs.TicketID}`)], files: [attachment]});
+                        const failedMessage = await guild.channels.cache.get(transcripts_channel_id).send({ embeds: [transcriptEmbed.setFooter({text: "This ticket failed to close, so it was closed automatically."})], files: [attachment]});
                         setTimeout(() => {channel.delete()}, 10 * 1000)    
                     }
                     break;
@@ -75,9 +99,9 @@ module.exports = {
                     if(docs.Claimed == true) 
                         return interaction.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`This ticket has already been claimed by <@${docs.ClaimedBy}>`)], ephemeral: true});
 
-                    await DB.updateOne({ChannelID: channel.id}, {Claimed: true, ClaimedBy: member.id});
+                    await DB.updateOne({ChannelID: channel.id}, {Claimed: true, ClaimedBy: interaction.member.id});
 
-                    Embed.setDescription(`🛄 This ticket has now been claimed by ${member}`)
+                    Embed.setDescription(`🛄 This ticket has now been claimed by ${interaction.member}`)
                     interaction.reply({embeds: [Embed]})
             }
         });

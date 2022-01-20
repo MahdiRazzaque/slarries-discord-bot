@@ -12,5 +12,6 @@ module.exports = model(
         Type: String,
         Claimed: Boolean,
         ClaimedBy: String,
+        OpenTime: String,
     })
 )
