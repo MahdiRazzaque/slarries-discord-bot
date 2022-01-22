@@ -82,5 +82,8 @@ module.exports = {
     }
 
     interaction.editReply({content: `${interaction.member}`, embeds: [Embed.setDescription(`**Finished sending dm to all users with the role ${role}**`).addFields({name: "Successful DMs", value: `${successfulMembers}`}, {name: "Failed DMs", value: `${failedMembers}`, inline: true}, {name: "Successful members", value: `${successfulMembersMessage}`}, {name: "Failed members", value: `${failedMembersMessage}`})]})
+
+    await interaction.channel.send({content: `${interaction.member} DM role finished.`}).then((m) => {setTimeout(() => {m.delete().catch(() => {})}, 1 * 5000)
+    })
   },
 };

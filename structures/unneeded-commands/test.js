@@ -3,7 +3,7 @@ const fetch = require("node-fetch");
 
 
 const { MessageEmbed, Message } = require("discord.js");
-const { admin_embed_colour } = require("../../structures/config.json");
+const { admin_embed_colour } = require("../config.json");
 
 module.exports = {
   name: "test",
