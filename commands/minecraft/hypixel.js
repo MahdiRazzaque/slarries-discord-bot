@@ -2,7 +2,6 @@ const { CommandInteraction, MessageEmbed, Client, Message } = require("discord.j
 const { hypixel, errors } = require('../../structures/hypixel');
 const commaNumber = require('comma-number');
 const { pagination } = require("reconlx");
-const simplydjs = require("simply-djs")
 const { minecraft_embed_colour } = require("../../structures/config.json")
 
 module.exports = {

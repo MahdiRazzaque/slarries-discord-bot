@@ -10,6 +10,8 @@ module.exports = {
      * @returns 
      */
     execute(message, client) {
+        if(message.channel.type === "DM") return;
+        if(message.author.bot) return;
         if (message.content.includes('@here') || message.content.includes('@everyone')) return;
         
         if (message.mentions.has(client.user)) 
