@@ -42,17 +42,17 @@ module.exports = {
     switch (choices) {
       case "guildMemberAdd": {
         client.emit("guildMemberAdd", interaction.member);
-        interaction.reply({embeds: [new MessageEmbed().setColor(developer_embed_colour).setDescription("<a:animated_tick:925091839030231071> Emmited a guildMemberAdd event.")],ephemeral: true})
+        interaction.reply({embeds: [new MessageEmbed().setColor(developer_embed_colour).setDescription(`${client.emojisObj.animated_tick} Emmited a guildMemberAdd event.`)],ephemeral: true})
       }
         break;
       case "guildMemberRemove": {
         client.emit("guildMemberRemove", interaction.member);
-        interaction.reply({embeds: [new MessageEmbed().setColor(developer_embed_colour).setDescription("<a:animated_tick:925091839030231071> Emmited a guildMemberRemove event.")],ephemeral: true})
+        interaction.reply({embeds: [new MessageEmbed().setColor(developer_embed_colour).setDescription(`${client.emojisObj.animated_tick} Emmited a guildMemberRemove event.`)],ephemeral: true})
       }
         break;
       case "guildCreate": {
         client.emit("guildCreate", interaction.guild);
-        interaction.reply({embeds: [new MessageEmbed().setColor(developer_embed_colour).setDescription("<a:animated_tick:925091839030231071> Emmited a guildCreate event.")],ephemeral: true})
+        interaction.reply({embeds: [new MessageEmbed().setColor(developer_embed_colour).setDescription(`${client.emojisObj.animated_tick} Emmited a guildCreate event.`)],ephemeral: true})
       }
         break;
     }

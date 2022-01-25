@@ -32,13 +32,13 @@ module.exports = {
     const message = options.getString("message") || "none";
     const member = options.getUser("user")
 
-    if(member.id === client.user.id) return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setTitle("Error <a:animated_cross:925091847905366096>").setDescription("🙄 I cannot DM myself.")]})
+    if(member.id === client.user.id) return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setTitle(`Error ${client.emojisObj.animated_cross}`).setDescription("🙄 I cannot DM myself.")]})
     
     try {
       const sendMessage = await member.send(message);
-      interaction.reply({embeds: [new MessageEmbed().setColor(admin_embed_colour).setDescription(`<a:animated_tick:925091839030231071> The message was successfully sent to ${member}.`)],ephemeral: true});
+      interaction.reply({embeds: [new MessageEmbed().setColor(admin_embed_colour).setDescription(`${client.emojisObj.animated_tick} The message was successfully sent to ${member}.`)],ephemeral: true});
     } catch (error) {
-      return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("<a:animated_cross:925091847905366096> An error occured. Mostly likely, the users DMs are closed.")], ephemeral: true}) 
+      return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_tick} An error occured. Mostly likely, the users DMs are closed.`)], ephemeral: true}) 
     }
   },
 };

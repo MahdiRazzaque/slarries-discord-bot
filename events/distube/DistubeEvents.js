@@ -1,12 +1,12 @@
 const client = require("../../structures/bot");
-const { music_embed_colour } = require("../../structures/config.json")
+const { system_embed_colour } = require("../../structures/config.json")
 const { MessageEmbed } = require('discord.js');
 
 const status = queue => `Volume: \`${queue.volume}%\` | Filter: \`${queue.filters.join(", ") || "Off"}\` | Loop: \`${queue.repeatMode ? queue.repeatMode === 2 ? "All Queue" : "This Song" : "Off"}\` | Autoplay: \`${queue.autoplay ? "On" : "Off"}\``
 client.distube
-    .on("playSong", (queue, song) => queue.textChannel.send({embeds: [new MessageEmbed().setColor(music_embed_colour).setDescription(`🎶 | Playing \`${song.name}\` - \`${song.formattedDuration}\`\nRequested by: ${song.user}\n${status(queue)}`)]}))
-    .on("addSong", (queue, song) => queue.textChannel.send({embeds: [new MessageEmbed().setColor(music_embed_colour).setDescription(`🎶 | Added ${song.name} - \`${song.formattedDuration}\` to the queue by ${song.user}`)]}))
-    .on("addList", (queue, playlist) => queue.textChannel.send({embeds: [new MessageEmbed().setColor(music_embed_colour).setDescription(`🎶 | Added \`${playlist.name}\` playlist (${playlist.songs.length} songs) to queue\n${status(queue)}`)]}))
+    .on("playSong", (queue, song) => queue.textChannel.send({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`🎶 | Playing \`${song.name}\` - \`${song.formattedDuration}\`\nRequested by: ${song.user}\n${status(queue)}`)]}))
+    .on("addSong", (queue, song) => queue.textChannel.send({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`🎶 | Added ${song.name} - \`${song.formattedDuration}\` to the queue by ${song.user}`)]}))
+    .on("addList", (queue, playlist) => queue.textChannel.send({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`🎶 | Added \`${playlist.name}\` playlist (${playlist.songs.length} songs) to queue\n${status(queue)}`)]}))
     .on("error", (channel, e) => {
         channel.send({embeds: [new MessageEmbed().setColor("RED").setDescription(`❌ | An error encountered: ${e}`)]})
     })

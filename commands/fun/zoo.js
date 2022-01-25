@@ -40,7 +40,7 @@ module.exports = {
 
     const errembed = new MessageEmbed()
       .setColor("RED")
-      .setDescription(`<a:animated_cross:925091847905366096> **|** An error occured while running this command ╰（‵□′）╯`)
+      .setDescription(`${client.emojisObj.animated_cross} **|** An error occured while running this command ╰（‵□′）╯`)
       .addField("Error Info", `\`\`\`The API that we're using probably in maintenance\`\`\``);
 
     let data, response;

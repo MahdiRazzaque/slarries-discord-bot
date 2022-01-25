@@ -39,7 +39,7 @@ module.exports = {
     const choices = interaction.options.getString("choice");
     const opponent = interaction.options.getUser("opponent");
 
-    const Response = new MessageEmbed().setColor(fun_embed_colour).setDescription("\n <a:dogecoin:930531317463003247> **Flipping coin** <a:dogecoin:930531317463003247>");
+    const Response = new MessageEmbed().setColor(fun_embed_colour).setDescription(`\n ${client.emojisObj.dogecoin} **Flipping coin** ${client.emojisObj.dogecoin}`);
 
     if(opponent) {
         Response.addFields(
@@ -49,7 +49,7 @@ module.exports = {
     }
 
     var message = await interaction.channel.send({embeds: [Response]})
-    interaction.reply({embeds: [new MessageEmbed().setColor(fun_embed_colour).setDescription("<a:animated_tick:925091839030231071> Flipping coin")], ephemeral: true})
+    interaction.reply({embeds: [new MessageEmbed().setColor(fun_embed_colour).setDescription(`${client.emojisObj.animated_tick} Flipping coin`)], ephemeral: true})
 
     // for (var i = 0; i < 10; i++) {
     //     const coin = answers[Math.floor(Math.random() * answers.length)];

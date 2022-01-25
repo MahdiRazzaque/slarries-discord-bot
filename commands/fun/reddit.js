@@ -38,14 +38,14 @@ module.exports = {
       if (e) {
         if (e.message.startsWith("Request failed with status code")) {
           const Response = new MessageEmbed()
-            .setTitle("Error <a:animated_cross:925091847905366096>")
+            .setTitle(`Error ${client.emojisObj.animated_cross}`)
             .setColor("RED")
             .addField(`Subreddit does not exist:`, `\`\`\`${name}\`\`\``);
 
           await interaction.reply({ embeds: [Response], fetchReply: true });
         } else if (e) {
           const errorEmbed = new MessageEmbed()
-            .setTitle("Oh no... <a:animated_cross:925091847905366096>")
+            .setTitle(`Oh no... ${client.emojisObj.animated_cross}`)
             .setColor("RED")
             .addField("Error", `\`\`\`Please try again\`\`\``);
           console.log(e.message);

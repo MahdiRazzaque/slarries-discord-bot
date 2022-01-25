@@ -75,10 +75,10 @@ module.exports = {
         }
 
         if(!embed.title && !embed.description && !embed.fields[0]) {
-            embed.setDescription("<a:animated_cross:925091847905366096> You have not provided valid options! ")
+            embed.setDescription(`${client.emojisObj.animated_cross} You have not provided valid options! `)
             embed.setColor("RED")
         }
         const message = client.channels.cache.get(gChannel.id).send({embeds: [embed]});
-        interaction.reply({embeds: [new MessageEmbed().setColor(admin_embed_colour).setDescription(`<a:animated_tick:925091839030231071> The embed was successfully sent to ${gChannel} `)], ephemeral: true})
+        interaction.reply({embeds: [new MessageEmbed().setColor(admin_embed_colour).setDescription(`${client.emojisObj.animated_tick} The embed was successfully sent to ${gChannel} `)], ephemeral: true})
     }
 }

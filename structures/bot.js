@@ -1,6 +1,5 @@
 //Base for starting the bot
-const DiscordJS = require("discord.js");
-const { Client, Intents } = require("discord.js");
+const { Client, Intents, Collection, Guild } = require("discord.js");
 const fs = require("fs");
 const { promisify } = require("util");
 const { glob } = require("glob");
@@ -9,11 +8,13 @@ const Ascii = require("ascii-table");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const client = new DiscordJS.Client({ intents: 32767, partials: ["REACTION", "CHANNEL", "MESSAGE"] });
+const client = new Client({ intents: 32767, partials: ["REACTION", "CHANNEL", "MESSAGE"] });
 
 //Command Handler
-client.commands = new DiscordJS.Collection();
-client.events = new DiscordJS.Collection();
+client.commands = new Collection();
+client.events = new Collection();
+client.filters = new Collection();
+client.filtersLog = new Collection()
 
 require("../systems/giveawaySystem")(client);
 

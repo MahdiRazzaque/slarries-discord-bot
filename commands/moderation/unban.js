@@ -33,7 +33,7 @@ module.exports = {
 		const reason2 = "Invalid Permissions"
 		const per = this.permission
 
-		const Embed1 = new MessageEmbed().setTitle("Error <a:animated_cross:925091847905366096>").setColor("RED").setTimestamp()
+		const Embed1 = new MessageEmbed().setTitle(`Error ${client.emojisObj.animated_tick}`).setColor("RED").setTimestamp()
 			.addFields({name: "Command:", value: name}, 
             {name: "Reason", value: reason2}, 
             {name: "Needed Permissions", value: per}
@@ -45,7 +45,7 @@ module.exports = {
 		const reason = options.getString("reason");
 
 		if (reason.length > 512)
-            return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setTitle("Error <a:animated_cross:925091847905366096>").setDescription("Reason can't be more than 512 characters.").setTimestamp()], ephemeral: true});
+            return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setTitle(`Error ${client.emojisObj.animated_cross}`).setDescription("Reason can't be more than 512 characters.").setTimestamp()], ephemeral: true});
 		
         const SuccessEmbed = new MessageEmbed()
             .setColor(moderation_embed_colour)
@@ -56,7 +56,7 @@ module.exports = {
             )
         
             const ErrorEmbed = new MessageEmbed()
-			.setTitle(`Couldn't unban <@${userID}> from ${interaction.guild.name}. <a:animated_cross:925091847905366096>`)
+			.setTitle(`Couldn't unban <@${userID}> from ${interaction.guild.name}. ${client.emojisObj.animated_cross}`)
 			.setColor("RED")
 			.setTimestamp()
 			.addFields({

@@ -45,16 +45,16 @@ module.exports = {
       .setThumbnail(Target.user.avatarURL({ dynamic: true, size: 512 }));
 
     if (Target.id === interaction.member.id)
-      return interaction.reply({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle("Error <a:animated_cross:925091847905366096>").setDescription("🙄 You can't ban yourself")], ephemeral: true});
+      return interaction.reply({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle(`Error ${client.emojisObj.animated_cross}`).setDescription("🙄 You can't ban yourself")], ephemeral: true});
 
     if (Target.permissions.has("ADMINISTRATOR"))
-      return interaction.reply({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle("Error <a:animated_cross:925091847905366096>").setDescription("🙄 You can't ban an Admin")], ephemeral: true});
+      return interaction.reply({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle(`Error ${client.emojisObj.animated_cross}`).setDescription("🙄 You can't ban an Admin")], ephemeral: true});
 
     if (Target.permissions.has("MANAGE_GUILD"))
-      return interaction.reply({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle("Error <a:animated_cross:925091847905366096>").setDescription("🙄 You can't ban a Moderator")], ephemeral: true});
+      return interaction.reply({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle(`Error ${client.emojisObj.animated_cross}`).setDescription("🙄 You can't ban a Moderator")], ephemeral: true});
 
     if (Reason.length > 512)
-		  return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setTitle("Error <a:animated_cross:925091847905366096>").setDescription("Reason can't be more than 512 characters.")], ephemeral: true});
+		  return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setTitle(`Error ${client.emojisObj.animated_cross}`).setDescription("Reason can't be more than 512 characters.")], ephemeral: true});
 
     Target.send({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle(`👮 You've been banned From ${interaction.guild.name}!`).addFields({name: "Reason", value: Reason}, {name: "Banned by", value: interaction.member.user.tag})]})
 

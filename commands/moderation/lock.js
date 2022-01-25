@@ -32,7 +32,7 @@
          const Embed = new MessageEmbed();
 
          if(!channel.permissionsFor(guild.id).has("SEND_MESSAGES"))
-            return interaction.reply({embeds: [Embed.setColor("RED").setDescription("<a:animated_cross:925091847905366096> This channel is already locked.")], ephemeral: true})
+            return interaction.reply({embeds: [Embed.setColor("RED").setDescription(`${client.emojisObj.animated_cross} This channel is already locked.`)], ephemeral: true})
 
         channel.permissionOverwrites.edit(guild.id, {SEND_MESSAGES: false})
 

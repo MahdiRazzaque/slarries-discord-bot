@@ -43,17 +43,17 @@ module.exports = {
         { name: "Reason", value: `${Reason}` },
         { name: "Kicked by", value: `${interaction.member.user}` }
       )
-      .setAuthor(Target.user.tag, Target.user.avatarURL({ dynamic: true, size: 512 }))
+      .setAuthor({name: `${Target.user.tag}`, iconURL: `${Target.user.avatarURL({ dynamic: true, size: 512 })}`})
       .setThumbnail(Target.user.avatarURL({ dynamic: true, size: 512 }));
 
     if (Target.id === interaction.member.id)
-      return interaction.reply({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle("Error <a:animated_cross:925091847905366096>").setDescription("🙄 You can't kick yourself")], ephemeral: true});
+      return interaction.reply({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle(`Error ${client.emojisObj.animated_cross}`).setDescription("🙄 You can't kick yourself")], ephemeral: true});
 
     if (Target.permissions.has("ADMINISTRATOR"))
-      return interaction.reply({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle("Error <a:animated_cross:925091847905366096>").setDescription("🙄 You can't kick an Admin")], ephemeral: true});
+      return interaction.reply({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle(`Error ${client.emojisObj.animated_cross}`).setDescription("🙄 You can't kick an Admin")], ephemeral: true});
 
     if (Target.permissions.has("MANAGE_GUILD"))
-      return interaction.reply({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle("Error <a:animated_cross:925091847905366096>").setDescription("🙄 You can't kick an Moderator")], ephemeral: true});
+      return interaction.reply({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle(`Error ${client.emojisObj.animated_cross}`).setDescription("🙄 You can't kick an Moderator")], ephemeral: true});
 
     Target.send({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle(`👮 You've been kicked From ${interaction.guild.name}!`).addFields({name: "Reason", value: Reason}, {name: "Kicked by", value: interaction.member.user.tag})]})
 

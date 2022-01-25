@@ -112,10 +112,10 @@ module.exports = {
               },
             })
             .then(async () => {
-              successEmbed.setDescription("<a:animated_tick:925091839030231071> Giveaway was successfully started.");
+              successEmbed.setDescription(`${client.emojisObj.animated_tick} Giveaway was successfully started.`);
               return interaction.reply({embeds: [successEmbed], ephemeral: true})})
             .catch((err) => {
-              errEmbed.setDescription(`<a:animated_cross:925091847905366096> An error has occured \n\`${err}\``);
+              errEmbed.setDescription(`${client.emojisObj.animated_cross} An error has occured \n\`${err}\``);
               return interaction.reply({embeds: [errEmbed], ephemeral: true});
             });
         }
@@ -128,7 +128,7 @@ module.exports = {
 
           const giveaway = client.giveawaysManager.giveaways.find((g) => g.guildId === interaction.guildId && g.messageId === messageID);
 
-          if (!giveaway) {errorEmbed.setDescription(`<a:animated_cross:925091847905366096> Unable to find a giveaway with the messageid: ${messageId} in this guild.`);
+          if (!giveaway) {errorEmbed.setDescription(`${client.emojisObj.animated_cross} Unable to find a giveaway with the messageid: ${messageId} in this guild.`);
             return interaction.reply({ embeds: [errEmbed], ephemeral: true });
           }
 
@@ -138,11 +138,11 @@ module.exports = {
                 const messageId = interaction.options.getString("message-id");
                 client.giveawaysManager.end(messageId)
                   .then(() => {
-                    successEmbed.setDescription("<a:animated_tick:925091839030231071> Giveaway has been ended.");
+                    successEmbed.setDescription(`${client.emojisObj.animated_tick} Giveaway has been ended.`);
                     return interaction.reply({embeds: [successEmbed], ephemeral: true})
                   })
                   .catch((err) => {
-                    errEmbed.setDescription(`<a:animated_cross:925091847905366096> An error has occured \n\`${err}\``);
+                    errEmbed.setDescription(`${client.emojisObj.animated_cross} An error has occured \n\`${err}\``);
                     return interaction.reply({embeds: [errEmbed], ephemeral: true});
                   });
               }
@@ -153,11 +153,11 @@ module.exports = {
                 const messageId = interaction.options.getString("message-id");
                 client.giveawaysManager.pause(messageId)
                   .then(() => {
-                    successEmbed.setDescription("<a:animated_tick:925091839030231071> Giveaway has been paused.");
+                    successEmbed.setDescription(`${client.emojisObj.animated_cross} Giveaway has been paused.`);
                     return interaction.reply({embeds: [successEmbed], ephemeral: true,});
                   })
                   .catch((err) => {
-                    errEmbed.setDescription(`<a:animated_cross:925091847905366096> An error has occured \n\`${err}\``);
+                    errEmbed.setDescription(`${client.emojisObj.animated_cross} An error has occured \n\`${err}\``);
                     return interaction.reply({embeds: [errEmbed], ephemeral: true})});
               }
               break;
@@ -167,11 +167,11 @@ module.exports = {
                 const messageId = interaction.options.getString("message-id");
                 client.giveawaysManager.unpause(messageId)
                   .then(() => {
-                    successEmbed.setDescription("<a:animated_tick:925091839030231071> Giveaway has been unpaused.");
+                    successEmbed.setDescription(`${client.emojisObj.animated_tick} Giveaway has been unpaused.`);
                     return interaction.reply({embeds: [successEmbed], ephemeral: true});
                   })
                   .catch((err) => {
-                    errEmbed.setDescription(`An error has occured \n\`${err}\``);
+                    errEmbed.setDescription(`${client.emojisObj.animated_cross} An error has occured \n\`${err}\``);
                     return interaction.reply({embeds: [errEmbed], ephemeral: true});
                   });
               }
@@ -182,11 +182,11 @@ module.exports = {
                 const messageId = interaction.options.getString("message-id");
                 client.giveawaysManager.reroll(messageId)
                   .then(() => {
-                    successEmbed.setDescription("<a:animated_tick:925091839030231071> Giveaway has been rerolled.");
+                    successEmbed.setDescription(`${client.emojisObj.animated_tick} Giveaway has been rerolled.`);
                     return interaction.reply({embeds: [successEmbed], ephemeral: true});
                   })
                   .catch((err) => {
-                    errEmbed.setDescription(`<a:animated_cross:925091847905366096> An error has occured \n\`${err}\``);
+                    errEmbed.setDescription(`${client.emojisObj.animated_cross} An error has occured \n\`${err}\``);
                     return interaction.reply({embeds: [errEmbed], ephemeral: true});
                   });
               }
@@ -197,11 +197,11 @@ module.exports = {
                 const messageId = interaction.options.getString("message-id");
                 client.giveawaysManager.delete(messageId)
                   .then(() => {
-                    successEmbed.setDescription("<a:animated_tick:925091839030231071> Giveaway has been deleted.");
+                    successEmbed.setDescription(`${client.emojisObj.animated_tick} Giveaway has been deleted.`);
                     return interaction.reply({embeds: [successEmbed], ephemeral: true});
                   })
                   .catch((err) => {
-                    errEmbed.setDescription(`<a:animated_cross:925091847905366096> An error has occured \n\`${err}\``);
+                    errEmbed.setDescription(`${client.emojisObj.animated_cross} An error has occured \n\`${err}\``);
                     return interaction.reply({embeds: [errEmbed], ephemeral: true});
                   });
               }

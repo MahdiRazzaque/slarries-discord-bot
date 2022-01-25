@@ -30,7 +30,7 @@ module.exports = {
    *
    * @param {CommandInteraction} interaction
    */
-  async execute(interaction) {     
+  async execute(interaction, client) {     
     const { channel, options } = interaction;
 
     const Amount = options.getNumber("amount");
@@ -41,7 +41,7 @@ module.exports = {
     const Response = new MessageEmbed().setColor(moderation_embed_colour);
 
     if (Amount > 100 || Amount <= 0) {
-      Response.setDescription(`Amount cannot exceed 100, and cannot be under 1.`);
+      Response.setDescription(`${client.emojisObj.animated_cross} Amount cannot exceed 100, and cannot be under 1.`);
       return interaction.reply({ embeds: [Response], ephemeral: true });
     }
 

@@ -49,15 +49,15 @@ module.exports = {
 
             switch (type) {
                 case 'add':
-                        if(!text) return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("<a:animated_cross:925091847905366096> Please set an activity text to be set.")], ephemeral: true})
-                        if(!activity) return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("<a:animated_cross:925091847905366096> Please set an activity type to be set.")], ephemeral: true})
+                        if(!text) return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} Please set an activity text to be set.`)], ephemeral: true})
+                        if(!activity) return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} Please set an activity type to be set.`)], ephemeral: true})
                         client.user.setActivity({ type: `${activity}`, name: `${text}` });
                         client.customStatus = true
-                        interaction.reply({embeds: [new MessageEmbed().setColor(developer_embed_colour).setDescription(`<a:animated_tick:925091839030231071> The activity has been set to **${activity}** ${text}.`)], ephemeral: true });
+                        interaction.reply({embeds: [new MessageEmbed().setColor(developer_embed_colour).setDescription(`${client.emojisObj.animated_tick} The activity has been set to **${activity}** ${text}.`)], ephemeral: true });
                     break;
                 case 'remove': {
                         client.user.setPresence({ activity: null });
-                        interaction.reply({embeds: [new MessageEmbed().setColor(developer_embed_colour).setDescription("<a:animated_tick:925091839030231071> The activity has been removed. ")], ephemeral: true });
+                        interaction.reply({embeds: [new MessageEmbed().setColor(developer_embed_colour).setDescription(`${client.emojisObj.animated_tick} The activity has been removed. `)], ephemeral: true });
                     break;
                 }
             }

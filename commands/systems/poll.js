@@ -59,10 +59,10 @@ module.exports = {
           case "numbered-poll":
 
             if(!options)
-              return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("<a:animated_cross:925091847905366096> This type of poll requires options to be set.")], ephemeral: true})
+              return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This type of poll requires options to be set.`)], ephemeral: true})
 
             if(options.includes("^^")) 
-            return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`<a:animated_cross:925091847905366096> The poll was not sent as you used \`^^\` in your options (which is used in the custom emoji poll). Please try again using the right type-of-poll.`)],ephemeral: true})
+            return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} The poll was not sent as you used \`^^\` in your options (which is used in the custom emoji poll). Please try again using the right type-of-poll.`)],ephemeral: true})
 
             const splitOptions = [];
             const emoji = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣']
@@ -75,7 +75,7 @@ module.exports = {
             }); 
 
             if (splitOptions.length > 9)
-              return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("<a:animated_cross:925091847905366096> Numbered polls can only have 9 options.")], ephemeral: true})
+              return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} Numbered polls can only have 9 options.`)], ephemeral: true})
 
             let pollOptions = ` `
             
@@ -84,7 +84,7 @@ module.exports = {
               }
             
             if(pollOptions.length > 4096)
-            return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`<a:animated_cross:925091847905366096> This poll is ${pollOptions.length - 4096} characters too long.`)], ephemeral: true})
+            return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This poll is ${pollOptions.length - 4096} characters too long.`)], ephemeral: true})
     
               const pollEmbed = new MessageEmbed()
               .setColor("AQUA")
@@ -98,7 +98,7 @@ module.exports = {
                 sendMessage.react(`${emoji[i]}`);
               }
             
-            return interaction.reply({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`<a:animated_tick:925091839030231071> The poll was successfully sent to ${gChannel}.`)],ephemeral: true})
+            return interaction.reply({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`${client.emojisObj.animated_tick} The poll was successfully sent to ${gChannel}.`)],ephemeral: true})
             break;
 
           case "yes-no-poll":
@@ -114,14 +114,14 @@ module.exports = {
             sendMessageYOrNo.react("🤷‍♂️")
 
             if(options) {
-              return interaction.reply({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`<a:animated_tick:925091839030231071> The poll was successfully sent to ${gChannel}. \n*Since this a y/n poll, the options you provided were ignored.*`)],ephemeral: true})
+              return interaction.reply({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`${client.emojisObj.animated_tick} The poll was successfully sent to ${gChannel}. \n*Since this a y/n poll, the options you provided were ignored.*`)],ephemeral: true})
             } else {
-              return interaction.reply({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`<a:animated_tick:925091839030231071> The poll was successfully sent to ${gChannel}.`)],ephemeral: true})
+              return interaction.reply({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`${client.emojisObj.animated_tick} The poll was successfully sent to ${gChannel}.`)],ephemeral: true})
             }            
             break;
           case "custom-emoji-poll":
             if(!options)
-              return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("<a:animated_cross:925091847905366096> This type of poll requires options to be set.")], ephemeral: true})
+              return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This type of poll requires options to be set.`)], ephemeral: true})
 
             const customSplitOptions = [];
             const optionNames = [];
@@ -141,9 +141,9 @@ module.exports = {
             }
 
             if (optionNames.length > customEmojis.length) {
-              return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("<a:animated_cross:925091847905366096> You didn't supply a valid number of emojis.")], ephemeral: true})
+              return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You didn't supply a valid number of emojis.`)], ephemeral: true})
             } else if (optionNames.length < customEmojis.length) {
-              return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("<a:animated_cross:925091847905366096> You didn't supply a valid number of options.")], ephemeral: true})
+              return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You didn't supply a valid number of options.`)], ephemeral: true})
             }
               
             let custompollOptions = ` `
@@ -153,7 +153,7 @@ module.exports = {
             }
 
             if(custompollOptions.length > 4096)
-              return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`<a:animated_cross:925091847905366096> This poll is ${custompollOptions.length - 4096} characters too long.`)], ephemeral: true})
+              return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This poll is ${custompollOptions.length - 4096} characters too long.`)], ephemeral: true})
 
             const customPollEmbed = new MessageEmbed()
             .setColor("AQUA")
@@ -168,11 +168,11 @@ module.exports = {
               await sendMessageCustomEmojis.react(`${customEmojis[i]}`);
             } catch (error) {
               sendMessageCustomEmojis.delete()
-              return interaction.reply({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`<a:animated_cross:925091847905366096> The poll was deleted as the emojis you provided were invalid. \n\nOptions: ${optionNames.map(e => e).join(", ")} \nEmojis: ${customEmojis.map(e => e).join(", ")}`)],ephemeral: true})
+              return interaction.reply({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`${client.emojisObj.animated_cross} The poll was deleted as the emojis you provided were invalid. \n\nOptions: ${optionNames.map(e => e).join(", ")} \nEmojis: ${customEmojis.map(e => e).join(", ")}`)],ephemeral: true})
             } 
             }  
           
-          return interaction.reply({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`<a:animated_tick:925091839030231071> The poll was successfully sent to ${gChannel}.`)],ephemeral: true})
+          return interaction.reply({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`${client.emojisObj.animated_tick} The poll was successfully sent to ${gChannel}.`)],ephemeral: true})
           break;
         }       
     }

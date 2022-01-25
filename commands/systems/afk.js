@@ -46,7 +46,7 @@ module.exports = {
                         {new: true, upsert: true}
                     )
 
-                    Embed.setColor("GREEN").setDescription(`<a:animated_tick:925091839030231071> Your AFK status has been updated to: ${afkStatus}`)
+                    Embed.setColor("GREEN").setDescription(`${client.emojisObj.animated_tick} Your AFK status has been updated to: ${afkStatus}`)
 
                     return interaction.reply({embeds: [Embed], ephemeral: true})
                 }
@@ -55,7 +55,7 @@ module.exports = {
                         {GuildID: guild.id, UserID: user.id},
                     )
 
-                    Embed.setColor("GREEN").setDescription(`<a:animated_tick:925091839030231071> Your AFK status has been removed.`)
+                    Embed.setColor("GREEN").setDescription(`${client.emojisObj.animated_tick} Your AFK status has been removed.`)
 
                     return interaction.reply({embeds: [Embed], ephemeral: true})
 

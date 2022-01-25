@@ -81,7 +81,7 @@ module.exports = {
           Suggestion: suggestion
         }
       ]})
-      interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`<a:animated_tick:925091839030231071> Your suggestion was successfully created and sent to ${suggestionsChannel}`)], ephemeral: true})
+      interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Your suggestion was successfully created and sent to ${suggestionsChannel}`)], ephemeral: true})
     } catch (err) {
       console.log(err);
     }

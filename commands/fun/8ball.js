@@ -26,7 +26,7 @@ module.exports = {
     const question = interaction.options.getString("question");
 
     if (question.length > 2000){
-      return interaction.reply({embeds: [new MessageEmbed().setTitle("Can't run code with the strings given. <a:animated_cross:925091847905366096> ").setColor("RED").setDescription("Question Can't Be More Than 2000 Characters")]});
+      return interaction.reply({embeds: [new MessageEmbed().setTitle(`${client.emojisObj.animated_cross} Can't run code with the strings given.`).setColor("RED").setDescription("Question Can't Be More Than 2000 Characters")]});
     }
 
     const Response = new MessageEmbed()

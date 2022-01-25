@@ -10,6 +10,19 @@ module.exports = {
     permission: "ADMINISTRATOR",
     options: [
         {
+            name: "player-information",
+            description: "General stats about a player",
+            type: "SUB_COMMAND",
+            options: [
+                { 
+                    name: "player", 
+                    description: "Provide the name of the player", 
+                    type: "STRING", 
+                    required: true
+                }
+            ]
+        },
+        {
             name: "bedwars",
             description: "Bedwars stats",
             type: "SUB_COMMAND",
@@ -61,6 +74,86 @@ module.exports = {
         const player = interaction.options.getString("player");
         
         switch(interaction.options.getSubcommand()) {
+            case "player-information":
+                hypixel.getPlayer(player, { guild: true }).then(async (player) => {
+                    if (!player.isOnline) {
+                        playerIsOnline = "Offline"
+                    } else if (player.isOnline) {
+                        playerIsOnline = "Online"
+                    }
+        
+                    if (player.mcVersion == null) {
+                        playerMinecraftVersion = "Unknown";
+                    } else if (player.mcVersion != null) {
+                        playerMinecraftVersion = player.mcVersion;
+                    }
+        
+                    if (player.rank == 'Default') {
+                        playerRank = "Default";
+                    } else if (player.rank != 'Default') {
+                        playerRank = player.rank;
+                    }
+                    
+                    const playerEmbed = new MessageEmbed()
+                        .setColor(minecraft_embed_colour)
+                        .setAuthor({name: 'Player Stats', iconURL: 'https://i.imgur.com/tRe29vU.jpeg'})
+                        .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
+                        .addField("General Stats",
+                        `\`•\` **Level**: \`${commaNumber(player.level)}\`
+                        \`•\` **AP**: \`${commaNumber(player.achievementPoints)}\`
+                        \`•\` **Karma**: \`${commaNumber(player.karma)}\`
+                        \`•\` **Rank**: \`${playerRank}\`
+                        \`•\` **MC Version**: \`${playerMinecraftVersion}\`
+                        `, true)
+
+                    if (player.guild !== null && player.guild.tag == null) {
+                        playerEmbed.setTitle(`[${player.rank}] ${player.nickname} [${player.guild.tag}]`)
+                    } else {
+                        playerEmbed.setTitle(`[${player.rank}] ${player.nickname}`)
+                    }
+
+                    if (player.guild !== null) {
+                        playerEmbed.addField("Guild",
+                        `\`•\` **Name**: \`${player.guild.name}\`
+                        \`•\` **Rank**: \`${commaNumber(player.achievementPoints)}✫\`
+                        \`•\` **Karma**: \`${commaNumber(player.karma)}\`
+                        \`•\` **Weekly experience**: \`${player.guild.totalWeeklyGexp}\`
+                        `, true)
+                    }
+
+                    var socialMedias = ``
+                    if(player.socialMedia) {
+                        for (var i = 0; i < player.socialMedia.length; i++) {
+                            socialMedias += `\`•\` **${player.socialMedia[i].name}**: \`${player.socialMedia[i].link}\`\n`
+                        }
+                    }
+                    playerEmbed.addField("Socials", `${socialMedias}`)
+
+                    await interaction.reply({ embeds: [playerEmbed], allowedMentions: { repliedUser: false } })   
+                    
+
+                }).catch(e => {
+                    console.log(e)
+                    if (e.message === errors.PLAYER_DOES_NOT_EXIST) {
+                        const player404 = new MessageEmbed()
+                            .setColor("RED")
+                            .setDescription(`${client.emojisObj.animated_cross} I could not find that player in the API. Check spelling and name history.`)
+                            interaction.reply({ embeds: [player404], allowedMentions: { repliedUser: false }, ephemeral: true })
+                    } else if (e.message === errors.PLAYER_HAS_NEVER_LOGGED) {
+                        const neverLogged = new MessageEmbed()
+                            .setColor("RED")
+                            .setDescription(`${client.emojisObj.animated_cross} That player has never logged into Hypixel.`)
+                            interaction.reply({ embeds: [neverLogged], allowedMentions: { repliedUser: false }, ephemeral: true })
+                    } else {
+                        const error = new MessageEmbed()
+                            .setColor("RED")
+                            .setDescription(`${client.emojisObj.animated_cross} An error has occurred.`)
+                            interaction.reply({ embeds: [error], allowedMentions: { repliedUser: false }, ephemeral: true })
+                    }       
+                });
+                break;
+
+
             case "bedwars":
                 hypixel.getPlayer(player).then(async(player) => {
                     const bedwarsOverall = new MessageEmbed()
@@ -818,17 +911,17 @@ module.exports = {
                     if (e.message === errors.PLAYER_DOES_NOT_EXIST) {
                         const player404 = new MessageEmbed()
                             .setColor("RED")
-                            .setDescription('<a:animated_cross:925091847905366096> I could not find that player in the API. Check spelling and name history.')
+                            .setDescription(`${client.emojisObj.animated_cross} I could not find that player in the API. Check spelling and name history.`)
                             interaction.reply({ embeds: [player404], allowedMentions: { repliedUser: false }, ephemeral: true })
                     } else if (e.message === errors.PLAYER_HAS_NEVER_LOGGED) {
                         const neverLogged = new MessageEmbed()
                             .setColor("RED")
-                            .setDescription('<a:animated_cross:925091847905366096> That player has never logged into Hypixel.')
+                            .setDescription(`${client.emojisObj.animated_cross} That player has never logged into Hypixel.`)
                             interaction.reply({ embeds: [neverLogged], allowedMentions: { repliedUser: false }, ephemeral: true })
                     } else {
                         const error = new MessageEmbed()
                             .setColor("RED")
-                            .setDescription(`<a:animated_cross:925091847905366096> An error has occurred. ${e}`)
+                            .setDescription(`${client.emojisObj.animated_cross} An error has occurred.`)
                             interaction.reply({ embeds: [error], allowedMentions: { repliedUser: false }, ephemeral: true })
                     }       
                 });
@@ -861,17 +954,17 @@ module.exports = {
                             if (e.message === errors.PLAYER_DOES_NOT_EXIST) {
                                 const player404 = new MessageEmbed()
                                     .setColor("RED")
-                                    .setDescription('<a:animated_cross:925091847905366096> I could not find that player in the API. Check spelling and name history.')
+                                    .setDescription(`${client.emojisObj.animated_cross} I could not find that player in the API. Check spelling and name history.`)
                                     interaction.reply({ embeds: [player404], allowedMentions: { repliedUser: false }, ephemeral: true })
                             } else if (e.message === errors.PLAYER_HAS_NEVER_LOGGED) {
                                 const neverLogged = new MessageEmbed()
                                     .setColor("RED")
-                                    .setDescription('<a:animated_cross:925091847905366096> That player has never logged into Hypixel.')
+                                    .setDescription(`${client.emojisObj.animated_cross} That player has never logged into Hypixel.`)
                                     interaction.reply({ embeds: [neverLogged], allowedMentions: { repliedUser: false }, ephemeral: true })
                             } else {
                                 const error = new MessageEmbed()
                                     .setColor("RED")
-                                    .setDescription(`<a:animated_cross:925091847905366096> An error has occurred. \n ${e}`)
+                                    .setDescription(`${client.emojisObj.animated_cross} An error has occurred.`)
                                     interaction.reply({ embeds: [error], allowedMentions: { repliedUser: false }, ephemeral: true })
                             }       
                         });
@@ -902,17 +995,17 @@ module.exports = {
                             if (e.message === errors.PLAYER_DOES_NOT_EXIST) {
                                 const player404 = new MessageEmbed()
                                     .setColor("RED")
-                                    .setDescription('<a:animated_cross:925091847905366096> I could not find that player in the API. Check spelling and name history.')
+                                    .setDescription(`${client.emojisObj.animated_cross} I could not find that player in the API. Check spelling and name history.`)
                                     interaction.reply({ embeds: [player404], allowedMentions: { repliedUser: false }, ephemeral: true })
                             } else if (e.message === errors.PLAYER_HAS_NEVER_LOGGED) {
                                 const neverLogged = new MessageEmbed()
                                     .setColor("RED")
-                                    .setDescription('<a:animated_cross:925091847905366096> That player has never logged into Hypixel.')
+                                    .setDescription(`${client.emojisObj.animated_cross} That player has never logged into Hypixel.`)
                                     interaction.reply({ embeds: [neverLogged], allowedMentions: { repliedUser: false }, ephemeral: true })
                             } else {
                                 const error = new MessageEmbed()
                                     .setColor("RED")
-                                    .setDescription('<a:animated_cross:925091847905366096> An error has occurred.')
+                                    .setDescription(`${client.emojisObj.animated_cross} An error has occurred.`)
                                     interaction.reply({ embeds: [error], allowedMentions: { repliedUser: false }, ephemeral: true })
                             }       
                         });
@@ -991,17 +1084,17 @@ module.exports = {
                             if (e.message === errors.PLAYER_DOES_NOT_EXIST) {
                                 const player404 = new MessageEmbed()
                                     .setColor("RED")
-                                    .setDescription('<a:animated_cross:925091847905366096> I could not find that player in the API. Check spelling and name history.')
+                                    .setDescription(`${client.emojisObj.animated_cross} I could not find that player in the API. Check spelling and name history.`)
                                     interaction.reply({ embeds: [player404], allowedMentions: { repliedUser: false }, ephemeral: true })
                             } else if (e.message === errors.PLAYER_HAS_NEVER_LOGGED) {
                                 const neverLogged = new MessageEmbed()
                                     .setColor("RED")
-                                    .setDescription('<a:animated_cross:925091847905366096> That player has never logged into Hypixel.')
+                                    .setDescription(`${client.emojisObj.animated_cross} That player has never logged into Hypixel.`)
                                     interaction.reply({ embeds: [neverLogged], allowedMentions: { repliedUser: false }, ephemeral: true })
                             } else {
                                 const error = new MessageEmbed()
                                     .setColor("RED")
-                                    .setDescription(`<a:animated_cross:925091847905366096> An error has occurred.`)
+                                    .setDescription(`${client.emojisObj.animated_cross} An error has occurred.`)
                                     interaction.reply({embeds: [error], allowedMentions: { repliedUser: false }, ephemeral: true })
                             }       
                         });

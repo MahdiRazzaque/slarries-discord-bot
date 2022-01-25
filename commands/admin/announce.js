@@ -30,6 +30,6 @@ module.exports = {
     let announcementChannel = client.channels.cache.get(announcement_channel);
     announcementChannel.send(`${announcement}\n ||@everyone||`); 
 
-    interaction.reply({embeds: [new MessageEmbed().setColor(admin_embed_colour).setDescription(`<a:animated_tick:925091839030231071> The announcement was successfully sent to ${announcementChannel}.`)],ephemeral: true});
+    interaction.reply({embeds: [new MessageEmbed().setColor(admin_embed_colour).setDescription(`${client.emojisObj.animated_tick} The announcement was successfully sent to ${announcementChannel}.`)],ephemeral: true});
   },
 };

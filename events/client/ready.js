@@ -28,13 +28,22 @@ module.exports = {
     });
     console.log("Ready! 🟢");
 
-    require("../../systems/lockdownSystem")(client);
-
     if (!process.env.Database) return;
     mongoose.connect(process.env.Database, { useNewUrlParser: true, useUnifiedTopology: true })
       .then(() => { console.log("The client is now connected to the database. 📚") })
       .catch((err) => { console.log(err) });
 
+    require("../../systems/lockdownSystem")(client);
+    require("../../systems/chatFilterSystem")(client);
+
+    //Emojis
+    const g = client.guilds.cache.get('916385872356733000')
+    const emojis = {};
+    g.emojis.cache.map(e => {
+        emojis[e.name] = `<${e.animated ? 'a' : ''}:${e.name}:${e.id}>`;
+    })
+    client.emojisObj = emojis;
+    
     app.get("/", function (req, res) {
       res.write("<h1> Connected as " + client.user.tag + "</h1>");
       res.write("<h2> Ready! &#128994 </h2>");

@@ -19,7 +19,7 @@ module.exports = {
 
       const bot = new MessageEmbed()
         .setColor(developer_embed_colour)
-        .setTitle("<a:animated_tick:925091839030231071> Maintenance mode has been **enabled**. ")
+        .setTitle(`${client.emojisObj.animated_tick} Maintenance mode has been **enabled**. `)
         .setDescription(`👷‍♂️ The bot has been put into maintenance mode. 👷‍♂️`)
         .setTimestamp();
 
@@ -31,7 +31,7 @@ module.exports = {
 
       const bot = new MessageEmbed()
         .setColor("RED")
-        .setTitle("<a:animated_tick:925091839030231071> Maintenance mode has been **disabled**.")
+        .setTitle(`${client.emojisObj.animated_tick} Maintenance mode has been **disabled**.`)
         .setDescription(`👷‍♂️ The bot has been taken out of maintenance mode. 👷‍♂️`)
         .setTimestamp();
 
