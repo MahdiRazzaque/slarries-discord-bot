@@ -92,10 +92,10 @@ module.exports = {
                     id: everyone_id, 
                     deny: ["SEND_MESSAGES", "VIEW_CHANNEL", "READ_MESSAGE_HISTORY"]
                 },
-                {
-                    id: unverified_id,
-                    deny: ["SEND_MESSAGES", "VIEW_CHANNEL", "READ_MESSAGE_HISTORY"]
-                },
+                // {
+                //     id: unverified_id,
+                //     deny: ["SEND_MESSAGES", "VIEW_CHANNEL", "READ_MESSAGE_HISTORY"]
+                // },
             ],
         })
         .then(async(channel) => {
