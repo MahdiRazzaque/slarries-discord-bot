@@ -1,4 +1,4 @@
-const { CommandInteraction, MessageEmbed, MessageAttachment } = require("discord.js");
+const { CommandInteraction, MessageEmbed, MessageAttachment, Message } = require("discord.js");
 const { reaction_role_embed_colour } = require("../../structures/config.json");
 
 module.exports = {
@@ -23,6 +23,10 @@ module.exports = {
                 name: "rules",
                 value: "rules",
             },
+            {
+              name: "verify",
+              value: "verify",
+          },
             {
               name: "slayer-prices",
               value: "slayer-prices",
@@ -67,6 +71,13 @@ module.exports = {
             interaction.reply({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`${client.emojisObj.animated_tick} Sent rules embed.`)],ephemeral: true})
         }
         break;
+        case "verify": 
+          const verify = new MessageEmbed().setColor("GREEN").setTitle("Verification").setDescription("> Please react to the following message to gain access to the rest of the server.\n\n> If you are unable to verify, DM <@381791690454859778> and he will manually verify you.")
+
+          await client.channels.cache.get(gChannel.id).send({embeds: [verify]});
+
+          await interaction.reply({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`${client.emojisObj.animated_tick} Sent verify embed.`)],ephemeral: true});
+          break;
         case "slayer-prices": {
           const slayerPrices = await client.channels.cache.get(gChannel.id).send({embeds: [new MessageEmbed().setTitle("__**Slayer Prices!**__").setColor("BLUE")]})
           const revenantHorror = await client.channels.cache.get(gChannel.id).send({embeds: [new MessageEmbed().setTitle("Revenant Horror").setDescription("> Tier 1 - 25k \n> Tier 2 - 50k \n> Tier 3 - 100k \n> Tier 4 - 200k \n> Tier 5 - 450k").setColor("BLUE")]})
@@ -101,7 +112,7 @@ module.exports = {
           await client.channels.cache.get(gChannel.id).send({ files: [goblinArmourImage]});
           await client.channels.cache.get(gChannel.id).send({embeds: [whatToDoWhenMini, whatToDoWhenBoss, whatToDoIfDeath]});
 
-          await interaction.reply({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`${client.emojisObj.animated_tick} Sent frequent questions embed.`)],ephemeral: true})
+          await interaction.reply({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`${client.emojisObj.animated_tick} Sent frequent questions embed.`)],ephemeral: true});
 
         }
         break;

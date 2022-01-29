@@ -1,5 +1,6 @@
-const { MessageActionRow, MessageButton } = require('discord.js');
+const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 const menus = require('../../structures/schemas/reactionRoleDB');
+const { admin_embed_colour } = require("../../structures/config.json")
 
 module.exports = {
     name: "rr-menu",
@@ -91,22 +92,26 @@ module.exports = {
         const channel = interaction.options.getChannel("channel");
 
         if (option === "create") {
-            if (menu) return interaction.editReply({ content: `A reaction Role menu with that name already exists, so next time use a different name.` });
+            if (menu) return interaction.editReply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} A reaction role menu with the name \`${name}\` already exists.`)]});
 
             await menus.create({ guild: interaction.guildId, name, message: "0" });
 
-            interaction.editReply({ content: `A role menu has been created with the name : \`${name}\`.` });
+            interaction.editReply({ embeds: [new MessageEmbed().setColor(admin_embed_colour).setDescription(`${client.emojisObj.animated_tick} A role menu has been created with the name \`${name}\`.`)]});
         } else if (option === "delete") {
-            if (!menu) return interaction.editReply({ content: `A reaction role menu with that name does not exist, so next time use a actual menu name.` });
+            if (!menu) return interaction.editReply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} A reaction role menu with the name \`${name}\` does not exist.`)]});
 
             await menus.findOneAndDelete({ guild: interaction.guildId, name });
 
-            interaction.editReply({ content: `The role menu \`${name}\`. has been deleted.` });
+            interaction.editReply({ embeds: [new MessageEmbed().setColor(admin_embed_colour).setDescription(`${client.emojisObj.animated_tick} The role menu \`${name}\` has been deleted.`)]});
         } else if (option === "start") {
-            if (channel.type !== "GUILD_TEXT" && channel.type !== "GUILD_NEWS") return interaction.editReply({ content: "Invalid channel was provided" });
-            if (menu.roles.length === 0) return interaction.editReply({ content: "This menu hase 0 roles." });
+            if (channel.type !== "GUILD_TEXT" && channel.type !== "GUILD_NEWS") return interaction.editReply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} Invalid channel was provided.`)]});
+            if (menu.roles.length === 0) return interaction.editReply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} The role menu \`${name}\` has 0 roles`)]});
 
-            let content = `__**${menuCapitalized = menu.name.charAt(0).toUpperCase() + menu.name.slice(1)}**__ \n\n`,
+            const reactionRoleEmbed = new MessageEmbed()
+                .setColor("AQUA")
+                .setTitle(`__**${menuCapitalized = menu.name.charAt(0).toUpperCase() + menu.name.slice(1)}**__`)
+
+            let content = `ㅤ\n`,
             
                 rows = [new MessageActionRow()], index;
 
@@ -122,18 +127,21 @@ module.exports = {
 
                 rows[index] ? rows[index].addComponents(button) : rows[index] = new MessageActionRow().addComponents(button)
             })
+            
+            reactionRoleEmbed.setDescription(content);
 
-            const msg = await channel.send({ content, components: rows });
+
+            const msg = await channel.send({ embeds: [reactionRoleEmbed], components: rows });
 
             await menus.findOneAndUpdate({ name, guild: interaction.guildId }, { message: msg.id });
 
-            interaction.editReply({ content: "Menu has been started successfully" });
+            interaction.editReply({ embeds: [new MessageEmbed().setColor(admin_embed_colour).setDescription(`${client.emojisObj.animated_tick} The role menu \`${name}\` has been started successfully.`)]});
         } else if (option === "add-role") {
-            if (!menu) return interaction.editReply({ content: `A reaction role menu with that name doe not exist, so next time give a real menu name.` });
+            if (!menu) return interaction.editReply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} A reaction role menu with the name \`${name}\` does not exist.`)]});
 
-            if (role.position >= my_role) return interaction.editReply({ content: `The provided role is above my highest role, so please put my role above it than try again.` });
+            if (role.position >= my_role) return interaction.editReply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} The ${role} role is above my highest role, so please put my role above it than try again.`)]});
 
-            const msg = await interaction.channel.send({ content: `React with the emoji you want for this role` });
+            const msg = await interaction.channel.send({ embeds: [new MessageEmbed().setColor(admin_embed_colour).setDescription(`React with the emoji you want for this role`)]});
 
             const reactions = await msg.awaitReactions({
                 errors: ["time"],
@@ -144,26 +152,27 @@ module.exports = {
 
             const emoji = reactions.first()?.emoji;
 
-            if (!emoji) return interaction.editReply({ content: "You took too much time to respond" });
+            if (!emoji) return interaction.editReply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You too too long to respond.`)]});
 
-            if (menu.roles.some(v => v.role === role.id) || menu.roles.some(v => v.emoji === emoji.id || v.emoji === emoji.name)) return interaction.editReply({ content: `The reaction role menu already has either the provided role or the emoji` });
+            if (menu.roles.some(v => v.role === role.id)) return interaction.editReply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} The reaction role menu \`${name}\` already has the provided role.`)]});
+            if (menu.roles.some(v => v.emoji === emoji.id || v.emoji === emoji.name)) return interaction.editReply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} The reaction role menu \`${name}\` already has the provided emoji.`)]});
 
             menu.roles.push({ role: role.id, emoji: emoji.id || emoji.name });
 
             await menus.findOneAndUpdate({ name, guild: interaction.guildId }, { roles: menu.roles });
 
-            interaction.editReply({ content: `Added role \`${role.name}\` with emoji : ${emoji.toString()} for menu : \`${menu.name}\`` });
+            interaction.editReply({ embeds: [new MessageEmbed().setColor(admin_embed_colour).setDescription(`${client.emojisObj.animated_tick} Added role \`${role.name}\` with emoji : ${emoji.toString()} for menu \`${menu.name}\`.`)]});
             await msg.delete();
         } else if(option=== "remove-role") {
-            if (!menu) return interaction.editReply({ content: `A reaction role menu with that name does not exist, so next time give a real menu name.` });
+            if (!menu) return interaction.editReply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} A reaction role menu with the name \`${name}\` does not exist.`)]});
 
-            if (!menu.roles.some(v => v.role === role.id)) return interaction.editReply({ content: `Reaction Role menu do not have this role as its part` });
+            if (!menu.roles.some(v => v.role === role.id)) return interaction.editReply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} The reaction role \`${menu.name}\` menu does not have this role.`)]});
 
             menu.roles = menu.roles.filter((v) => v.role !== role.id);
 
             await menus.findOneAndUpdate({ name, guild: interaction.guildId }, { roles: menu.roles });
 
-            interaction.editReply({ content: `Remove role \`${role.name}\`from menu : \`${menu.name}\`` });
+            interaction.editReply({ embeds: [new MessageEmbed().setColor(admin_embed_colour).setDescription(`${client.emojisObj.animated_tick} Removed role \`${role.name}\` with emoji : ${emoji.toString()} for menu \`${menu.name}\`.`)]});
         }
     }
 }
