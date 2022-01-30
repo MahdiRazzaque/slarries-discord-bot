@@ -8,10 +8,11 @@ const DB = require("../../structures/schemas/hypixelStatsInteractionDB");
 module.exports = {
     name: "hypixel",
     description: "Get stats about a hypixel player",
-    permission: "ADMINISTRATOR",
+    whitelist: ["381791690454859778", "733646902083452949", "687292694451716102", "424954210866692099"],
+    botCommandChannelOnly: true,
     options: [
         {
-            name: "player-information",
+            name: "player",
             description: "General stats about a player",
             type: "SUB_COMMAND",
             options: [
@@ -116,9 +117,9 @@ module.exports = {
                     if (player.guild !== null) {
                         playerEmbed.addField("Guild",
                         `\`•\` **Name**: \`${player.guild.name}\`
-                        \`•\` **Rank**: \`${commaNumber(player.achievementPoints)}✫\`
-                        \`•\` **Karma**: \`${commaNumber(player.karma)}\`
-                        \`•\` **Weekly experience**: \`${player.guild.totalWeeklyGexp}\`
+                        \`•\` **Level**: \`${commaNumber(player.guild.level)}\`
+                        \`•\` **Tag**: \`[${commaNumber(player.guild.tag)}]\`
+                        \`•\` **Weekly experience**: \`${commaNumber(player.guild.totalWeeklyGexp)}\`
                         `, true)
                     }
 
@@ -129,6 +130,12 @@ module.exports = {
                         }
                     }
                     playerEmbed.addField("Socials", `${socialMedias}`)
+
+                    playerEmbed.addField("Status",
+                    `\`•\` **Status**: \`${playerIsOnline}\`
+                    \`•\` **First Login**: <t:${player.firstLoginTimestamp.toString().slice(0, -3)}:R>
+                    \`•\` **Last login**: <t:${player.lastLoginTimestamp.toString().slice(0, -3)}:R>
+                    `, true)
 
                     await interaction.reply({ embeds: [playerEmbed], allowedMentions: { repliedUser: false } })   
                     

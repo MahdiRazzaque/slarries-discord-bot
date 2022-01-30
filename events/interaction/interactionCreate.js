@@ -41,7 +41,7 @@ module.exports = {
         }
       }
 
-      if(command.botCommandChannelOnly == true) {
+      if(command.botCommandChannelOnly == true && !owners.includes(interaction.member.id) && !botOwners.includes(interaction.member.id)) {
         if(!botCommandChannels.includes(interaction.channelId)) {
           return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`<a:animated_cross:925091847905366096> **This command (/${command.name}) can only be used in bot command channels. These channels are: <#${botCommandChannels.map((c) => c).join(">, <#")}>**`)], ephemeral: true})
         }
@@ -58,6 +58,12 @@ module.exports = {
       }
       if(!valid)
         return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`<a:animated_cross:925091847905366096> **To use this command (/${command.name}), you need one of the following roles:\n<@&${command.roles.map((r) => r).join(">, <@&")}>**`)], ephemeral: true});
+      }
+
+      if(command.whitelist && !owners.includes(interaction.member.id) && !botOwners.includes(interaction.member.id)) {
+        if (!command.whitelist.includes(interaction.member.id)) {
+          return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross}  **To use this command (/${command.name}), you need to be part of the whitlisted members.**`).addField("Whitelisted Members", `<@${command.whitelist.map((m)=> m).join(">, <@")}>`)], ephemeral: true})
+        }
       }
 
       const cmd = client.commands.get(interaction.commandName);
