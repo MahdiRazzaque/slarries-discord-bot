@@ -14,7 +14,10 @@ module.exports = {
   execute(interaction, client) {
     if(!interaction.isSelectMenu()) return;
 
-    if(!["bedwars-overall", "bedwars-solos", "bedwars-doubles", "bedwars-threes", "bedwars-fours", "bedwars-4v4", "bedwars-dream-ultimate-doubles", "bedwars-dream-ultimate-fours", "bedwars-dream-rush-doubles", "bedwars-dream-rush-fours", "bedwars-dream-armed-doubles", "bedwars-dream-armed-fours", "bedwars-dream-lucky-doubles", "bedwars-dream-lucky-fours", "bedwars-dream-voidless-doubles", "bedwars-dream-voidless-fours"].includes(interaction.values[0])) return;
+    if
+    (!["bedwars-overall", "bedwars-solos", "bedwars-doubles", "bedwars-threes", "bedwars-fours", "bedwars-4v4", "bedwars-dream-ultimate-doubles", "bedwars-dream-ultimate-fours", "bedwars-dream-rush-doubles", "bedwars-dream-rush-fours", "bedwars-dream-armed-doubles", "bedwars-dream-armed-fours", "bedwars-dream-lucky-doubles", "bedwars-dream-lucky-fours", "bedwars-dream-voidless-doubles", "bedwars-dream-voidless-fours"].includes(interaction.values[0]) && 
+    (!["bridge-overall", "bridge-1v1", "bridge-2v2", "bridge-3v3", "bridge-4v4", "bridge-2v2v2v2", "bridge-3v3v3v3", "bridge-ctf"].includes(interaction.values[0]))) 
+    return;
 
     DB.findOne({GuildID: interaction.guild.id, MessageID: interaction.message.id}, async(err, data) => {
         if(err) throw err;
@@ -303,7 +306,6 @@ module.exports = {
                             case "bedwars-dream-voidless-fours": 
                             interaction.message.edit({embeds: [bedwarsDreamVoidlessFours]})
                             break;
-
                         }
                         interaction.deferUpdate()
                     } else {
@@ -331,6 +333,132 @@ module.exports = {
                             interaction.reply({ embeds: [error], allowedMentions: { repliedUser: false }, ephemeral: true })
                     }       
                 });
+            break;
+            case "bridge":
+                hypixel.getPlayer(player).then(async(player) => {
+                    const bridgeOverall = new MessageEmbed()
+                        .setColor(minecraft_embed_colour)
+                        .setAuthor({name: `Overall Bridge Stats`, iconURL: 'https://hypixel.net/styles/hypixel-v2/images/game-icons/Duels-64.png'})
+                        .setTitle(`[${player.rank}] ${player.nickname}   |   ${player.stats.duels.bridge.overall.division}`)
+                        .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
+                        .addField("Games", `\`•\` **Best WS**: \`${commaNumber(player.stats.duels.bridge.overall.bestWinstreak)}\`\n \`•\` **Winstreak**: \`${commaNumber(player.stats.duels.bridge.overall.winstreak)}\`\n \`•\` **Wins**: \`${commaNumber(player.stats.duels.bridge.overall.wins)}\`\n \`•\` **Losses**: \`${commaNumber(player.stats.duels.bridge.overall.losses)}\`\n \`•\` **WLR**: \`${commaNumber(player.stats.duels.bridge.overall.WLRatio)}\``, true)
+                        .addField("Combat", `\`•\` **Kills**: \`${commaNumber(player.stats.duels.bridge.overall.kills)}\`\n \`•\` **Deaths**: \`${commaNumber(player.stats.duels.bridge.overall.deaths)}\`\n \`•\` **KDR**: \`${commaNumber(player.stats.duels.bridge.overall.KDRatio)}\``, true)
+                        .addField("Milstones", `\`•\` **Wins to ${commaNumber(Math.ceil(player.stats.duels.bridge.overall.WLRatio))} WLR**: \`${commaNumber((player.stats.duels.bridge.overall.losses*Math.ceil(player.stats.duels.bridge.overall.WLRatio))-player.stats.duels.bridge.overall.wins)}\`\n \`•\` **Kills to ${commaNumber(Math.ceil(player.stats.duels.bridge.overall.KDRatio))} KDR**: \`${commaNumber((player.stats.duels.bridge.overall.deaths*Math.ceil(player.stats.duels.bridge.overall.KDRatio))-player.stats.duels.bridge.overall.kills)}\``, true)
+                    
+                    const bridge1v1 = new MessageEmbed()
+                        .setColor(minecraft_embed_colour)
+                        .setAuthor({name: `1v1 Bridge Stats`, iconURL: 'https://hypixel.net/styles/hypixel-v2/images/game-icons/Duels-64.png'})
+                        .setTitle(`[${player.rank}] ${player.nickname}   |   ${player.stats.duels.bridge.overall.division}`)
+                        .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
+                        .addField("Games", `\`•\` **Best WS**: \`${commaNumber(player.stats.duels.bridge["1v1"].bestWinstreak)}\`\n \`•\` **Winstreak**: \`${commaNumber(player.stats.duels.bridge["1v1"].winstreak)}\`\n \`•\` **Wins**: \`${commaNumber(player.stats.duels.bridge["1v1"].wins)}\`\n \`•\` **Losses**: \`${commaNumber(player.stats.duels.bridge["1v1"].losses)}\`\n \`•\` **WLR**: \`${commaNumber(player.stats.duels.bridge["1v1"].WLRatio)}\``, true)
+                        .addField("Combat", `\`•\` **Kills**: \`${commaNumber(player.stats.duels.bridge["1v1"].kills)}\`\n \`•\` **Deaths**: \`${commaNumber(player.stats.duels.bridge["1v1"].deaths)}\`\n \`•\` **KDR**: \`${commaNumber(player.stats.duels.bridge["1v1"].KDRatio)}\``, true)
+                        .addField("Milstones", `\`•\` **Wins to ${commaNumber(Math.ceil(player.stats.duels.bridge["1v1"].WLRatio))} WLR**: \`${commaNumber((player.stats.duels.bridge["1v1"].losses*Math.ceil(player.stats.duels.bridge["1v1"].WLRatio))-player.stats.duels.bridge["1v1"].wins)}\`\n \`•\` **Kills to ${commaNumber(Math.ceil(player.stats.duels.bridge["1v1"].KDRatio))} KDR**: \`${commaNumber((player.stats.duels.bridge["1v1"].deaths*Math.ceil(player.stats.duels.bridge["1v1"].KDRatio))-player.stats.duels.bridge["1v1"].kills)}\``, true)
+
+                    const bridge2v2 = new MessageEmbed()
+                        .setColor(minecraft_embed_colour)
+                        .setAuthor({name: `2v2 Bridge Stats`, iconURL: 'https://hypixel.net/styles/hypixel-v2/images/game-icons/Duels-64.png'})
+                        .setTitle(`[${player.rank}] ${player.nickname}   |   ${player.stats.duels.bridge.overall.division}`)
+                        .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
+                        .addField("Games", `\`•\` **Best WS**: \`${commaNumber(player.stats.duels.bridge["2v2"].bestWinstreak)}\`\n \`•\` **Winstreak**: \`${commaNumber(player.stats.duels.bridge["2v2"].winstreak)}\`\n \`•\` **Wins**: \`${commaNumber(player.stats.duels.bridge["2v2"].wins)}\`\n \`•\` **Losses**: \`${commaNumber(player.stats.duels.bridge["2v2"].losses)}\`\n \`•\` **WLR**: \`${commaNumber(player.stats.duels.bridge["2v2"].WLRatio)}\``, true)
+                        .addField("Combat", `\`•\` **Kills**: \`${commaNumber(player.stats.duels.bridge["2v2"].kills)}\`\n \`•\` **Deaths**: \`${commaNumber(player.stats.duels.bridge["2v2"].deaths)}\`\n \`•\` **KDR**: \`${commaNumber(player.stats.duels.bridge["2v2"].KDRatio)}\``, true)
+                        .addField("Milstones", `\`•\` **Wins to ${commaNumber(Math.ceil(player.stats.duels.bridge["2v2"].WLRatio))} WLR**: \`${commaNumber((player.stats.duels.bridge["2v2"].losses*Math.ceil(player.stats.duels.bridge["2v2"].WLRatio))-player.stats.duels.bridge["2v2"].wins)}\`\n \`•\` **Kills to ${commaNumber(Math.ceil(player.stats.duels.bridge["2v2"].KDRatio))} KDR**: \`${commaNumber((player.stats.duels.bridge["2v2"].deaths*Math.ceil(player.stats.duels.bridge["2v2"].KDRatio))-player.stats.duels.bridge["2v2"].kills)}\``, true)
+
+                    const bridge3v3 = new MessageEmbed()
+                        .setColor(minecraft_embed_colour)
+                        .setAuthor({name: `3v3 Bridge Stats`, iconURL: 'https://hypixel.net/styles/hypixel-v2/images/game-icons/Duels-64.png'})
+                        .setTitle(`[${player.rank}] ${player.nickname}   |   ${player.stats.duels.bridge.overall.division}`)
+                        .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
+                        .addField("Games", `\`•\` **Best WS**: \`${commaNumber(player.stats.duels.bridge["3v3"].bestWinstreak)}\`\n \`•\` **Winstreak**: \`${commaNumber(player.stats.duels.bridge["3v3"].winstreak)}\`\n \`•\` **Wins**: \`${commaNumber(player.stats.duels.bridge["3v3"].wins)}\`\n \`•\` **Losses**: \`${commaNumber(player.stats.duels.bridge["3v3"].losses)}\`\n \`•\` **WLR**: \`${commaNumber(player.stats.duels.bridge["3v3"].WLRatio)}\``, true)
+                        .addField("Combat", `\`•\` **Kills**: \`${commaNumber(player.stats.duels.bridge["3v3"].kills)}\`\n \`•\` **Deaths**: \`${commaNumber(player.stats.duels.bridge["3v3"].deaths)}\`\n \`•\` **KDR**: \`${commaNumber(player.stats.duels.bridge["3v3"].KDRatio)}\``, true)
+                        .addField("Milstones", `\`•\` **Wins to ${commaNumber(Math.ceil(player.stats.duels.bridge["3v3"].WLRatio))} WLR**: \`${commaNumber((player.stats.duels.bridge["3v3"].losses*Math.ceil(player.stats.duels.bridge["3v3"].WLRatio))-player.stats.duels.bridge["3v3"].wins)}\`\n \`•\` **Kills to ${commaNumber(Math.ceil(player.stats.duels.bridge["3v3"].KDRatio))} KDR**: \`${commaNumber((player.stats.duels.bridge["3v3"].deaths*Math.ceil(player.stats.duels.bridge["3v3"].KDRatio))-player.stats.duels.bridge["3v3"].kills)}\``, true)
+                    
+                    const bridge4v4 = new MessageEmbed()
+                        .setColor(minecraft_embed_colour)
+                        .setAuthor({name: `4v4 Bridge Stats`, iconURL: 'https://hypixel.net/styles/hypixel-v2/images/game-icons/Duels-64.png'})
+                        .setTitle(`[${player.rank}] ${player.nickname}   |   ${player.stats.duels.bridge.overall.division}`)
+                        .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
+                        .addField("Games", `\`•\` **Best WS**: \`${commaNumber(player.stats.duels.bridge.bestWinstreak)}\`\n \`•\` **Winstreak**: \`${commaNumber(player.stats.duels.bridge["4v4"].winstreak)}\`\n \`•\` **Wins**: \`${commaNumber(player.stats.duels.bridge["4v4"].wins)}\`\n \`•\` **Losses**: \`${commaNumber(player.stats.duels.bridge["4v4"].losses)}\`\n \`•\` **WLR**: \`${commaNumber(player.stats.duels.bridge["4v4"].WLRatio)}\``, true)
+                        .addField("Combat", `\`•\` **Kills**: \`${commaNumber(player.stats.duels.bridge["4v4"].kills)}\`\n \`•\` **Deaths**: \`${commaNumber(player.stats.duels.bridge["4v4"].deaths)}\`\n \`•\` **KDR**: \`${commaNumber(player.stats.duels.bridge["4v4"].KDRatio)}\``, true)
+                        .addField("Milstones", `\`•\` **Wins to ${commaNumber(Math.ceil(player.stats.duels.bridge["4v4"].WLRatio))} WLR**: \`${commaNumber((player.stats.duels.bridge["4v4"].losses*Math.ceil(player.stats.duels.bridge["4v4"].WLRatio))-player.stats.duels.bridge["4v4"].wins)}\`\n \`•\` **Kills to ${commaNumber(Math.ceil(player.stats.duels.bridge["4v4"].KDRatio))} KDR**: \`${commaNumber((player.stats.duels.bridge["4v4"].deaths*Math.ceil(player.stats.duels.bridge["4v4"].KDRatio))-player.stats.duels.bridge["4v4"].kills)}\``, true)
+
+                    const bridge2v2v2v2 = new MessageEmbed()
+                        .setColor(minecraft_embed_colour)
+                        .setAuthor({name: `2v2v2v2 Bridge Stats`, iconURL: 'https://hypixel.net/styles/hypixel-v2/images/game-icons/Duels-64.png'})
+                        .setTitle(`[${player.rank}] ${player.nickname}   |   ${player.stats.duels.bridge.overall.division}`)
+                        .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
+                        .addField("Games", `\`•\` **Best WS**: \`${commaNumber(player.stats.duels.bridge.bestWinstreak)}\`\n \`•\` **Winstreak**: \`${commaNumber(player.stats.duels.bridge["2v2v2v2"].winstreak)}\`\n \`•\` **Wins**: \`${commaNumber(player.stats.duels.bridge["2v2v2v2"].wins)}\`\n \`•\` **Losses**: \`${commaNumber(player.stats.duels.bridge["2v2v2v2"].losses)}\`\n \`•\` **WLR**: \`${commaNumber(player.stats.duels.bridge["2v2v2v2"].WLRatio)}\``, true)
+                        .addField("Combat", `\`•\` **Kills**: \`${commaNumber(player.stats.duels.bridge["2v2v2v2"].kills)}\`\n \`•\` **Deaths**: \`${commaNumber(player.stats.duels.bridge["2v2v2v2"].deaths)}\`\n \`•\` **KDR**: \`${commaNumber(player.stats.duels.bridge["2v2v2v2"].KDRatio)}\``, true)
+                        .addField("Milstones", `\`•\` **Wins to ${commaNumber(Math.ceil(player.stats.duels.bridge["2v2v2v2"].WLRatio))} WLR**: \`${commaNumber((player.stats.duels.bridge["2v2v2v2"].losses*Math.ceil(player.stats.duels.bridge["2v2v2v2"].WLRatio))-player.stats.duels.bridge["2v2v2v2"].wins)}\`\n \`•\` **Kills to ${commaNumber(Math.ceil(player.stats.duels.bridge["2v2v2v2"].KDRatio))} KDR**: \`${commaNumber((player.stats.duels.bridge["2v2v2v2"].deaths*Math.ceil(player.stats.duels.bridge["2v2v2v2"].KDRatio))-player.stats.duels.bridge["2v2v2v2"].kills)}\``, true)
+                    
+                    const bridge3v3v3v3 = new MessageEmbed()
+                        .setColor(minecraft_embed_colour)
+                        .setAuthor({name: `3v3v3v3 Bridge Stats`, iconURL: 'https://hypixel.net/styles/hypixel-v2/images/game-icons/Duels-64.png'})
+                        .setTitle(`[${player.rank}] ${player.nickname}   |   ${player.stats.duels.bridge.overall.division}`)
+                        .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
+                        .addField("Games", `\`•\` **Best WS**: \`${commaNumber(player.stats.duels.bridge.bestWinstreak)}\`\n \`•\` **Winstreak**: \`${commaNumber(player.stats.duels.bridge["3v3v3v3"].winstreak)}\`\n \`•\` **Wins**: \`${commaNumber(player.stats.duels.bridge["3v3v3v3"].wins)}\`\n \`•\` **Losses**: \`${commaNumber(player.stats.duels.bridge["3v3v3v3"].losses)}\`\n \`•\` **WLR**: \`${commaNumber(player.stats.duels.bridge["3v3v3v3"].WLRatio)}\``, true)
+                        .addField("Combat", `\`•\` **Kills**: \`${commaNumber(player.stats.duels.bridge["3v3v3v3"].kills)}\`\n \`•\` **Deaths**: \`${commaNumber(player.stats.duels.bridge["3v3v3v3"].deaths)}\`\n \`•\` **KDR**: \`${commaNumber(player.stats.duels.bridge["3v3v3v3"].KDRatio)}\``, true)
+                        .addField("Milstones", `\`•\` **Wins to ${commaNumber(Math.ceil(player.stats.duels.bridge["3v3v3v3"].WLRatio))} WLR**: \`${commaNumber((player.stats.duels.bridge["3v3v3v3"].losses*Math.ceil(player.stats.duels.bridge["3v3v3v3"].WLRatio))-player.stats.duels.bridge["3v3v3v3"].wins)}\`\n \`•\` **Kills to ${commaNumber(Math.ceil(player.stats.duels.bridge["3v3v3v3"].KDRatio))} KDR**: \`${commaNumber((player.stats.duels.bridge["3v3v3v3"].deaths*Math.ceil(player.stats.duels.bridge["3v3v3v3"].KDRatio))-player.stats.duels.bridge["3v3v3v3"].kills)}\``, true)
+                    
+                    const bridgeCtf = new MessageEmbed()
+                        .setColor(minecraft_embed_colour)
+                        .setAuthor({name: `CTF Bridge Stats`, iconURL: 'https://hypixel.net/styles/hypixel-v2/images/game-icons/Duels-64.png'})
+                        .setTitle(`[${player.rank}] ${player.nickname}   |   ${player.stats.duels.bridge.ctf.division}`)
+                        .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
+                        .addField("Games", `\`•\` **Best WS**: \`${commaNumber(player.stats.duels.bridge.ctf.bestWinstreak)}\`\n \`•\` **Winstreak**: \`${commaNumber(player.stats.duels.bridge.ctf.winstreak)}\`\n \`•\` **Wins**: \`${commaNumber(player.stats.duels.bridge.ctf.wins)}\`\n \`•\` **Losses**: \`${commaNumber(player.stats.duels.bridge.ctf.losses)}\`\n \`•\` **WLR**: \`${commaNumber(player.stats.duels.bridge.ctf.WLRatio)}\``, true)
+                        .addField("Combat", `\`•\` **Kills**: \`${commaNumber(player.stats.duels.bridge.ctf.kills)}\`\n \`•\` **Deaths**: \`${commaNumber(player.stats.duels.bridge.ctf.deaths)}\`\n \`•\` **KDR**: \`${commaNumber(player.stats.duels.bridge.ctf.KDRatio)}\``, true)
+                        .addField("Milstones", `\`•\` **Wins to ${commaNumber(Math.ceil(player.stats.duels.bridge.ctf.WLRatio))} WLR**: \`${commaNumber((player.stats.duels.bridge.ctf.losses*Math.ceil(player.stats.duels.bridge.ctf.WLRatio))-player.stats.duels.bridge.ctf.wins)}\`\n \`•\` **Kills to ${commaNumber(Math.ceil(player.stats.duels.bridge.ctf.KDRatio))} KDR**: \`${commaNumber((player.stats.duels.bridge.ctf.deaths*Math.ceil(player.stats.duels.bridge.ctf.KDRatio))-player.stats.duels.bridge.ctf.kills)}\``, true)
+
+                    if (interaction.member.id === data.InteractionMemberID) {
+                        switch(interaction.values[0]) {
+                            case "bridge-overall": 
+                                interaction.message.edit({embeds: [bridgeOverall]})
+                            break;
+                            case "bridge-1v1": 
+                                interaction.message.edit({embeds: [bridge1v1]})
+                            break;
+                            case "bridge-2v2": 
+                            interaction.message.edit({embeds: [bridge2v2]})
+                            break;
+                            case "bridge-3v3": 
+                            interaction.message.edit({embeds: [bridge3v3]})
+                            break;
+                            case "bridge-4v4": 
+                            interaction.message.edit({embeds: [bridge4v4]})
+                            break;
+                            case "bridge-2v2v2v2": 
+                            interaction.message.edit({embeds: [bridge2v2v2v2]})
+                            break;
+                            case "bridge-3v3v3v3": 
+                            interaction.message.edit({embeds: [bridge3v3v3v3]})
+                            break;
+                            case "bridge-ctf": 
+                            interaction.message.edit({embeds: [bridgeCtf]})
+                            break;
+                        }
+                        interaction.deferUpdate()
+                    } else {
+                        interaction.deferUpdate()
+                    }     
+                }).catch(e => {
+                    console.log(e)
+                    if (e.message === errors.PLAYER_DOES_NOT_EXIST) {
+                        const player404 = new MessageEmbed()
+                            .setColor("RED")
+                            .setDescription(`${client.emojisObj.animated_cross} I could not find that player in the API. Check spelling and name history.`)
+                            interaction.reply({ embeds: [player404], allowedMentions: { repliedUser: false }, ephemeral: true })
+                    } else if (e.message === errors.PLAYER_HAS_NEVER_LOGGED) {
+                        const neverLogged = new MessageEmbed()
+                            .setColor("RED")
+                            .setDescription(`${client.emojisObj.animated_cross} That player has never logged into Hypixel.`)
+                            interaction.reply({ embeds: [neverLogged], allowedMentions: { repliedUser: false }, ephemeral: true })
+                    } else {
+                        const error = new MessageEmbed()
+                            .setColor("RED")
+                            .setDescription(`${client.emojisObj.animated_cross} An error has occurred.`)
+                            interaction.reply({ embeds: [error], allowedMentions: { repliedUser: false }, ephemeral: true })
+                    }       
+                });
+
             break;
         }
 

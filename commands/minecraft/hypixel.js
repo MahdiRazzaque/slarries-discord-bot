@@ -1,9 +1,10 @@
 const { CommandInteraction, MessageEmbed, Client, Message, MessageActionRow, MessageSelectMenu } = require("discord.js");
 const { hypixel, errors } = require('../../structures/hypixel');
 const commaNumber = require('comma-number');
-const { pagination } = require("reconlx");
+const fetch = require("node-fetch-commonjs")
 const { minecraft_embed_colour } = require("../../structures/config.json");
 const DB = require("../../structures/schemas/hypixelStatsInteractionDB");
+const linkDB = require("../../structures/schemas/hypixelLinkingDB");
 
 module.exports = {
     name: "hypixel",
@@ -11,6 +12,24 @@ module.exports = {
     whitelist: ["381791690454859778", "733646902083452949", "687292694451716102", "424954210866692099"],
     botCommandChannelOnly: true,
     options: [
+        {
+            name: "link",
+            description: "Link your account to this bot.",
+            type: "SUB_COMMAND",
+            options: [
+                { 
+                    name: "player", 
+                    description: "Provide the name of the player", 
+                    type: "STRING", 
+                    required: true
+                }
+            ]
+        },
+        {
+            name: "unlink",
+            description: "Unlink your account to this bot.",
+            type: "SUB_COMMAND",
+        },
         {
             name: "player",
             description: "General stats about a player",
@@ -20,7 +39,6 @@ module.exports = {
                     name: "player", 
                     description: "Provide the name of the player", 
                     type: "STRING", 
-                    required: true
                 }
             ]
         },
@@ -33,7 +51,6 @@ module.exports = {
                     name: "player", 
                     description: "Provide the name of the player", 
                     type: "STRING", 
-                    required: true
                 }
             ]
         },
@@ -42,12 +59,6 @@ module.exports = {
             description: "Duels stats",
             type: "SUB_COMMAND",
             options: [
-                {
-                    name: "player", 
-                    description: "Provide the name of the player", 
-                    type: "STRING", 
-                    required: true
-                },
                 { 
                     name: "mode", 
                     description: "Select a gamemode.", 
@@ -58,11 +69,16 @@ module.exports = {
                         {name: "Classic", value: "classic"},
                         {name: "UHC", value: "uhc"},
                         // {name: "Skywars", value: "skywars"},
-                        // {name: "Bridge", value: "bridge"},
+                        {name: "Bridge", value: "bridge"},
                         // {name: "Sumo", value: "sumo"},
                         // {name: "OP", value: "op"},
                         // {name: "Combo", value: "combo"},        
                     ]
+                },
+                {
+                    name: "player", 
+                    description: "Provide the name of the player", 
+                    type: "STRING", 
                 },
             ]
         },
@@ -73,9 +89,97 @@ module.exports = {
      * @param {Client} client 
      */
     async execute(interaction, client) {
-        const player = interaction.options.getString("player");
+
+        const data = await linkDB.findOne({id: interaction.member.id});
+        var player = interaction.options.getString("player");
+
+        if(data && !player) {
+            player = data.uuid
+        } else if (player) {
+            player = player
+        } else {
+            return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You did not provide a valid player or you haven't linked your account. \n\n If you would like to like your account, use /hypixel link`).setFooter({text: ""})]})
+        }
         
         switch(interaction.options.getSubcommand()) {
+            case "link":
+                const linkUser = await linkDB.findOne({ id: interaction.member.id });
+                if (linkUser && linkUser.uuid) {
+                  const alreadyconnected = new MessageEmbed()
+                    .setDescription(`${client.emojisObj.animated_cross} Your account is already connected!`)
+                  interaction.reply({ embeds: [alreadyconnected], allowedMentions: { repliedUser: false } })
+                }
+                hypixel.getPlayer(player).then(async (player) => {
+                    if (!player.socialMedia.find((s) => s.id === 'DISCORD')) {
+                      const notconnected = new MessageEmbed()
+                        .setColor("RED")
+                        .setDescription(`${client.emojisObj.animated_cross} This minecraft account does not have a discord account connected to it.\n\nWatch the GIF to learn how to connect your discord account.`)
+                        .setImage('https://thumbs.gfycat.com/DentalTemptingLeonberger-size_restricted.gif')
+                      return interaction.reply({ embeds: [notconnected], allowedMentions: { repliedUser: false } })
+                    }
+
+                    if (player.socialMedia.find((s) => s.id === 'DISCORD').link !== interaction.user.tag) {
+                      const tagnomatch = new MessageEmbed()
+                        .setColor("RED")
+                        .setDescription(`${client.emojisObj.animated_cross} ${player.nickname}'s connected discord tag doesn't match your discord tag.`)
+                      return interaction.reply({ embeds: [tagnomatch], allowedMentions: { repliedUser: false } })
+                    }
+
+                    const user1 = await linkDB.findOne({ uuid: player.uuid });
+                    if (user1) {
+                      const playerdupe = new MessageEmbed()
+                        .setColor("RED")
+                        .setDescription(`${client.emojisObj.animated_cross} That player has already been linked to another account.`)
+                      return interaction.reply({ embeds: [playerdupe], allowedMentions: { repliedUser: false } })
+                    }
+
+                    new linkDB({ id: interaction.member.id, uuid: player.uuid }).save(() => {
+                        const linked = new MessageEmbed()
+                            .setColor(minecraft_embed_colour)
+                            .setDescription(`${client.emojisObj.animated_tick} ${player.nickname} has been successfully linked to your account.`)
+                        interaction.reply({ embeds: [linked], allowedMentions: { repliedUser: false } })
+                      });
+                }).catch(e => {
+                    console.log(e)
+                    if (e.message === errors.PLAYER_DOES_NOT_EXIST) {
+                        const player404 = new MessageEmbed()
+                            .setColor("RED")
+                            .setDescription(`${client.emojisObj.animated_cross} I could not find that player in the API. Check spelling and name history.`)
+                            interaction.reply({ embeds: [player404], allowedMentions: { repliedUser: false }, ephemeral: true })
+                    } else if (e.message === errors.PLAYER_HAS_NEVER_LOGGED) {
+                        const neverLogged = new MessageEmbed()
+                            .setColor("RED")
+                            .setDescription(`${client.emojisObj.animated_cross} That player has never logged into Hypixel.`)
+                            interaction.reply({ embeds: [neverLogged], allowedMentions: { repliedUser: false }, ephemeral: true })
+                    } else {
+                        const error = new MessageEmbed()
+                            .setColor("RED")
+                            .setDescription(`${client.emojisObj.animated_cross} An error has occurred.`)
+                            interaction.reply({ embeds: [error], allowedMentions: { repliedUser: false }, ephemeral: true })
+                    }       
+                });
+
+            break;
+            case "unlink":
+                const unlinkUser = await linkDB.findOne({ id: interaction.member.id });
+                if (!unlinkUser) {
+                    const notconnected = new MessageEmbed()
+                        .setColor("RED")
+                        .setDescription(`${client.emojisObj.animated_cross} This discord account does not have a minecraft account linked to it.`)
+                        .setImage('https://thumbs.gfycat.com/DentalTemptingLeonberger-size_restricted.gif')
+                  return interaction.reply({ embeds: [notconnected], allowedMentions: { repliedUser: false } })
+                }
+        
+                const username = await fetch(`https://playerdb.co/api/player/minecraft/${unlinkUser.uuid}`).then(res => res.json())
+        
+                unlinkUser.deleteOne(() => {
+                  const unlinked = new MessageEmbed()
+                    .setColor(minecraft_embed_colour)
+                    .setDescription(`${client.emojisObj.animated_tick} ${username.data.player.username} has been successfully unlinked to your account.`)
+                return interaction.reply({ embeds: [unlinked], allowedMentions: { repliedUser: false } })
+                });
+            break;
+
             case "player-information":
                 hypixel.getPlayer(player, { guild: true }).then(async (player) => {
                     if (!player.isOnline) {
@@ -290,6 +394,51 @@ module.exports = {
                                 .addField(` ​`, ` ​`, true)
 
                             interaction.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
+                        }).catch(e => {
+                            if (e.message === errors.PLAYER_DOES_NOT_EXIST) {
+                                const player404 = new MessageEmbed()
+                                    .setColor("RED")
+                                    .setDescription(`${client.emojisObj.animated_cross} I could not find that player in the API. Check spelling and name history.`)
+                                    interaction.reply({ embeds: [player404], allowedMentions: { repliedUser: false }, ephemeral: true })
+                            } else if (e.message === errors.PLAYER_HAS_NEVER_LOGGED) {
+                                const neverLogged = new MessageEmbed()
+                                    .setColor("RED")
+                                    .setDescription(`${client.emojisObj.animated_cross} That player has never logged into Hypixel.`)
+                                    interaction.reply({ embeds: [neverLogged], allowedMentions: { repliedUser: false }, ephemeral: true })
+                            } else {
+                                const error = new MessageEmbed()
+                                    .setColor("RED")
+                                    .setDescription(`${client.emojisObj.animated_cross} An error has occurred.`)
+                                    interaction.reply({embeds: [error], allowedMentions: { repliedUser: false }, ephemeral: true })
+                            }       
+                        });
+                        break;
+                    case "bridge":
+                        hypixel.getPlayer(player).then(async (player) => {
+                            const bridgeOverall = new MessageEmbed()
+                                .setColor(minecraft_embed_colour)
+                                .setAuthor({name: `Overall Bridge Stats`, iconURL: 'https://hypixel.net/styles/hypixel-v2/images/game-icons/Duels-64.png'})
+                                .setTitle(`[${player.rank}] ${player.nickname}   |   ${player.stats.duels.bridge.overall.division}`)
+                                .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
+                                .addField("Games", `\`•\` **Best WS**: \`${commaNumber(player.stats.duels.bridge.overall.bestWinstreak)}\`\n \`•\` **Winstreak**: \`${commaNumber(player.stats.duels.bridge.overall.winstreak)}\`\n \`•\` **Wins**: \`${commaNumber(player.stats.duels.bridge.overall.wins)}\`\n \`•\` **Losses**: \`${commaNumber(player.stats.duels.bridge.overall.losses)}\`\n \`•\` **WLR**: \`${commaNumber(player.stats.duels.bridge.overall.WLRatio)}\``, true)
+                                .addField("Combat", `\`•\` **Kills**: \`${commaNumber(player.stats.duels.bridge.overall.kills)}\`\n \`•\` **Deaths**: \`${commaNumber(player.stats.duels.bridge.overall.deaths)}\`\n \`•\` **KDR**: \`${commaNumber(player.stats.duels.bridge.overall.KDRatio)}\``, true)
+                                .addField("Milstones", `\`•\` **Wins to ${commaNumber(Math.ceil(player.stats.duels.bridge.overall.WLRatio))} WLR**: \`${commaNumber((player.stats.duels.bridge.overall.losses*Math.ceil(player.stats.duels.bridge.overall.WLRatio))-player.stats.duels.bridge.overall.wins)}\`\n \`•\` **Kills to ${commaNumber(Math.ceil(player.stats.duels.bridge.overall.KDRatio))} KDR**: \`${commaNumber((player.stats.duels.bridge.overall.deaths*Math.ceil(player.stats.duels.bridge.overall.KDRatio))-player.stats.duels.bridge.overall.kills)}\``, true)
+
+                            const bridgeRow = new MessageActionRow().addComponents(
+                                new MessageSelectMenu()
+                                    .setCustomId("bridge-stats")
+                                    .setPlaceholder("Use this menu to select different modes.")
+                                    .addOptions([{ label: "Overall", value: "bridge-overall" }, { label: "1v1", value: "bridge-1v1" }, { label: "2v2", value: "bridge-2v2" }, { label: "3v3", value: "bridge-3v3" }, { label: "4v4", value: "bridge-4v4" }, { label: "2v2v2v2", value: "bridge-2v2v2v2" }, { label: "3v3v3v3", value: "bridge-3v3v3v3" }, { label: "Capture the flag", value: "bridge-ctf" }])
+                            )
+        
+                            const M = await interaction.reply({embeds: [bridgeOverall], components: [bridgeRow], fetchReply: true});
+        
+                            await DB.create({GuildID: interaction.guildId, MessageID: M.id, Player: player, TypeOfStats: "bridge", InteractionMemberID: interaction.member.id})
+        
+                            setTimeout(async () => {
+                                await interaction.editReply({components: []}).catch(() => {})
+                                await DB.deleteOne({GuildID: interaction.guildId, MessageID: M.id, Player: player, TypeOfStats: "bridge", InteractionMemberID: interaction.member.id})
+                            }, 60 * 1000)
                         }).catch(e => {
                             if (e.message === errors.PLAYER_DOES_NOT_EXIST) {
                                 const player404 = new MessageEmbed()
