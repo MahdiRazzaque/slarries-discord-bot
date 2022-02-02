@@ -90,6 +90,17 @@ module.exports = {
      */
     async execute(interaction, client) {
 
+        function errorHandling (e) {
+            console.log(e)
+            if (e.message === errors.PLAYER_DOES_NOT_EXIST) {
+                return interaction.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} I could not find that player in the API. Check spelling and name history.`)], allowedMentions: { repliedUser: false }, ephemeral: true })
+            } else if (e.message === errors.PLAYER_HAS_NEVER_LOGGED) {
+                return interaction.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} That player has never logged into Hypixel.`)], allowedMentions: { repliedUser: false }, ephemeral: true })
+            } else { 
+                return interaction.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} An error has occurred.`)], allowedMentions: { repliedUser: false }, ephemeral: true })
+            }   
+        }
+
         const data = await linkDB.findOne({id: interaction.member.id});
         var player = interaction.options.getString("player");
 
@@ -105,82 +116,42 @@ module.exports = {
             case "link":
                 const linkUser = await linkDB.findOne({ id: interaction.member.id });
                 if (linkUser && linkUser.uuid) {
-                  const alreadyconnected = new MessageEmbed()
-                    .setDescription(`${client.emojisObj.animated_cross} Your account is already connected!`)
-                  interaction.reply({ embeds: [alreadyconnected], allowedMentions: { repliedUser: false } })
+                  return interaction.reply({ embeds: [new MessageEmbed().setDescription(`${client.emojisObj.animated_cross} Your account is already connected!`)], allowedMentions: { repliedUser: false } })
                 }
                 hypixel.getPlayer(player).then(async (player) => {
                     if (!player.socialMedia.find((s) => s.id === 'DISCORD')) {
-                      const notconnected = new MessageEmbed()
-                        .setColor("RED")
-                        .setDescription(`${client.emojisObj.animated_cross} This minecraft account does not have a discord account connected to it.\n\nWatch the GIF to learn how to connect your discord account.`)
-                        .setImage('https://thumbs.gfycat.com/DentalTemptingLeonberger-size_restricted.gif')
-                      return interaction.reply({ embeds: [notconnected], allowedMentions: { repliedUser: false } })
+                      return interaction.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This minecraft account does not have a discord account connected to it.\n\nWatch the GIF to learn how to connect your discord account.`).setImage('https://thumbs.gfycat.com/DentalTemptingLeonberger-size_restricted.gif')], allowedMentions: { repliedUser: false } })
                     }
 
                     if (player.socialMedia.find((s) => s.id === 'DISCORD').link !== interaction.user.tag) {
-                      const tagnomatch = new MessageEmbed()
-                        .setColor("RED")
-                        .setDescription(`${client.emojisObj.animated_cross} ${player.nickname}'s connected discord tag doesn't match your discord tag.`)
-                      return interaction.reply({ embeds: [tagnomatch], allowedMentions: { repliedUser: false } })
+                      return interaction.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} ${player.nickname}'s connected discord tag doesn't match your discord tag.`)], allowedMentions: { repliedUser: false } })
                     }
 
                     const user1 = await linkDB.findOne({ uuid: player.uuid });
-                    if (user1) {
-                      const playerdupe = new MessageEmbed()
-                        .setColor("RED")
-                        .setDescription(`${client.emojisObj.animated_cross} That player has already been linked to another account.`)
-                      return interaction.reply({ embeds: [playerdupe], allowedMentions: { repliedUser: false } })
+                    if (user1) {                      
+                      return interaction.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} That player has already been linked to another account.`)], allowedMentions: { repliedUser: false } })
                     }
 
                     new linkDB({ id: interaction.member.id, uuid: player.uuid }).save(() => {
-                        const linked = new MessageEmbed()
-                            .setColor(minecraft_embed_colour)
-                            .setDescription(`${client.emojisObj.animated_tick} ${player.nickname} has been successfully linked to your account.`)
-                        interaction.reply({ embeds: [linked], allowedMentions: { repliedUser: false } })
+                        interaction.reply({ embeds: [new MessageEmbed().setColor(minecraft_embed_colour).setDescription(`${client.emojisObj.animated_tick} ${player.nickname} has been successfully linked to your account.`)], allowedMentions: { repliedUser: false } })
                       });
-                }).catch(e => {
-                    console.log(e)
-                    if (e.message === errors.PLAYER_DOES_NOT_EXIST) {
-                        const player404 = new MessageEmbed()
-                            .setColor("RED")
-                            .setDescription(`${client.emojisObj.animated_cross} I could not find that player in the API. Check spelling and name history.`)
-                            interaction.reply({ embeds: [player404], allowedMentions: { repliedUser: false }, ephemeral: true })
-                    } else if (e.message === errors.PLAYER_HAS_NEVER_LOGGED) {
-                        const neverLogged = new MessageEmbed()
-                            .setColor("RED")
-                            .setDescription(`${client.emojisObj.animated_cross} That player has never logged into Hypixel.`)
-                            interaction.reply({ embeds: [neverLogged], allowedMentions: { repliedUser: false }, ephemeral: true })
-                    } else {
-                        const error = new MessageEmbed()
-                            .setColor("RED")
-                            .setDescription(`${client.emojisObj.animated_cross} An error has occurred.`)
-                            interaction.reply({ embeds: [error], allowedMentions: { repliedUser: false }, ephemeral: true })
-                    }       
-                });
+                }).catch(e => {return errorHandling(e)});
 
             break;
             case "unlink":
                 const unlinkUser = await linkDB.findOne({ id: interaction.member.id });
                 if (!unlinkUser) {
-                    const notconnected = new MessageEmbed()
-                        .setColor("RED")
-                        .setDescription(`${client.emojisObj.animated_cross} This discord account does not have a minecraft account linked to it.`)
-                        .setImage('https://thumbs.gfycat.com/DentalTemptingLeonberger-size_restricted.gif')
-                  return interaction.reply({ embeds: [notconnected], allowedMentions: { repliedUser: false } })
+                  return interaction.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This discord account does not have a minecraft account linked to it.`) .setImage('https://thumbs.gfycat.com/DentalTemptingLeonberger-size_restricted.gif')], allowedMentions: { repliedUser: false } })
                 }
         
                 const username = await fetch(`https://playerdb.co/api/player/minecraft/${unlinkUser.uuid}`).then(res => res.json())
         
                 unlinkUser.deleteOne(() => {
-                  const unlinked = new MessageEmbed()
-                    .setColor(minecraft_embed_colour)
-                    .setDescription(`${client.emojisObj.animated_tick} ${username.data.player.username} has been successfully unlinked to your account.`)
-                return interaction.reply({ embeds: [unlinked], allowedMentions: { repliedUser: false } })
+                return interaction.reply({ embeds: [new MessageEmbed().setColor(minecraft_embed_colour) .setDescription(`${client.emojisObj.animated_tick} ${username.data.player.username} has been successfully unlinked to your account.`)], allowedMentions: { repliedUser: false } })
                 });
             break;
 
-            case "player-information":
+            case "player":
                 hypixel.getPlayer(player, { guild: true }).then(async (player) => {
                     if (!player.isOnline) {
                         playerIsOnline = "Offline"
@@ -204,67 +175,43 @@ module.exports = {
                         .setColor(minecraft_embed_colour)
                         .setAuthor({name: 'Player Stats', iconURL: 'https://i.imgur.com/tRe29vU.jpeg'})
                         .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
-                        .addField("General Stats",
-                        `\`•\` **Level**: \`${commaNumber(player.level)}\`
-                        \`•\` **AP**: \`${commaNumber(player.achievementPoints)}\`
-                        \`•\` **Karma**: \`${commaNumber(player.karma)}\`
-                        \`•\` **Rank**: \`${playerRank}\`
-                        \`•\` **MC Version**: \`${playerMinecraftVersion}\`
-                        `, true)
+                        .addField("General Stats", `\`•\` **Level**: \`${commaNumber(player.level)}\` \n\`•\` **AP**: \`${commaNumber(player.achievementPoints)}\` \n\`•\` **Karma**: \`${commaNumber(player.karma)}\` \n\`•\` **Rank**: \`${playerRank}\` \n\`•\` **MC Version**: \`${playerMinecraftVersion}\` `, true)
 
-                    if (player.guild !== null && player.guild.tag == null) {
-                        playerEmbed.setTitle(`[${player.rank}] ${player.nickname} [${player.guild.tag}]`)
-                    } else {
+                    if (player.guild) {
+                        const guildRank = player.guild.me.rank || "None"
+                        const guildTag = player.guild.tag || "None"
+
                         playerEmbed.setTitle(`[${player.rank}] ${player.nickname}`)
-                    }
-
-                    if (player.guild !== null) {
-                        playerEmbed.addField("Guild",
-                        `\`•\` **Name**: \`${player.guild.name}\`
-                        \`•\` **Level**: \`${commaNumber(player.guild.level)}\`
-                        \`•\` **Tag**: \`[${commaNumber(player.guild.tag)}]\`
-                        \`•\` **Weekly experience**: \`${commaNumber(player.guild.totalWeeklyGexp)}\`
-                        `, true)
+                        playerEmbed.addField("Guild", `\`•\` **Name**: \`${player.guild.name}\` \n\`•\` **Rank**: \`[${guildRank}]\` \n\`•\` **Level**: \`${commaNumber(player.guild.level)}\` \n\`•\` **Tag**: \`${guildTag}\` \n\`•\` **Weekly experience**: \`${commaNumber(player.guild.totalWeeklyGexp)}\` `, true)
                     }
 
                     var socialMedias = ``
-                    if(player.socialMedia) {
+                    if(player.socialMedia.length != 0) {
                         for (var i = 0; i < player.socialMedia.length; i++) {
-                            socialMedias += `\`•\` **${player.socialMedia[i].name}**: \`${player.socialMedia[i].link}\`\n`
+                            if(player.socialMedia[i].id === "DISCORD") {
+                                socialMedias += `\`•\` **${player.socialMedia[i].name}**: \`${player.socialMedia[i].link}\`\n`
+                            } else {
+                                socialMedias += `\`•\` **${player.socialMedia[i].name}**: [link](${player.socialMedia[i].link})\n`
+                            }
+                            
                         }
+                        playerEmbed.addField("Socials", `${socialMedias}`)
+                    } else {
+                        playerEmbed.addField("Socials", `\`No social medias connected\``)
                     }
-                    playerEmbed.addField("Socials", `${socialMedias}`)
-
-                    playerEmbed.addField("Status",
-                    `\`•\` **Status**: \`${playerIsOnline}\`
-                    \`•\` **First Login**: <t:${player.firstLoginTimestamp.toString().slice(0, -3)}:R>
-                    \`•\` **Last login**: <t:${player.lastLoginTimestamp.toString().slice(0, -3)}:R>
-                    `, true)
+                    
+                    if (!player.lastLoginTimestamp) {
+                        lastLoginTimestamp = "\`Unknown\`"
+                    } else {
+                        lastLoginTimestamp = `<t:${player.lastLoginTimestamp.toString().slice(0, -3)}:R>`
+                    }
+                    
+                    playerEmbed.addField("Status", `\`•\` **Status**: \`${playerIsOnline}\` \n\`•\` **First Login**: <t:${player.firstLoginTimestamp.toString().slice(0, -3)}:R> \n\`•\` **Last login**: ${lastLoginTimestamp} \n\`•\` **Last played**: \`${player.recentlyPlayedGame || "Unknown"}\` `, true)
 
                     await interaction.reply({ embeds: [playerEmbed], allowedMentions: { repliedUser: false } })   
                     
-
-                }).catch(e => {
-                    console.log(e)
-                    if (e.message === errors.PLAYER_DOES_NOT_EXIST) {
-                        const player404 = new MessageEmbed()
-                            .setColor("RED")
-                            .setDescription(`${client.emojisObj.animated_cross} I could not find that player in the API. Check spelling and name history.`)
-                            interaction.reply({ embeds: [player404], allowedMentions: { repliedUser: false }, ephemeral: true })
-                    } else if (e.message === errors.PLAYER_HAS_NEVER_LOGGED) {
-                        const neverLogged = new MessageEmbed()
-                            .setColor("RED")
-                            .setDescription(`${client.emojisObj.animated_cross} That player has never logged into Hypixel.`)
-                            interaction.reply({ embeds: [neverLogged], allowedMentions: { repliedUser: false }, ephemeral: true })
-                    } else {
-                        const error = new MessageEmbed()
-                            .setColor("RED")
-                            .setDescription(`${client.emojisObj.animated_cross} An error has occurred.`)
-                            interaction.reply({ embeds: [error], allowedMentions: { repliedUser: false }, ephemeral: true })
-                    }       
-                });
+                }).catch(e => {return errorHandling(e)});
                 break;
-
 
             case "bedwars":
                 hypixel.getPlayer(player).then(async(player) => {
@@ -298,27 +245,9 @@ module.exports = {
                         await DB.deleteOne({GuildID: interaction.guildId, MessageID: M.id, Player: player, TypeOfStats: "bedwars", InteractionMemberID: interaction.member.id})
                     }, 60 * 1000)
 
-
-                }).catch(e => {
-                    console.log(e)
-                    if (e.message === errors.PLAYER_DOES_NOT_EXIST) {
-                        const player404 = new MessageEmbed()
-                            .setColor("RED")
-                            .setDescription(`${client.emojisObj.animated_cross} I could not find that player in the API. Check spelling and name history.`)
-                            interaction.reply({ embeds: [player404], allowedMentions: { repliedUser: false }, ephemeral: true })
-                    } else if (e.message === errors.PLAYER_HAS_NEVER_LOGGED) {
-                        const neverLogged = new MessageEmbed()
-                            .setColor("RED")
-                            .setDescription(`${client.emojisObj.animated_cross} That player has never logged into Hypixel.`)
-                            interaction.reply({ embeds: [neverLogged], allowedMentions: { repliedUser: false }, ephemeral: true })
-                    } else {
-                        const error = new MessageEmbed()
-                            .setColor("RED")
-                            .setDescription(`${client.emojisObj.animated_cross} An error has occurred.`)
-                            interaction.reply({ embeds: [error], allowedMentions: { repliedUser: false }, ephemeral: true })
-                    }       
-                });
+                }).catch(e => {return errorHandling(e)});
                 break;
+
             case "duels":
                 const mode = interaction.options.getString("mode");
                 switch(mode) {
@@ -331,25 +260,9 @@ module.exports = {
                                 .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
                                 .addField(' ​', `\`•\` **Matches**: \`${commaNumber(player.stats.duels.playedGames)}\`\n\`•\` **Coins**: \`${commaNumber(player.stats.duels.playedGames)}\`\n\`•\` **Winstreak**: \`${commaNumber(player.stats.duels.coins)}\`\n\`•\` **Best Winstreak**: \`${commaNumber(player.stats.duels.bestWinstreak)}\`\n\`•\` **Wins**: \`${commaNumber(player.stats.duels.wins)}\`\n\`•\` **Losses**: \`${commaNumber(player.stats.duels.losses)}\`\n\`•\` **WLR**: \`${commaNumber(player.stats.duels.WLRatio)}\`\n\`•\` **Kills**: \`${commaNumber(player.stats.duels.kills)}\`\n\`•\` **Deaths**: \`${commaNumber(player.stats.duels.deaths)}\`\n\`•\` **KDR**: \`${commaNumber(player.stats.duels.KDRatio)}\``, true)
                             interaction.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
-                        }).catch(e => {
-                            if (e.message === errors.PLAYER_DOES_NOT_EXIST) {
-                                const player404 = new MessageEmbed()
-                                    .setColor("RED")
-                                    .setDescription(`${client.emojisObj.animated_cross} I could not find that player in the API. Check spelling and name history.`)
-                                    interaction.reply({ embeds: [player404], allowedMentions: { repliedUser: false }, ephemeral: true })
-                            } else if (e.message === errors.PLAYER_HAS_NEVER_LOGGED) {
-                                const neverLogged = new MessageEmbed()
-                                    .setColor("RED")
-                                    .setDescription(`${client.emojisObj.animated_cross} That player has never logged into Hypixel.`)
-                                    interaction.reply({ embeds: [neverLogged], allowedMentions: { repliedUser: false }, ephemeral: true })
-                            } else {
-                                const error = new MessageEmbed()
-                                    .setColor("RED")
-                                    .setDescription(`${client.emojisObj.animated_cross} An error has occurred.`)
-                                    interaction.reply({ embeds: [error], allowedMentions: { repliedUser: false }, ephemeral: true })
-                            }       
-                        });
+                        }).catch(e => {return errorHandling(e)});
                         break;
+
                     case "classic":
                         hypixel.getPlayer(player).then((player) => {
                             const embed = new MessageEmbed()
@@ -360,25 +273,9 @@ module.exports = {
                                 .addField(' ​', `\`•\` **Matches**: \`${commaNumber(player.stats.duels.classic.playedGames)}\`\n\`•\` **Coins**: \`${commaNumber(player.stats.duels.classic.playedGames)}\`\n\`•\` **Winstreak**: \`${commaNumber(player.stats.duels.classic.winstreak)}\`\n\`•\` **Best Winstreak**: \`${commaNumber(player.stats.duels.classic.bestWinstreak)}\`\n\`•\` **Wins**: \`${commaNumber(player.stats.duels.classic.wins)}\`\n\`•\` **Losses**: \`${commaNumber(player.stats.duels.classic.losses)}\`\n\`•\` **WLR**: \`${commaNumber(player.stats.duels.classic.WLRatio)}\`\n\`•\` **Kills**: \`${commaNumber(player.stats.duels.classic.kills)}\`\n\`•\` **Deaths**: \`${commaNumber(player.stats.duels.classic.deaths)}\`\n\`•\` **KDR**: \`${commaNumber(player.stats.duels.classic.KDRatio)}\``,true)
                             interaction.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
             
-                        }).catch(e => {
-                            if (e.message === errors.PLAYER_DOES_NOT_EXIST) {
-                                const player404 = new MessageEmbed()
-                                    .setColor("RED")
-                                    .setDescription(`${client.emojisObj.animated_cross} I could not find that player in the API. Check spelling and name history.`)
-                                    interaction.reply({ embeds: [player404], allowedMentions: { repliedUser: false }, ephemeral: true })
-                            } else if (e.message === errors.PLAYER_HAS_NEVER_LOGGED) {
-                                const neverLogged = new MessageEmbed()
-                                    .setColor("RED")
-                                    .setDescription(`${client.emojisObj.animated_cross} That player has never logged into Hypixel.`)
-                                    interaction.reply({ embeds: [neverLogged], allowedMentions: { repliedUser: false }, ephemeral: true })
-                            } else {
-                                const error = new MessageEmbed()
-                                    .setColor("RED")
-                                    .setDescription(`${client.emojisObj.animated_cross} An error has occurred.`)
-                                    interaction.reply({ embeds: [error], allowedMentions: { repliedUser: false }, ephemeral: true })
-                            }       
-                        });
+                        }).catch(e => {return errorHandling(e)});
                         break;
+
                     case "uhc":
                         hypixel.getPlayer(player).then((player) => {
                             const embed = new MessageEmbed()
@@ -394,25 +291,9 @@ module.exports = {
                                 .addField(` ​`, ` ​`, true)
 
                             interaction.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
-                        }).catch(e => {
-                            if (e.message === errors.PLAYER_DOES_NOT_EXIST) {
-                                const player404 = new MessageEmbed()
-                                    .setColor("RED")
-                                    .setDescription(`${client.emojisObj.animated_cross} I could not find that player in the API. Check spelling and name history.`)
-                                    interaction.reply({ embeds: [player404], allowedMentions: { repliedUser: false }, ephemeral: true })
-                            } else if (e.message === errors.PLAYER_HAS_NEVER_LOGGED) {
-                                const neverLogged = new MessageEmbed()
-                                    .setColor("RED")
-                                    .setDescription(`${client.emojisObj.animated_cross} That player has never logged into Hypixel.`)
-                                    interaction.reply({ embeds: [neverLogged], allowedMentions: { repliedUser: false }, ephemeral: true })
-                            } else {
-                                const error = new MessageEmbed()
-                                    .setColor("RED")
-                                    .setDescription(`${client.emojisObj.animated_cross} An error has occurred.`)
-                                    interaction.reply({embeds: [error], allowedMentions: { repliedUser: false }, ephemeral: true })
-                            }       
-                        });
+                        }).catch(e => {return errorHandling(e)});
                         break;
+
                     case "bridge":
                         hypixel.getPlayer(player).then(async (player) => {
                             const bridgeOverall = new MessageEmbed()
@@ -439,24 +320,7 @@ module.exports = {
                                 await interaction.editReply({components: []}).catch(() => {})
                                 await DB.deleteOne({GuildID: interaction.guildId, MessageID: M.id, Player: player, TypeOfStats: "bridge", InteractionMemberID: interaction.member.id})
                             }, 60 * 1000)
-                        }).catch(e => {
-                            if (e.message === errors.PLAYER_DOES_NOT_EXIST) {
-                                const player404 = new MessageEmbed()
-                                    .setColor("RED")
-                                    .setDescription(`${client.emojisObj.animated_cross} I could not find that player in the API. Check spelling and name history.`)
-                                    interaction.reply({ embeds: [player404], allowedMentions: { repliedUser: false }, ephemeral: true })
-                            } else if (e.message === errors.PLAYER_HAS_NEVER_LOGGED) {
-                                const neverLogged = new MessageEmbed()
-                                    .setColor("RED")
-                                    .setDescription(`${client.emojisObj.animated_cross} That player has never logged into Hypixel.`)
-                                    interaction.reply({ embeds: [neverLogged], allowedMentions: { repliedUser: false }, ephemeral: true })
-                            } else {
-                                const error = new MessageEmbed()
-                                    .setColor("RED")
-                                    .setDescription(`${client.emojisObj.animated_cross} An error has occurred.`)
-                                    interaction.reply({embeds: [error], allowedMentions: { repliedUser: false }, ephemeral: true })
-                            }       
-                        });
+                        }).catch(e => {return errorHandling(e)});
                         break;
                 }
 
