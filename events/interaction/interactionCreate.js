@@ -46,7 +46,7 @@ module.exports = {
       
       if(command.botOwnerOnly == true) {
         if(!botOwners.includes(interaction.member.id)) {
-          const command_logs = client.channels.cache.get(command_logs_id).send({embeds: [new MessageEmbed().setColor("RED").setTitle("Command misuse").setDescription(`<a:animated_cross:925091847905366096> ${interaction.member} tried to use a bot owner only command.`).addField("Command", `/${command.name}`).setAuthor(interaction.user.tag, interaction.user.avatarURL({ dynamic: true, size: 512 })).setFooter(`ID| ${interaction.user.id}`)]})
+          const command_logs = client.channels.cache.get(command_logs_id).send({embeds: [new MessageEmbed().setColor("RED").setTitle("Command misuse").setDescription(`<a:animated_cross:925091847905366096> ${interaction.member} tried to use a bot owner only command.`).addField("Command", `/${command.name}`).setAuthor(interaction.user.tag, interaction.user.avatarURL({ dynamic: true, size: 512 })).setFooter({text: `ID| ${interaction.user.id}`})]})
           return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} **This command (/${command.name}) can only be used by the owners of this bot.**`)], ephemeral: true})  
         }
       }
