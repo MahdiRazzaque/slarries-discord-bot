@@ -30,10 +30,6 @@ client.customStatus = false;
 const { DisTube } = require("distube");
 const { SpotifyPlugin } = require("@distube/spotify");
 
-//Discord Together
-const { DiscordTogether } = require('discord-together'); 
-client.discordTogether = new DiscordTogether(client); 
-
 client.distube = new DisTube(client, {
   emitNewSongOnly: true,
   leaveOnFinish: true,
@@ -41,6 +37,10 @@ client.distube = new DisTube(client, {
   plugins: [new SpotifyPlugin()],
 });
 module.exports = client;
+
+//Discord Together
+const { DiscordTogether } = require('discord-together'); 
+client.discordTogether = new DiscordTogether(client); 
 
 //Logging into the bot
 client.login(process.env.TOKEN);
