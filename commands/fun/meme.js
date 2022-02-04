@@ -30,7 +30,7 @@ module.exports = {
           .setURL(`${memeUrl}`)
           .setColor(fun_embed_colour)
           .setImage(memeImage)
-          .setFooter(`👍 ${memeUpvotes} 💬 ${memeNumComments}`);
+          .setFooter({text: `👍 ${memeUpvotes} 💬 ${memeNumComments}`});
 
         interaction.reply({ embeds: [meme] });
       })

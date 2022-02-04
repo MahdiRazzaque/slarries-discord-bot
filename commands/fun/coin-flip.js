@@ -48,14 +48,7 @@ module.exports = {
         )
     }
 
-    var message = await interaction.channel.send({embeds: [Response]})
-    interaction.reply({embeds: [new MessageEmbed().setColor(fun_embed_colour).setDescription(`${client.emojisObj.animated_tick} Flipping coin`)], ephemeral: true})
-
-    // for (var i = 0; i < 10; i++) {
-    //     const coin = answers[Math.floor(Math.random() * answers.length)];
-    //     await message.edit({embeds: [Response.setDescription(`**Flipping coin** \n\n**${coin.toUpperCase()}**`)]})
-    //     await delay(100)
-    // }
+    var message = await interaction.reply({embeds: [Response], fetchReply: true})
 
     await delay(5000)
 
