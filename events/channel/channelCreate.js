@@ -1,24 +1,25 @@
-const { Client, MessageEmbed, Message, Channel } = require("discord.js");
+const { Client, MessageEmbed, Message, GuildChannel } = require("discord.js");
 const { channel_log_colour, channel_logs_id } = require("../../structures/config.json");
 
 module.exports = {
   name: "channelCreate",
   disabled: false,
   /**
-   * @param {Channel} channel
+   * @param {GuildChannel} channel
    * @param {Client} client
    */
   execute(channel, client) {
 
+    const channel_logs = client.channels.cache.get(channel_logs_id)
+    let happen = Math.floor(new Date().getTime()/1000.0)
+
     const Log = new MessageEmbed()
       .setColor(channel_log_colour)
       .setTitle("__Channel Created📺__")
-      .setDescription(`A channel was **created**`)
-      .addFields({ name: "**Channel**", value: `${channel}` })
+      .setDescription(`A channel was **created** <t:${happen}:R>`)
+      .addFields({ name: "**Channel**", value: `\`${channel.name}\`` })
       .setTimestamp();
 
-    const channel_logs = client.channels.cache
-      .get(channel_logs_id)
-      .send({ embeds: [Log] });
+    channel_logs.send({ embeds: [Log] });
   },
 };

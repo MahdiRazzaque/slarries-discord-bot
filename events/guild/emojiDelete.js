@@ -9,20 +9,22 @@ module.exports = {
    * @param {guildMember} member
    */
   execute(emoji, client) {
+
+    const guild_logs = client.channels.cache.get(guild_logs_id)
+    let happen = Math.floor(new Date().getTime()/1000.0)
     
     const Log = new MessageEmbed()
     .setColor(guild_log_colour)
     .setTitle("__Emoji Deleted__ 😃")
+    .setDescription(`An emoji was **deleted** <t:${happen}:R>`)
     .addFields(
-        {name: "Name", value: `${emoji.name}`},
-        {name: "ID", value: `${emoji.id}`},
-        {name: "Author", value: `${emoji.author}`},
-        {name: "Animated", value: `${emoji.animated}`},
+        {name: "Name", value: `\`${emoji.name}\``},
+        {name: "ID", value: `\`${emoji.id}\``, inline: true},
+        {name: "Author", value: `\`${emoji.author}\``},
+        {name: "Animated", value: `\`${emoji.animated}\``, inline: true},
     )
     .setTimestamp();
 
-    const guild_logs = client.channels.cache
-    .get(guild_logs_id)
-    .send({ embeds: [Log] });
+    guild_logs.send({ embeds: [Log] });
   },
 };

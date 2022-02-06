@@ -311,7 +311,7 @@ module.exports = {
                                     .setPlaceholder("Use this menu to select different modes.")
                                     .addOptions([{ label: "Overall", value: "bridge-overall" }, { label: "1v1", value: "bridge-1v1" }, { label: "2v2", value: "bridge-2v2" }, { label: "3v3", value: "bridge-3v3" }, { label: "4v4", value: "bridge-4v4" }, { label: "2v2v2v2", value: "bridge-2v2v2v2" }, { label: "3v3v3v3", value: "bridge-3v3v3v3" }, { label: "Capture the flag", value: "bridge-ctf" }])
                             )
-        
+
                             const M = await interaction.reply({embeds: [bridgeOverall], components: [bridgeRow], fetchReply: true});
         
                             await DB.create({GuildID: interaction.guildId, MessageID: M.id, Player: player, TypeOfStats: "bridge", InteractionMemberID: interaction.member.id})
@@ -320,6 +320,7 @@ module.exports = {
                                 await interaction.editReply({components: []}).catch(() => {})
                                 await DB.deleteOne({GuildID: interaction.guildId, MessageID: M.id, Player: player, TypeOfStats: "bridge", InteractionMemberID: interaction.member.id})
                             }, 60 * 1000)
+                            
                         }).catch(e => {return errorHandling(e)});
                         break;
                 }

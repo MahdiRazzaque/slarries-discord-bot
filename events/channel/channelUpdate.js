@@ -15,7 +15,7 @@ module.exports = {
     if(oldChannel.type === "GUILD_PUBLIC_THREAD") return;
     if(oldChannel.type === "GUILD_PRIVATE_THREAD ") return;
 
-    if(oldChannel.id === "916387154442223676") return;
+    if(!["916387140227715082", "916387154442223676", "916387156870721647", "916387157864742973"].includes(oldChannel.id)) return;
 
     const channel_logs = client.channels.cache.get(channel_logs_id)
     let happen = Math.floor(new Date().getTime()/1000.0)

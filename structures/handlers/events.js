@@ -8,7 +8,7 @@ module.exports = async (client, PG, Ascii) => {
 
     if (event.name) {
       if(!Events.includes(event.name))
-      return Table.addRow(file.split("/")[7], "🔸 FAILED", "Event name is missing.");
+        return Table.addRow(file.split("/")[7], "🔸 FAILED", "Event name is missing.");
   }
 
     if(event.disabled) {
