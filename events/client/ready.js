@@ -9,7 +9,8 @@ module.exports = {
   name: "ready",
   disabled: false,
   once: true,
-  execute(client) {
+  async execute(client) {
+    console.log("======================================================================")
     modmailClient.ready()
     setInterval(() => {
       if (client.maintenance) {
@@ -30,7 +31,10 @@ module.exports = {
 
     if (!process.env.Database) return;
     mongoose.connect(process.env.Database, { useNewUrlParser: true, useUnifiedTopology: true })
-      .then(() => { console.log("The client is now connected to the database. 📚") })
+      .then(async () => { 
+        console.log("The client is now connected to the database. 📚")
+        console.log("======================================================================")
+      })
       .catch((err) => { console.log(err) });
 
     require("../../systems/lockdownSystem")(client);
@@ -50,8 +54,11 @@ module.exports = {
       res.send();
     });
 
-    app.listen(port, () =>
-      console.log(`Slarries Website: http://localhost:${port}`)
-    );
+    app.listen(port, () => {
+    console.log(`Slarries Website: http://localhost:${port}`)
+    console.log("======================================================================")
+    
+    });
+    console.log("======================================================================")
   },
 };
