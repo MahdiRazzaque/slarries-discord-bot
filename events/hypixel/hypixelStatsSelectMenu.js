@@ -12,8 +12,20 @@ module.exports = {
    * @param {CommandInteraction} interaction
    */
   execute(interaction, client) {
-    if(!interaction.isSelectMenu()) return;
 
+    function errorHandling (e) {
+        console.log(e)
+        if (e.message === errors.PLAYER_DOES_NOT_EXIST) {
+            return interaction.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} I could not find that player in the API. Check spelling and name history.`)], allowedMentions: { repliedUser: false }, ephemeral: true })
+        } else if (e.message === errors.PLAYER_HAS_NEVER_LOGGED) {
+            return interaction.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} That player has never logged into Hypixel.`)], allowedMentions: { repliedUser: false }, ephemeral: true })
+        } else { 
+            return interaction.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} An error has occurred.`)], allowedMentions: { repliedUser: false }, ephemeral: true })
+        }   
+    }
+
+    if(!interaction.isSelectMenu()) return;
+    
     if
     (!["bedwars-overall", "bedwars-solos", "bedwars-doubles", "bedwars-threes", "bedwars-fours", "bedwars-4v4", "bedwars-dream-ultimate-doubles", "bedwars-dream-ultimate-fours", "bedwars-dream-rush-doubles", "bedwars-dream-rush-fours", "bedwars-dream-armed-doubles", "bedwars-dream-armed-fours", "bedwars-dream-lucky-doubles", "bedwars-dream-lucky-fours", "bedwars-dream-voidless-doubles", "bedwars-dream-voidless-fours"].includes(interaction.values[0]) && 
     (!["bridge-overall", "bridge-1v1", "bridge-2v2", "bridge-3v3", "bridge-4v4", "bridge-2v2v2v2", "bridge-3v3v3v3", "bridge-ctf"].includes(interaction.values[0]))) 
@@ -45,7 +57,6 @@ module.exports = {
                         .addField("Averages per game", `\`•\` **Kills**: \`${commaNumber(player.stats.bedwars.avg.kills)}\` \n\`•\` **Lost**: \`${commaNumber(player.stats.bedwars.avg.finalKills)}\` \n\`•\` **BBLR**: \`${commaNumber(player.stats.bedwars.avg.bedsBroken)}\` `, true)
                         .addField("Milestones", `\`•\` **Wins to ${commaNumber(Math.ceil(player.stats.bedwars.WLRatio))} WLR**: \`${commaNumber((player.stats.bedwars.losses*Math.ceil(player.stats.bedwars.WLRatio))-player.stats.bedwars.wins)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars.KDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars.deaths*Math.ceil(player.stats.bedwars.KDRatio))-player.stats.bedwars.kills)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars.finalKDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars.finalDeaths*Math.ceil(player.stats.bedwars.finalKDRatio))-player.stats.bedwars.finalKills)}\` \n\`•\` **Beds to ${commaNumber(Math.ceil(player.stats.bedwars.beds.BLRatio))} BBLR**: \`${commaNumber((player.stats.bedwars.beds.lost*Math.ceil(player.stats.bedwars.beds.BLRatio))-player.stats.bedwars.beds.broken)}\` `, true)
                         .addField("Resources collected (All modes)", `\`•\` **Iron**: \`${commaNumber(player.stats.bedwars.collectedItemsTotal.iron)}\` \n\`•\` **Gold**: \`${commaNumber(player.stats.bedwars.collectedItemsTotal.gold)}\` \n\`•\` **Diamond**: \`${commaNumber(player.stats.bedwars.collectedItemsTotal.diamond)}\` \n\`•\` **Emerald**: \`${commaNumber(player.stats.bedwars.collectedItemsTotal.emerald)}\` `, true)
-        
         
                     const bedwarsSolos = new MessageEmbed()
                         .setColor(minecraft_embed_colour)
@@ -309,30 +320,59 @@ module.exports = {
                         }
                         interaction.deferUpdate()
                     } else {
-                        interaction.deferUpdate()
+                        switch(interaction.values[0]) {
+                            case "bedwars-overall": 
+                                interaction.reply({embeds: [bedwarsOverall], ephemeral: true})
+                            break;
+                            case "bedwars-solos": 
+                                interaction.reply({embeds: [bedwarsSolos], ephemeral: true})
+                            break;
+                            case "bedwars-doubles": 
+                            interaction.reply({embeds: [bedwarsDoubles], ephemeral: true})
+                            break;
+                            case "bedwars-threes": 
+                            interaction.reply({embeds: [bedwarsThrees], ephemeral: true})
+                            break;
+                            case "bedwars-fours": 
+                            interaction.reply({embeds: [bedwarsFours], ephemeral: true})
+                            break;
+                            case "bedwars-4v4": 
+                            interaction.reply({embeds: [bedwarsFourVFour], ephemeral: true})
+                            break;
+                            case "bedwars-dream-ultimate-doubles": 
+                            interaction.reply({embeds: [bedwarsDreamUltimateDoubles], ephemeral: true})
+                            break;
+                            case "bedwars-dream-ultimate-fours": 
+                            interaction.reply({embeds: [bedwarsDreamUltimateFours], ephemeral: true})
+                            break;
+                            case "bedwars-dream-rush-doubles": 
+                            interaction.reply({embeds: [bedwarsDreamRushDoubles], ephemeral: true})
+                            break;
+                            case "bedwars-dream-rush-fours": 
+                            interaction.reply({embeds: [bedwarsDreamRushFours], ephemeral: true})
+                            break;
+                            case "bedwars-dream-armed-doubles": 
+                            interaction.reply({embeds: [bedwarsDreamArmedDoubles], ephemeral: true})
+                            break;
+                            case "bedwars-dream-armed-fours": 
+                            interaction.reply({embeds: [bedwarsDreamArmedFours], ephemeral: true})
+                            break;
+                            case "bedwars-dream-lucky-doubles": 
+                            interaction.reply({embeds: [bedwarsDreamLuckyDoubles], ephemeral: true})
+                            break;
+                            case "bedwars-dream-lucky-fours": 
+                            interaction.reply({embeds: [bedwarsDreamLuckyFours], ephemeral: true})
+                            break;
+                            case "bedwars-dream-voidless-doubles": 
+                            interaction.reply({embeds: [bedwarsDreamVoidlessDoubles], ephemeral: true})
+                            break;
+                            case "bedwars-dream-voidless-fours": 
+                            interaction.reply({embeds: [bedwarsDreamVoidlessFours], ephemeral: true})
+                            break;
+                        }
                     }
 
-
-        
-                }).catch(e => {
-                    console.log(e)
-                    if (e.message === errors.PLAYER_DOES_NOT_EXIST) {
-                        const player404 = new MessageEmbed()
-                            .setColor("RED")
-                            .setDescription(`${client.emojisObj.animated_cross} I could not find that player in the API. Check spelling and name history.`)
-                            interaction.reply({ embeds: [player404], allowedMentions: { repliedUser: false }, ephemeral: true })
-                    } else if (e.message === errors.PLAYER_HAS_NEVER_LOGGED) {
-                        const neverLogged = new MessageEmbed()
-                            .setColor("RED")
-                            .setDescription(`${client.emojisObj.animated_cross} That player has never logged into Hypixel.`)
-                            interaction.reply({ embeds: [neverLogged], allowedMentions: { repliedUser: false }, ephemeral: true })
-                    } else {
-                        const error = new MessageEmbed()
-                            .setColor("RED")
-                            .setDescription(`${client.emojisObj.animated_cross} An error has occurred.`)
-                            interaction.reply({ embeds: [error], allowedMentions: { repliedUser: false }, ephemeral: true })
-                    }       
-                });
+                }).catch(e => {return errorHandling(e)});
             break;
             case "bridge":
                 hypixel.getPlayer(player).then(async(player) => {
@@ -417,47 +457,55 @@ module.exports = {
                                 interaction.message.edit({embeds: [bridge1v1]})
                             break;
                             case "bridge-2v2": 
-                            interaction.message.edit({embeds: [bridge2v2]})
+                                interaction.message.edit({embeds: [bridge2v2]})
                             break;
                             case "bridge-3v3": 
-                            interaction.message.edit({embeds: [bridge3v3]})
+                                interaction.message.edit({embeds: [bridge3v3]})
                             break;
                             case "bridge-4v4": 
-                            interaction.message.edit({embeds: [bridge4v4]})
+                                interaction.message.edit({embeds: [bridge4v4]})
                             break;
                             case "bridge-2v2v2v2": 
-                            interaction.message.edit({embeds: [bridge2v2v2v2]})
+                                interaction.message.edit({embeds: [bridge2v2v2v2]})
                             break;
                             case "bridge-3v3v3v3": 
-                            interaction.message.edit({embeds: [bridge3v3v3v3]})
+                                interaction.message.edit({embeds: [bridge3v3v3v3]})
                             break;
                             case "bridge-ctf": 
-                            interaction.message.edit({embeds: [bridgeCtf]})
+                                interaction.message.edit({embeds: [bridgeCtf]})
                             break;
                         }
                         interaction.deferUpdate()
                     } else {
-                        interaction.deferUpdate()
+                        switch(interaction.values[0]) {
+                            case "bridge-overall": 
+                                interaction.reply({embeds: [bridgeOverall], ephemeral: true})
+                            break;
+                            case "bridge-1v1": 
+                                interaction.reply({embeds: [bridge1v1], ephemeral: true})
+                            break;
+                            case "bridge-2v2": 
+                                interaction.reply({embeds: [bridge2v2], ephemeral: true})
+                            break;
+                            case "bridge-3v3": 
+                                interaction.reply({embeds: [bridge3v3], ephemeral: true})
+                            break;
+                            case "bridge-4v4": 
+                                interaction.reply({embeds: [bridge4v4], ephemeral: true})
+                            break;
+                            case "bridge-2v2v2v2": 
+                                interaction.reply({embeds: [bridge2v2v2v2], ephemeral: true})
+                            break;
+                            case "bridge-3v3v3v3": 
+                                interaction.reply({embeds: [bridge3v3v3v3], ephemeral: true})
+                            break;
+                            case "bridge-ctf": 
+                                interaction.reply({embeds: [bridgeCtf], ephemeral: true})
+                            break;
+                        }
+                        
                     }     
-                }).catch(e => {
-                    console.log(e)
-                    if (e.message === errors.PLAYER_DOES_NOT_EXIST) {
-                        const player404 = new MessageEmbed()
-                            .setColor("RED")
-                            .setDescription(`${client.emojisObj.animated_cross} I could not find that player in the API. Check spelling and name history.`)
-                            interaction.reply({ embeds: [player404], allowedMentions: { repliedUser: false }, ephemeral: true })
-                    } else if (e.message === errors.PLAYER_HAS_NEVER_LOGGED) {
-                        const neverLogged = new MessageEmbed()
-                            .setColor("RED")
-                            .setDescription(`${client.emojisObj.animated_cross} That player has never logged into Hypixel.`)
-                            interaction.reply({ embeds: [neverLogged], allowedMentions: { repliedUser: false }, ephemeral: true })
-                    } else {
-                        const error = new MessageEmbed()
-                            .setColor("RED")
-                            .setDescription(`${client.emojisObj.animated_cross} An error has occurred.`)
-                            interaction.reply({ embeds: [error], allowedMentions: { repliedUser: false }, ephemeral: true })
-                    }       
-                });
+                }).catch(e => {return errorHandling(e)});
 
             break;
         }
