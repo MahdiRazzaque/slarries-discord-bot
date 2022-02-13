@@ -16,7 +16,7 @@ module.exports = {
     const Log = new MessageEmbed()
       .setColor(channel_log_colour)
       .setTitle("__Channel Deleted📺__")
-      .setDescription(`A channel was **deleted** guild_logs`)
+      .setDescription(`A channel was **deleted** <t:${happen}:R>`)
       .addFields({ name: "**Channel**", value: `\`${channel.name}\`` })
       .setTimestamp();
 
