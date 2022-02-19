@@ -95,6 +95,7 @@ module.exports = {
       interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Your [suggestion](${M.url}) was successfully created and sent to ${suggestionsChannel}`)], ephemeral: true})
     } catch (err) {
       console.log(err);
+      return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} An error occured.`)]})     
     }
   }
 }

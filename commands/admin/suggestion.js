@@ -1,6 +1,6 @@
 const { MessageEmbed, Message, CommandInteraction, Client } = require("discord.js");
 const { admin_embed_colour } = require("../../structures/config.json");
-const suggestSetupDB = require("../../structures/schemas/suggestSetupDB")
+const suggestSetupDB = require("../../structures/schemas/suggestSetupDB");
 const suggestDB = require("../../structures/schemas/suggestDB");
 
 module.exports = {
