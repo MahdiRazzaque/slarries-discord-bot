@@ -1,6 +1,6 @@
 const { MessageEmbed, Message, CommandInteraction, Client } = require("discord.js");
 const { admin_embed_colour } = require("../../structures/config.json");
-const DB = require("../../structures/schemas/suggestSetupDB")
+const DB = require("../../structures/schemas/suggestSetupDB");
 
 module.exports = {
   name: "suggest-setup",
@@ -40,9 +40,9 @@ module.exports = {
                 })
             } catch (error) {
                 if(error.message === "Missing Access") {
-                    return interaction.reply({embeds: [new MessageEmbed().setColor(admin_embed_colour).setDescription(`${client.emojisObj.animated_cross} The bot does not have access to this channel.`)]})
+                    return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} The bot does not have access to this channel.`)]})
                 } else {
-                    return interaction.reply({embeds: [new MessageEmbed().setColor(admin_embed_colour).setDescription(`${client.emojisObj.animated_cross} An error occured. \n\n \`\`\`${error}\`\`\``)]})
+                    return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} An error occured. \n\n \`\`\`${error}\`\`\``)]})
                 }    
             }
         break;
