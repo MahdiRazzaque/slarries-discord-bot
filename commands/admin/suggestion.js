@@ -37,6 +37,9 @@ module.exports = {
     const messageId = interaction.options.getString("message-id");
     const reason = interaction.options.getString("reason");
 
+    if(reason.length > 1024)
+      return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} Your reason can't be longer than 1024 characters.`)], ephemeral: true})
+
     const suggestionsSetup = await suggestSetupDB.findOne({ GuildID: interaction.guildId });
     var suggestionsChannel;
 
@@ -49,12 +52,12 @@ module.exports = {
     const suggestion = await suggestDB.findOne({GuildID: interaction.guild.id, MessageID: messageId})
 
     if(!suggestion)
-      return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This suggestion was not found in the database.`)]})
+      return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This suggestion was not found in the database.`)], ephemeral: true})
 
     const message = await suggestionsChannel.messages.fetch(messageId)
 
     if(!message)
-      return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This message was not found.`)]})
+      return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This message was not found.`)], ephemeral: true})
 
     const Embed = message.embeds[0];
     if(!Embed) return;
@@ -63,7 +66,7 @@ module.exports = {
       case "accept":
         Embed.fields[1] = {name: "Status", value: "Accepted", inline: true};
         Embed.fields[2] = {name: "Reason", value: `${reason}`, inline: true}
-        message.edit({embeds: [Embed.setColor("GREEN")], content: `<@${suggestion.MemberID}>`});
+        message.edit({embeds: [Embed.setColor("GREEN")], content: `<@${suggestion.MemberID}>`, components: []});
 
         if(suggestion.DM) {
           const member = client.users.cache.get(suggestion.MemberID);
@@ -75,7 +78,7 @@ module.exports = {
       case "decline":
         Embed.fields[1] = {name: "Status", value: "Declined", inline: true};
         Embed.fields[2] = {name: "Reason", value: `${reason}`, inline: true}
-        message.edit({embeds: [Embed.setColor("RED")], content: `<@${suggestion.MemberID}>`});
+        message.edit({embeds: [Embed.setColor("RED")], content: `<@${suggestion.MemberID}>`, components: []});
 
         if(suggestion.DM) {
           const member = client.users.cache.get(suggestion.MemberID);

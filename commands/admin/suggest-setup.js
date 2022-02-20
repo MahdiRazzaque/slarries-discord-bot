@@ -17,10 +17,15 @@ module.exports = {
         ]
     },
     {
-        name: "current-channel",
+        name: "channel",
         description: "Display the current suggestions channel.",
         type: "SUB_COMMAND",
-      },
+    },
+    {
+        name: "reset",
+        description: "Reset the suggestion channel.",
+        type: "SUB_COMMAND",
+    },
   ],
   /**
    *
@@ -46,13 +51,24 @@ module.exports = {
                 }    
             }
         break;
-        case "current-channel":
-            const suggestion = await DB.findOne({GuildID: interaction.guild.id})
+        case "channel":
+            var suggestion = await DB.findOne({GuildID: interaction.guild.id})
 
             if(!suggestion)
                 return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This server has not setup the suggestion system.`)]})
 
             return interaction.reply({embeds: [new MessageEmbed().setColor(admin_embed_colour).setDescription(`The suggestions channel is currently set to <#${suggestion.ChannelID}>`)]})
+        break;
+        case "reset":
+            var suggestion = await DB.findOne({GuildID: interaction.guild.id})
+
+            if(!suggestion)
+                return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This server has not setup the suggestion system.`)]})
+
+            DB.deleteOne({GuildID: interaction.guild.id})
+            .then(() => {
+                return interaction.reply({embeds: [new MessageEmbed().setColor(admin_embed_colour).setDescription(`${client.emojisObj.animated_tick} The suggestions channel has successfully been reset.`)]})
+            })
         break;
     }
 

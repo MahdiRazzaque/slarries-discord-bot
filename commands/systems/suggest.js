@@ -76,12 +76,20 @@ module.exports = {
         {name: "Status", value: "🕐 Pending", inline: true},
         {name: "Reason", value: "Pending", inline: true},
       )
+      .addFields(
+        {name: "Upvotes", value: "0", inline: true},
+        {name: "Downvotes", value: "0", inline: true},
+        {name: "Overall votes", value: "0", inline: true},
+      )
+    
+    const buttons = new MessageActionRow()
+    buttons.addComponents(
+      new MessageButton().setCustomId("suggestion-upvote").setLabel(`Upvote`).setStyle("PRIMARY").setEmoji(`${client.emojisObj.upvote}`),
+      new MessageButton().setCustomId("suggestion-downvote").setLabel(`Downvote`).setStyle("SECONDARY").setEmoji(`${client.emojisObj.downvote}`)
+    )
 
     try {
-      const M = await suggestionsChannel.send({embeds: [Embed]});
-      
-      M.react("👍");
-      M.react("👎");
+      const M = await suggestionsChannel.send({embeds: [Embed], components: [buttons]});
 
       await suggestDB.create({GuildID: guildId, MessageID: M.id, Details: [
         {
@@ -90,9 +98,12 @@ module.exports = {
           Suggestion: suggestion,
         }],
         MemberID: member.id,
-        DM: DM
+        DM: DM,
+        UpvotesMembers: [],
+        DownvotesMembers: [],
+        InUse: false,
       })
-      interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Your [suggestion](${M.url}) was successfully created and sent to ${suggestionsChannel}`)], ephemeral: true})
+      interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Your [suggestion](${M.url}) was successfully created and sent to ${suggestionsChannel}`)]})
     } catch (err) {
       console.log(err);
       return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} An error occured.`)]})     

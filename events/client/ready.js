@@ -47,6 +47,7 @@ module.exports = {
         emojis[e.name] = `<${e.animated ? 'a' : ''}:${e.name}:${e.id}>`;
     })
     client.emojisObj = emojis;
+    console.log(client.emojisObj)
     
     app.get("/", function (req, res) {
       res.write("<h1> Connected as " + client.user.tag + "</h1>");
