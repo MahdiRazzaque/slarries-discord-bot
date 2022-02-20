@@ -29,7 +29,7 @@ module.exports = {
           return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This [suggestion](${interaction.message.url}) was not found in the database.`)], ephemeral: true});
 
         if(suggestion.InUse) {
-            return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} Please wait`)], ephemeral: true});
+            return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} Please wait as someone else it currently trying to upvote/downvote.`)], ephemeral: true});
         } else {
             suggestion.InUse = true
             await suggestion.save()
@@ -73,7 +73,7 @@ module.exports = {
 
                     suggestion.UpvotesMembers.push(interaction.member.id)
 
-                    interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_tick} You have upvoted this [suggestion](${interaction.message.url}).`)], ephemeral: true});
+                    interaction.reply({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`${client.emojisObj.animated_tick} You have upvoted this [suggestion](${interaction.message.url}).`)], ephemeral: true});
                 }                
             break;
 
@@ -96,7 +96,7 @@ module.exports = {
 
                     suggestion.DownvotesMembers.push(interaction.member.id)
 
-                    interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_tick} You have downvoted this [suggestion](${interaction.message.url}).`)], ephemeral: true});
+                    interaction.reply({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`${client.emojisObj.animated_tick} You have downvoted this [suggestion](${interaction.message.url}).`)], ephemeral: true});
                 }
             break;
         }
