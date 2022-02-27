@@ -1,13 +1,12 @@
-const { MessageEmbed, Message, CommandInteraction, Client } = require("discord.js");
+const { MessageEmbed, Message, CommandInteraction, Client, Permissions } = require("discord.js");
 const { admin_embed_colour } = require("../../structures/config.json");
 const suggestSetupDB = require("../../structures/schemas/suggestSetupDB");
 const suggestDB = require("../../structures/schemas/suggestDB");
 
 module.exports = {
   name: "suggestion",
-  description: "Set up the channel to where suggestions are sent.",
+  description: "Accept or decline a suggestion.",
   usage: "/suggestion",
-  permission: "ADMINISTRATOR",
   options: [
     {
       name: "accept",
@@ -27,6 +26,14 @@ module.exports = {
         {name: "reason", description: "The reason why this suggestion was declined.", type: "STRING", required: true}
       ]
     },
+    {
+      name: "delete",
+      description: "Delete a suggestion.",
+      type: "SUB_COMMAND",
+      options: [
+        {name: "message-id", description: "The message id of the suggestion you want to decline.", type: "STRING", required: true},
+      ]
+    },
   ],
   /**
    *
@@ -37,19 +44,39 @@ module.exports = {
     const messageId = interaction.options.getString("message-id");
     const reason = interaction.options.getString("reason");
 
-    if(reason.length > 1024)
+    if(reason) {
+      if(reason.length > 1024)
       return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} Your reason can't be longer than 1024 characters.`)], ephemeral: true})
-
-    const suggestionsSetup = await suggestSetupDB.findOne({ GuildID: interaction.guildId });
+    }
+    
+    const suggestSetup = await suggestSetupDB.findOne({ GuildID: interaction.guildId });
     var suggestionsChannel;
 
-    if(!suggestionsSetup) {
+    if(!suggestSetup) {
       return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This server has not setup the suggestion system.`)]})
     } else {
-      suggestionsChannel = interaction.guild.channels.cache.get(suggestionsSetup.ChannelID)
+      suggestionsChannel = interaction.guild.channels.cache.get(suggestSetup.ChannelID)
+    }
+    
+    if(interaction.options.getSubcommand() != "delete") {
+      if(suggestSetup.SuggestionManagers.length <= 0 || !suggestSetup.SuggestionManagers) {
+        if(!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR))
+          return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You are not a suggestion manager.`)], ephemeral: true});
+      } else {
+        for (var i = 0; i < suggestSetup.SuggestionManagers.length; i++) {
+          if (!interaction.member.roles.cache.has(suggestSetup.SuggestionManagers[i])) 
+            continue;
+           
+          if (interaction.member.roles.cache.has(suggestSetup.SuggestionManagers[i])) 
+            var suggestionManager = true;
+      }
+      if(!suggestionManager)
+        return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You are not a suggestion manager.`)], ephemeral: true});
+      }
     }
 
-    const suggestion = await suggestDB.findOne({GuildID: interaction.guild.id, MessageID: messageId})
+    
+    const suggestion = await suggestDB.findOne({GuildID: interaction.guild.id, MessageID: messageId});
 
     if(!suggestion)
       return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This suggestion was not found in the database.`)], ephemeral: true})
@@ -70,9 +97,9 @@ module.exports = {
 
         if(suggestion.DM) {
           const member = client.users.cache.get(suggestion.MemberID);
-          member.send({embeds: [new MessageEmbed().setColor("GREEN").setTitle("Suggestion 💡").setDescription(`Your suggestion was accepted ✅`).addFields({name: "Suggestion", value: `[link](${message.url})`, inline: true}, {name: "Guild", value: `${interaction.guild.name}`, inline: true}, {name: "Reason", value: `${reason}`, inline: true})]}).catch(() => null)
+          member.send({embeds: [new MessageEmbed().setColor("GREEN").setTitle("Suggestion 💡").setDescription(`${client.emojisObj.animated_tick} Your suggestion was accepted.`).addFields({name: "Suggestion", value: `[link](${message.url})`, inline: true}, {name: "Guild", value: `${interaction.guild.name}`, inline: true}, {name: "Reason", value: `${reason}`, inline: true})]}).catch(() => null)
         }
-        return interaction.reply({embeds: [new MessageEmbed().setColor(admin_embed_colour).setDescription(`[Suggestion](${message.url}) was accepted ✅`)], ephemeral: true})
+        return interaction.reply({embeds: [new MessageEmbed().setColor(admin_embed_colour).setDescription(`${client.emojisObj.animated_tick} [Suggestion](${message.url}) was accepted.`)], ephemeral: true})
       break;
 
       case "decline":
@@ -82,9 +109,26 @@ module.exports = {
 
         if(suggestion.DM) {
           const member = client.users.cache.get(suggestion.MemberID);
-          member.send({embeds: [new MessageEmbed().setColor("RED").setTitle("Suggestion 💡").setDescription(`Your suggestion was declined. ✅`).addFields({name: "Suggestion", value: `[link](${message.url})`, inline: true}, {name: "Guild", value: `${interaction.guild.name}`, inline: true}, {name: "Reason", value: `${reason}`, inline: true})]}).catch(() => null)
+          member.send({embeds: [new MessageEmbed().setColor("RED").setTitle("Suggestion 💡").setDescription(`${client.emojisObj.animated_cross} Your suggestion was declined.`).addFields({name: "Suggestion", value: `[link](${message.url})`, inline: true}, {name: "Guild", value: `${interaction.guild.name}`, inline: true}, {name: "Reason", value: `${reason}`, inline: true})]}).catch(() => null)
         }
-        return interaction.reply({embeds: [new MessageEmbed().setColor(admin_embed_colour).setDescription(`[Suggestion](${message.url}) declined ✅`)], ephemeral: true})
+        return interaction.reply({embeds: [new MessageEmbed().setColor(admin_embed_colour).setDescription(`${client.emojisObj.animated_tick} [Suggestion](${message.url}) declined.`)], ephemeral: true})
+      break;
+      
+      case "delete":
+        if(!suggestSetup.AllowOwnSuggestionDelete && !suggestionManager) {
+          return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You cannot delete this [suggestion](${message.url})`)]})
+        } else if (suggestionManager) {
+          await message.delete()
+          return interaction.reply({embeds: [new MessageEmbed().setColor(admin_embed_colour).setDescription(`${client.emojisObj.animated_tick} This suggestion was deleted.`)]})
+        } else if(suggestSetup.AllowOwnSuggestionDelete) {
+          if(suggestion.MemberID === interaction.member.id) {
+            await message.delete()
+            return interaction.reply({embeds: [new MessageEmbed().setColor(admin_embed_colour).setDescription(`${client.emojisObj.animated_tick} Your suggestion was deleted.`)]})  
+          } else {
+            return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This isn't your suggestion.`)]})  
+          }
+          
+        }
       break;
     }
   },

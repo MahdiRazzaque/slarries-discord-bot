@@ -63,6 +63,12 @@ module.exports = {
       suggestionsChannel = interaction.guild.channels.cache.get(suggestionsSetup.ChannelID)
     }
 
+    if(suggestionsSetup.Disabled)
+      return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} Suggestions are currently disabled.`)]})
+
+    if(suggestionsSetup.ChannelID === "None")
+      return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} The suggestion channel hasn't been set.`)]})
+
     const type = options.getString("type");
     const suggestion = options.getString("suggestion");
     const DM = options.getBoolean("dm")
