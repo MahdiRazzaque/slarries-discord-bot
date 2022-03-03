@@ -58,24 +58,24 @@ module.exports = {
       suggestionsChannel = interaction.guild.channels.cache.get(suggestSetup.ChannelID)
     }
     
-    if(interaction.options.getSubcommand() != "delete") {
-      if(suggestSetup.SuggestionManagers.length <= 0 || !suggestSetup.SuggestionManagers) {
-        if(!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR))
-          return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You are not a suggestion manager.`)], ephemeral: true});
-      } else {
-        for (var i = 0; i < suggestSetup.SuggestionManagers.length; i++) {
-          if (!interaction.member.roles.cache.has(suggestSetup.SuggestionManagers[i])) 
-            continue;
-           
-          if (interaction.member.roles.cache.has(suggestSetup.SuggestionManagers[i])) 
-            var suggestionManager = true;
-      }
-      if(!suggestionManager)
-        return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You are not a suggestion manager.`)], ephemeral: true});
-      }
+    if(suggestSetup.SuggestionManagers.length <= 0 || !suggestSetup.SuggestionManagers) {
+      console.log("suggestSetup.SuggestionManagers.length <= 0 || !suggestSetup.SuggestionManagers")
+      if(interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
+        var suggestionManager = true;
+      } else if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) 
+        return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You are not a suggestion manager.`)], ephemeral: true});    
+    } else {
+      for (var i = 0; i < suggestSetup.SuggestionManagers.length; i++) {
+        if (!interaction.member.roles.cache.has(suggestSetup.SuggestionManagers[i])) 
+          continue;
+          
+        if (interaction.member.roles.cache.has(suggestSetup.SuggestionManagers[i])) 
+          var suggestionManager = true;
+    }
+    if(!suggestionManager)
+      return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You are not a suggestion manager.`)], ephemeral: true});
     }
 
-    
     const suggestion = await suggestDB.findOne({GuildID: interaction.guild.id, MessageID: messageId});
 
     if(!suggestion)
@@ -127,7 +127,6 @@ module.exports = {
           } else {
             return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This isn't your suggestion.`)]})  
           }
-          
         }
       break;
     }
