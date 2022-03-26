@@ -84,7 +84,7 @@ module.exports = {
                         for (var i = 0; i < docs.MembersID.length; i++) {
                             var member = client.users.cache.get(docs.MembersID[i]);
 
-                            member.send({embeds: [transcriptEmbed.setTitle(`Ticket closed in ${interaction.guild.name}`)]}).catch((e) => {})
+                            member.send({embeds: [transcriptEmbed.setTitle(`Ticket closed in ${interaction.guild.name}`)], files: [attachment]}).catch((e) => {})
                         }
                     
                         setTimeout(() => {channel.delete()}, 10 * 500)
