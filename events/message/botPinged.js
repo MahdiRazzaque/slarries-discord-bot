@@ -11,6 +11,7 @@ module.exports = {
      */
     execute(message, client) {
         if(message.channel.type === "DM") return;
+        if(message.guild === null) return;
         if(message.author.bot) return;
         if (message.content.includes('@here') || message.content.includes('@everyone')) return;
         

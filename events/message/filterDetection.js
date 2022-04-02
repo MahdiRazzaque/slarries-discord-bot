@@ -10,6 +10,7 @@ module.exports = {
      */
     async execute(message, client) {
         if(message.author.bot) return;
+        if(message.guild === null) return;
 
         const { content, guild, author, channel } = message;
 

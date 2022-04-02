@@ -34,7 +34,9 @@
     "everyone_id": "916385872356733000",
     "parent_id": "916385874416123923",
     "open_ticket_channel": "916385874697150504",
-    "transcripts_channel_id": "922915715797880932"
+    "transcripts_channel_id": "922915715797880932",
+    
+    "Prefix": "!"
   
   }
   

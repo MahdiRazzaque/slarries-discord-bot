@@ -35,7 +35,7 @@ module.exports = {
         .setDescription(`👷‍♂️ The bot has been taken out of maintenance mode. 👷‍♂️`)
         .setTimestamp();
 
-      return interaction.reply({ embeds: [bot], ephemeral: true });
+      return interaction.reply({ embeds: [bot]});
     }
   },
 };

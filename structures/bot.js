@@ -1,5 +1,5 @@
 //Base for starting the bot
-const { Client, Intents, Collection, Guild } = require("discord.js");
+const { Client, Collection } = require("discord.js");
 const fs = require("fs");
 const { promisify } = require("util");
 const { glob } = require("glob");
@@ -12,13 +12,15 @@ const client = new Client({ intents: 32767, partials: ["REACTION", "CHANNEL", "M
 
 //Command Handler
 client.commands = new Collection();
+client.prefixcommands = new Collection();
+client.cooldowns = new Collection();
 client.events = new Collection();
 client.filters = new Collection();
 client.filtersLog = new Collection()
 
 require("../systems/giveawaySystem")(client);
 
-["events", "commands"].forEach((handler) => {
+["events", "commands", "prefixcommands"].forEach((handler) => {
   require(`./handlers/${handler}`)(client, PG, Ascii);
 });
 

@@ -10,6 +10,7 @@ module.exports = {
   execute(message, client) {
 
     try {
+      if(message.guild === null) return;
       if (message.author.bot) return;
 
       const Filter = client.filters.get(message.guild.id);

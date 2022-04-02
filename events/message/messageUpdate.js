@@ -13,7 +13,7 @@ module.exports = {
   execute(oldMessage, newMessage, client) {
 
     try {
-    
+      if(oldMessage.guild === null) return;
       if (oldMessage.author.bot) return;
 
       if (oldMessage.content === newMessage.content) return;

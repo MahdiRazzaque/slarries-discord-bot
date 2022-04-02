@@ -54,6 +54,6 @@ module.exports = {
                 { name: `**Creation Date:**`, value: `\`\`\`${moment(guild.createdTimestamp).format("LT")} ${moment(guild.createdTimestamp).format("LL")} (${moment(guild.createdTimestamp).fromNow()})\`\`\``, inline: false },
             );
             
-        interaction.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
+        return interaction.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
     },
 };

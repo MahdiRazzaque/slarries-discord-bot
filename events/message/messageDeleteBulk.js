@@ -11,32 +11,33 @@ module.exports = {
    * @param {Client} client
    */
   async execute(messages, client) {
-      let happen = Math.floor(new Date().getTime()/1000.0)
+    if(messages.guild === null) return;
+    let happen = Math.floor(new Date().getTime()/1000.0)
 
-      const content = messages.map((m) => m.content).reverse()
-      const authors = messages.map((m) => m.author.username).reverse()
-      const discriminators = messages.map((m) => m.author.discriminator).reverse()
-      const embeds = messages.map((m) => m.embeds).reverse()
-      const channel = messages.map((m) => m.channelId)
+    const content = messages.map((m) => m.content).reverse()
+    const authors = messages.map((m) => m.author.username).reverse()
+    const discriminators = messages.map((m) => m.author.discriminator).reverse()
+    const embeds = messages.map((m) => m.embeds).reverse()
+    const channel = messages.map((m) => m.channelId)
 
-      var messages = ``;
+    var messages = ``;
 
-      for (var i = 0; i < authors.length; i++) {
-        messages += `${authors[i]}#${discriminators[i]}: ${content[i] ? content[i] : "Embed"}\n`
-      }
-    
-      const sourceBin = await create([{name: "Messages deleted", content: messages}])
-      sourceBinURL = sourceBin.url
+    for (var i = 0; i < authors.length; i++) {
+      messages += `${authors[i]}#${discriminators[i]}: ${content[i] ? content[i] : "Embed"}\n`
+    }
+  
+    const sourceBin = await create([{name: "Messages deleted", content: messages}])
+    sourceBinURL = sourceBin.url
 
-      const Log = new MessageEmbed()
-      .setColor(message_log_colour)
-      .setTitle("__Bulk deleted messages 📕__")
-      .setDescription(`${authors.length} messages was **bulk deleted** in <#${channel[0]}> <t:${happen}:R>`)
-      .addFields({name: "Deleted messages", value: `${sourceBinURL}`,})
-      .setTimestamp();
+    const Log = new MessageEmbed()
+    .setColor(message_log_colour)
+    .setTitle("__Bulk deleted messages 📕__")
+    .setDescription(`${authors.length} messages was **bulk deleted** in <#${channel[0]}> <t:${happen}:R>`)
+    .addFields({name: "Deleted messages", value: `${sourceBinURL}`,})
+    .setTimestamp();
 
-      const message_logs = client.channels.cache
-      .get(message_logs_id)
-      .send({ embeds: [Log] });
-},
+    const message_logs = client.channels.cache
+    .get(message_logs_id)
+    .send({ embeds: [Log] });
+  },
 };
