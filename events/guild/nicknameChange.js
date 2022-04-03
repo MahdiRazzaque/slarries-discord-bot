@@ -11,6 +11,8 @@ module.exports = {
    */
   execute(oldMember, newMember, client) {
 
+    if(oldMember.nickname == newMember.nickname) return;
+
     const Log = new MessageEmbed()
     .setColor(guild_log_colour)
     .setTimestamp()

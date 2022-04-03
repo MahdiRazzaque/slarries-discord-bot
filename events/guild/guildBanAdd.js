@@ -8,22 +8,32 @@ module.exports = {
    * @param {Client} client
    * @param {GuildBan} ban
    */
-  execute(ban, client) {
-    const { user, guild, reason } = ban;
+  async execute(ban, client) {
 
-    const Log = new MessageEmbed()
-    .setColor(guild_log_colour)
-    .setTitle("__Member Banned__🔨")
-    .setDescription(`${user} was banned from ${guild.name}`)
-    //.addField({name: "Reason", value: `${ban.reason ?? "No reason provided"}` })
-    .setThumbnail(user.avatarURL({ dynamic: true, size: 512 }))
-    .addField("ID", `${user.id}`)
-    .setTimestamp();
+    const logs = await ban.guild.fetchAuditLogs({
+      type: "MEMBER_BAN_ADD",
+      limit: 1,
+    })
+    const log = logs.entries.first();
 
-    console.log(banReason)
+    const guild_logs = ban.guild.channels.cache.get(guild_logs_id)
+    let happen = Math.floor(new Date().getTime()/1000.0)
 
-    const guild_logs = client.channels.cache
-    .get(guild_logs_id)
-    .send({ embeds: [Log] });
+    const guildBanAdd = new MessageEmbed()
+      .setColor(guild_log_colour)
+      .setTitle("Member Banned 🔨")
+      .setTimestamp();
+
+    if (log) {
+      guildBanAdd.setDescription(`\`${log.target.tag}\` has been banned from this guild by \`${log.executor.tag}\` <t:${happen}:R>.`);
+      guildBanRemove.addField("ID", log.target.id)
+
+      if (log.reason) guildBanAdd.addField("Reason", log.reason)
+    } else {
+      guildBanAdd.setDescription(`\`${ban.user.tag}\` has been banned from this guild <t:${happen}:R>.`);
+      guildBanRemove.addField("ID", log.target.id)
+    }
+
+    guild_logs.send({ embeds: [guildBanAdd] });
   },
 };

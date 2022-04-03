@@ -42,7 +42,29 @@ module.exports = client;
 
 //Discord Together
 const { DiscordTogether } = require('discord-together'); 
-client.discordTogether = new DiscordTogether(client); 
+client.discordTogether = new DiscordTogether(client);
+
+//Anti Crash
+require("./antiCrash")(client);
+// process.on('warning', (info) => {
+//   console.log("[warning]")
+//   console.log(info.stack)
+//   })
+
+// process.on("uncaughtException", (error) => {
+//   console.log("[uncaughtException]")
+//   console.log(error.stack)
+// })
+
+// process.on("unhandledRejection", (error) => {
+//   console.log("[unhandledRejection]")
+//   console.log(error.stack)
+// })
+
+// process.on("uncaughtException", (error) => {
+//   console.log(error.stack)
+// })
+
 
 //Logging into the bot
 client.login(process.env.TOKEN);

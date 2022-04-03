@@ -1,4 +1,4 @@
-const { Client, MessageEmbed, Message } = require("discord.js");
+const { Client, MessageEmbed, GuildBan } = require("discord.js");
 const { guild_log_colour, guild_logs_id } = require("../../structures/config.json");
 
 module.exports = {
@@ -6,21 +6,32 @@ module.exports = {
   disabled: false,
   /**
    * @param {Client} client
-   * @param {guildMember} member
+   * @param {GuildBan} ban
    */
-  execute(ban, client) {
-    const { user, guild } = ban;
+  async execute(ban, client) {
 
-    const Log = new MessageEmbed()
-    .setColor(guild_log_colour)
-    .setTitle("__Member Unbanned__🔨")
-    .setDescription(`${user} was unbanned from ${guild.name}`)
-    .setThumbnail(user.avatarURL({ dynamic: true, size: 512 }))
-    .addField("ID", `${user.id}`)
-    .setTimestamp();
+    const logs = await ban.guild.fetchAuditLogs({
+      type: "MEMBER_BAN_REMOVE",
+      limit: 1,
+    })
+    const log = logs.entries.first();
 
-    const guild_logs = client.channels.cache
-    .get(guild_logs_id)
-    .send({ embeds: [Log] });
+    const guild_logs = ban.guild.channels.cache.get(guild_logs_id)
+    let happen = Math.floor(new Date().getTime()/1000.0)
+
+    const guildBanRemove = new MessageEmbed()
+      .setColor(guild_log_colour)
+      .setTitle("Member Banned 🔨")
+      .setTimestamp();
+
+    if (log) {
+      guildBanRemove.setDescription(`\`${log.target.tag}\` has been unbanned from this guild by \`${log.executor.tag}\` <t:${happen}:R>.`);
+      guildBanRemove.addField("ID", log.target.id)
+    } else {
+      guildBanRemove.setDescription(`\`${ban.user.tag}\` has been unbanned from this guild <t:${happen}:R>.`);
+      guildBanRemove.addField("ID", log.target.id)
+    }
+    
+    guild_logs.send({ embeds: [guildBanRemove] });
   },
 };

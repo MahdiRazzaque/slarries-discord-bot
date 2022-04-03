@@ -20,22 +20,22 @@ module.exports = {
 
     if(!log) return;
 
-    const channel_logs = client.channels.cache.get(channel_logs_id)
+    const channel_logs = channel.guild.channels.cache.get(channel_logs_id)
     let happen = Math.floor(new Date().getTime()/1000.0)
    
-    const Log = new MessageEmbed()
+    const channelDelete = new MessageEmbed()
       .setColor(channel_log_colour)
-      .setTitle("__Channel Deleted📺__")
-      .setDescription(`A channel was **deleted** <t:${happen}:R> by \`${log.executor.tag}\`.`)
+      .setTitle("Channel Deleted 📺")
+      .setDescription(`A channel was **deleted** by \`${log.executor.tag}\` <t:${happen}:R>.`)
       .addFields(
         { name: "**Channel**", value: `\`${channel.name}\``, inline: true }, 
         { name: "Type", value: `\`${channel.type.slice(6).toLowerCase().replaceAll("_", " ")}\``, inline: true})
       .setTimestamp();
 
       if (channel.type !== "GUILD_CATEGORY") { 
-        Log.addField("Parent category", channel.parentId ? `\`${channel.parent.name}\`` : "\`No parent channel\`", true)
+        channelDelete.addField("Parent category", channel.parentId ? `\`${channel.parent.name}\`` : "\`No parent channel\`", true)
       }
 
-    channel_logs.send({ embeds: [Log] });
+    channel_logs.send({ embeds: [channelDelete] });
   },
 };

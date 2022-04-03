@@ -24,14 +24,14 @@ module.exports = {
     })
     const log = logs.entries.first();
 
-    const channel_logs = client.channels.cache.get(channel_logs_id)
+    const channel_logs = channel.guild.channels.cache.get(channel_logs_id)
     let happen = Math.floor(new Date().getTime()/1000.0)
 
     switch(log.action) {
       case "CHANNEL_OVERWRITE_CREATE":
         const channelPermissionCreate = new MessageEmbed()
           .setColor(channel_log_colour)
-          .setTitle("__Channel Updated📺__")
+          .setTitle("Channel Updated 📺")
           .setDescription(`${newChannel}'s permisson was **created** <t:${happen}:R>`)
           .setTimestamp()
 
@@ -57,7 +57,7 @@ module.exports = {
       case "CHANNEL_OVERWRITE_UPDATE":
         const channelPermissionUpdate = new MessageEmbed()
         .setColor(channel_log_colour)
-        .setTitle("__Channel Updated📺__")
+        .setTitle("Channel Updated 📺")
         .setDescription(`${newChannel}'s permisson was **updated** <t:${happen}:R>`)
         .setTimestamp()
 
@@ -90,7 +90,7 @@ module.exports = {
       case "CHANNEL_OVERWRITE_DELETE":
         const channelPermissionDelete  = new MessageEmbed()
           .setColor(channel_log_colour)
-          .setTitle("__Channel Updated📺__")
+          .setTitle("Channel Updated 📺")
           .setDescription(`${newChannel}'s permisson was **deleted** <t:${happen}:R>.`)
           .setTimestamp()
 
@@ -107,7 +107,7 @@ module.exports = {
       case "CHANNEL_UPDATE":
         const channelUpdateLogEmbed  = new MessageEmbed()
           .setColor(channel_log_colour)
-          .setTitle("__Channel Updated📺__")
+          .setTitle("Channel Updated 📺")
           .setDescription(`${newChannel}'s was **updated** by \`${log.executor.tag}\` <t:${happen}:R>.`)
           .setTimestamp()
 
@@ -170,7 +170,7 @@ module.exports = {
       default:
         const channelUpdateEmbed  = new MessageEmbed()
           .setColor(channel_log_colour)
-          .setTitle("__Channel Updated📺__")
+          .setTitle("Channel Updated 📺")
           .setDescription(`${newChannel}'s was **updated** by \`${log.executor.tag}\` <t:${happen}:R>.`)
           .setTimestamp()
 

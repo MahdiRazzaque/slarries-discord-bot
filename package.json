@@ -47,6 +47,7 @@
     "reconlx": "^2.5.2",
     "sourcebin": "^4.3.5",
     "superagent": "^7.1.1",
+    "winston": "^3.6.0",
     "yt-search": "^2.10.3",
     "ytdl-core": "^4.10.1"
   },
