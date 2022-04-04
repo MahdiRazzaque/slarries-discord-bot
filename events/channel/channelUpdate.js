@@ -24,7 +24,7 @@ module.exports = {
     })
     const log = logs.entries.first();
 
-    const channel_logs = channel.guild.channels.cache.get(channel_logs_id)
+    const channel_logs = oldChannel.guild.channels.cache.get(channel_logs_id)
     let happen = Math.floor(new Date().getTime()/1000.0)
 
     switch(log.action) {

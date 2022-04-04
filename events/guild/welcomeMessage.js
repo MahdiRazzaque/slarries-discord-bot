@@ -5,6 +5,22 @@ function delay(time) {
   return new Promise((resolve) => setTimeout(resolve, time));
 }
 
+function welcome(member) {
+  const params = new URLSearchParams({
+    avatar: member.displayAvatarURL({
+      format: 'png'
+    }),
+    memcount: member.guild.memberCount,
+    discrim: member.user.discriminator, //tag of user #6969
+    username: member.user.username,
+    bg: "https://file.coffee/u/bZcr9HMO3Nc-MW.png",
+    header: `Welcome to ${member.guild.name}`
+  });
+
+  const image = 'https://badboy.is-a.dev/api/image/welcomecard?' + params
+  return image;
+}
+
 module.exports = {
   name: "guildMemberAdd",
   disabled: false,
@@ -19,19 +35,17 @@ module.exports = {
 
       const welcomeMessage = new MessageEmbed()
       .setColor("AQUA")
-      .setTitle(`**Welcome to Slarries**`)
-      .setDescription("> Please read the rules and verify.")
+      .setImage("attachment://welcome.png")
       .addFields(
         { name: "Rules", value: "<#916385873120079916>", inline: true },
         { name: "Verify", value: "<#916661502163963964>", inline: true },
       )
-      .setThumbnail(user.avatarURL({ dynamic: true, size: 512 }))
       .setFooter({text: `ID: ${user.id}`});
 
     const channel = client.channels.cache.get("916385873120079914")
 
     delay(1000)
-    .then(() => channel.send({ embeds: [welcomeMessage] }))
+    .then(() => channel.send({ embeds: [welcomeMessage], files: [new MessageAttachment(welcome(member), "attachment://welcome.png")]}))
     .then(() => channel.send(`${member.user}`));
 
     // const captcha = new Captcha();

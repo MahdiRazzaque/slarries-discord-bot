@@ -14,10 +14,12 @@ module.exports = (client) => {
     process.on('unhandledRejection', (reason, p) => {
         logger.error(chalk.blueBright('[antiCrash.js] ') + chalk.red('Unhandled rejection/crash detected.'));
         logger.error(reason, p);
+        console.log(reason.stack)
     });
     process.on("uncaughtException", (err, origin) => {
         logger.error(chalk.blueBright('[antiCrash.js] ') + chalk.red('Uncaught exception/catch detected.'));
         logger.error(err, origin);
+        console.log(err.stack)
     });
     process.on('uncaughtExceptionMonitor', (err, origin) => {
         logger.error(chalk.blueBright('[antiCrash.js] ') + chalk.red('Uncaught exception/catch detected. (Monitor)'));

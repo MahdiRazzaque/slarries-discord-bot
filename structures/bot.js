@@ -20,7 +20,7 @@ client.filtersLog = new Collection()
 
 require("../systems/giveawaySystem")(client);
 
-["events", "commands", "prefixcommands"].forEach((handler) => {
+["events", "commands", "prefixCommands"].forEach((handler) => {
   require(`./handlers/${handler}`)(client, PG, Ascii);
 });
 
@@ -46,6 +46,7 @@ client.discordTogether = new DiscordTogether(client);
 
 //Anti Crash
 require("./antiCrash")(client);
+
 // process.on('warning', (info) => {
 //   console.log("[warning]")
 //   console.log(info.stack)
