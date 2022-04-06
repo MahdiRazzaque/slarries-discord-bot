@@ -1,32 +1,90 @@
-const chalk = require('chalk');
-const winston = require('winston');
+const chalk = require("chalk");
+const config = require('./config.json')
+const {MessageEmbed, WebhookClient} = require('discord.js')
+const {inspect} = require("util")
+const s = new WebhookClient({url: "https://discord.com/api/webhooks/961270146222153809/iR6wk6DW-St8eOlGv0nXN4h9ge2fVf8em5ComG0mwggFQLANRA3oBUb-jEwT5GD4FnX_"})
 
-// Winston logging
-const logger = winston.createLogger({
-    transports: [
-        new winston.transports.Console(),
-        new winston.transports.File({ filename: 'antiCrashLog.log' }),
-    ],
-    format: winston.format.printf(log => `[${log.level.toLowerCase()}] - ${log.message}`),
-});
 
 module.exports = (client) => {
-    process.on('unhandledRejection', (reason, p) => {
-        logger.error(chalk.blueBright('[antiCrash.js] ') + chalk.red('Unhandled rejection/crash detected.'));
-        logger.error(reason, p);
-        console.log(reason.stack)
+    client.on('error', err => {
+        console.log(err)
+        const ErrorEmbed = new MessageEmbed()
+            .setTitle('Error')
+            .setColor('#2F3136')
+            .setDescription(`\`\`\`${inspect(error, {depth: 0})}\`\`\``)
+            
+            .setTimestamp()
+        return s.send({
+            embeds: [ErrorEmbed]
+        })
     });
+    process.on("unhandledRejection", (reason, p) => {
+        console.log(
+            chalk.yellow('——————————[Unhandled Rejection/Catch]——————————\n'),
+            reason, p
+        )
+        const unhandledRejectionEmbed = new MessageEmbed()
+            .setTitle('Unhandled Rejection/Catch')
+            .setColor('RED')
+            .addField('Reason', `\`\`\`${inspect(reason, { depth: 0 }).substring(0, 1000)}\`\`\``)
+            .addField('Promise', `\`\`\`${inspect(p, { depth: 0 }).substring(0, 1000)}\`\`\``)
+            .setTimestamp()
+        return s.send({
+            embeds: [unhandledRejectionEmbed]
+        })
+    });
+    
     process.on("uncaughtException", (err, origin) => {
-        logger.error(chalk.blueBright('[antiCrash.js] ') + chalk.red('Uncaught exception/catch detected.'));
-        logger.error(err, origin);
-        console.log(err.stack)
+        console.log(err, origin)
+        const uncaughtExceptionEmbed = new MessageEmbed()
+            .setTitle('Uncaught Exception/Catch')
+            .setColor('RED')
+            .addField('Error', `\`\`\`${inspect(err, { depth: 0 }).substring(0, 1000)}\`\`\``)
+            .addField('Origin', `\`\`\`${inspect(origin, { depth: 0 }).substring(0, 1000)}\`\`\``)
+            .setTimestamp()
+        return s.send({
+            embeds: [uncaughtExceptionEmbed]
+        })
     });
-    process.on('uncaughtExceptionMonitor', (err, origin) => {
-        logger.error(chalk.blueBright('[antiCrash.js] ') + chalk.red('Uncaught exception/catch detected. (Monitor)'));
-        logger.error(err, origin);
+    
+    // process.on("uncaughtExceptionMonitor", (err, origin) => {
+    //     console.log(err, origin)
+    //     const uncaughtExceptionMonitorEmbed = new MessageEmbed()
+    //         .setTitle('Uncaught Exception Monitor')
+    //         .setColor('RED')
+    //         .addField('Error', `\`\`\`${inspect(err, { depth: 0 }).substring(0, 1000)}\`\`\``)
+    //         .addField('Origin', `\`\`\`${inspect(origin, { depth: 0 }).substring(0, 1000)}\`\`\``)
+    //         .setTimestamp()
+    
+    //     return s.send({
+    //         embeds: [uncaughtExceptionMonitorEmbed]
+    //     })
+    // });
+    
+    process.on("multipleResolves", (type, promise, reason) => {
+        console.log(type, promise, reason)
+        const multipleResolvesEmbed = new MessageEmbed()
+            .setTitle('Multiple Resolves')
+            .setColor('RED')
+            .addField('Type', `\`\`\`${inspect(type, { depth: 0 }).substring(0, 1000)}\`\`\``)
+            .addField('Promise', `\`\`\`${inspect(promise, { depth: 0 }).substring(0, 1000)}\`\`\``)
+            .addField('Reason', `\`\`\`${inspect(reason, { depth: 0 }).substring(0, 1000)}\`\`\``)
+            .setTimestamp()
+        return s.send({
+            embeds: [multipleResolvesEmbed]
+        })
     });
-    process.on('multipleResolves', (type, promise, reason) => {
-        logger.error(chalk.blueBright('[antiCrash.js] ') + chalk.red('Multiple resolves detected.'));
-        logger.error(type, promise, reason);
-    });
-};
+    
+    process.on("warning", (warn) => {
+        if(warn.message.includes("DisTubeOptions.youtubeDL is deprecated")) return;
+        console.log(warn)
+        const warningEmbed = new MessageEmbed()
+            .setTitle('Warning')
+            .setColor('RED')
+            .addField('Warn', `\`\`\`${inspect(warn, { depth: 0 }).substring(0, 1000)}\`\`\``)
+            .setTimestamp()
+        return s.send({
+            embeds: [warningEmbed]
+        })
+    });  
+}
