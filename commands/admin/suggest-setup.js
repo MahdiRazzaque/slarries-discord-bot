@@ -1,4 +1,4 @@
-const { MessageEmbed, Message, CommandInteraction, Client, WebhookClient } = require("discord.js");
+const { MessageEmbed, Message, CommandInteraction, Client } = require("discord.js");
 const { admin_embed_colour } = require("../../structures/config.json");
 const DB = require("../../structures/schemas/suggestSetupDB");
 
@@ -117,21 +117,6 @@ module.exports = {
                 await interaction.followUp({embeds: [suggestionCommandHelp]})
                 await interaction.followUp({embeds: [suggestionConfigHelp]})
             })
-
-            const webhookClient = new WebhookClient({url: "https://discord.com/api/webhooks/947535321195757669/PTaCn8f2zfXwq7bfImz9GDsDqwUwxuLg9istkID-oEF6eFm8mF3SUz83WTElBT1hzWc4"})
-            const webhookEmbed = new MessageEmbed()
-                .setColor("GOLD")
-                .setTitle("Suggestion system")
-                .setDescription("A new guild is using the suggestion system.")
-                .setThumbnail(`${interaction.guild.iconURL({ dynamic: true })}`)
-                .addFields(
-                    { name: `**Server Name:**`, value: `\`\`\`${interaction.guild.name}\`\`\``, inline: true },
-                    { name: `**Server Owner:**`, value: `<@${interaction.guild.ownerId}>`, inline: true },
-                    { name: `**Server Members [ ${interaction.guild.memberCount} ]:**`, value: `\`\`\`Members: ${interaction.guild.members.cache.filter((m) => !m.user.bot).size} | Bots: ${interaction.guild.members.cache.filter((m) => m.user.bot).size}\`\`\``, inline: false },
-                    { name: `**Server ID:**`, value: `\`\`\`${interaction.guild.id}\`\`\``, inline: true },
-                    { name: `**Creation Date:**`, value: `<t:${parseInt(interaction.guild.createdTimestamp/1000)}:R>`, inline: false },
-                );
-            await webhookClient.send({embeds: [webhookEmbed]})
         break;
         case "set-channel":
             const channel = interaction.options.getChannel("channel");
