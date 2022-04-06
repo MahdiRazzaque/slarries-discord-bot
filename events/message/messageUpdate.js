@@ -11,34 +11,30 @@ module.exports = {
    * @param {Client} client
    */
   execute(oldMessage, newMessage, client) {
+    if(oldMessage.guild === null) return;
+    if (oldMessage.author?.bot || oldMessage.author?.bot === undefined) return;
 
-    try {
-      if(oldMessage.guild === null) return;
-      if (oldMessage.author.bot) return;
+    if (oldMessage.content === newMessage.content) return;
 
-      if (oldMessage.content === newMessage.content) return;
+    const message_logs = oldMessage.guild.channels.cache.get(message_logs_id)
+    let happen = Math.floor(new Date().getTime()/1000.0)
 
-      const Count = 1950;
+    const Count = 1950;
 
-      const Original = oldMessage.content.slice(0, Count) + (oldMessage.content.length > 1950 ? " ..." : "");
-      const Edited = newMessage.content.slice(0, Count) + (newMessage.content.length > 1950 ? " ..." : "");
+    const Original = oldMessage.content.slice(0, Count) + (oldMessage.content.length > 1950 ? " ..." : "");
+    const Edited = newMessage.content.slice(0, Count) + (newMessage.content.length > 1950 ? " ..." : "");
 
-      const Log = new MessageEmbed()
-        .setColor(message_log_colour)
-        .setTitle("__Edited message 📘__")
-        .setDescription(`[Message](${newMessage.url}) by ${newMessage.author} was **edited** in ${newMessage.channel}.`)
-        .addFields(
-          { name: "**Original**", value: `${Original}` },
-          { name: "**Edited**", value: `${Edited}` }
-        )
-        .setFooter({text: `Member: ${newMessage.author.tag} | ID: ${newMessage.author.id}`})
-        .setTimestamp();
+    const messageUpdate = new MessageEmbed()
+      .setColor(message_log_colour)
+      .setTitle("Edited message 📘")
+      .setDescription(`A [message](${newMessage.url}) by ${newMessage.author} was **edited** in ${newMessage.channel} <t:${happen}:R>.`)
+      .addFields(
+        { name: "**Original**", value: `${Original}` },
+        { name: "**Edited**", value: `${Edited}` }
+      )
+      .setFooter({text: `ID: ${newMessage.author.id}`})
+      .setTimestamp();
 
-      const message_logs = client.channels.cache.get(message_logs_id).send({ embeds: [Log] });
-        
-    } catch (e) { 
-      const error_logs = client.channels.cache.get(error_logs_id).send({ embeds: [new MessageEmbed().setColor("RED").setTitle("<a:animated_cross:925091847905366096> messageUpdate event").setDescription(`${e}`).setFooter({text: "This error was caught to prevent the bot from crashing."})]});
-    }
-    
-},
-};
+    message_logs.send({ embeds: [messageUpdate] });
+  }
+}

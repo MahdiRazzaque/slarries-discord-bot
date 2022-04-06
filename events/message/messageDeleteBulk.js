@@ -1,6 +1,6 @@
 const { Client, MessageEmbed, Message } = require("discord.js");
 const { message_log_colour, message_logs_id, error_logs_id } = require("../../structures/config.json");
-const { create } = require("sourcebin")
+const discordTranscripts = require('discord-html-transcripts');
 
 module.exports = {
   name: "messageDeleteBulk",
@@ -12,32 +12,39 @@ module.exports = {
    */
   async execute(messages, client) {
     if(messages.guild === null) return;
+
+    const message_logs = client.channels.cache.get(message_logs_id)
     let happen = Math.floor(new Date().getTime()/1000.0)
 
-    const content = messages.map((m) => m.content).reverse()
-    const authors = messages.map((m) => m.author.username).reverse()
-    const discriminators = messages.map((m) => m.author.discriminator).reverse()
-    const embeds = messages.map((m) => m.embeds).reverse()
-    const channel = messages.map((m) => m.channelId)
+    const logs = await messages.first().guild.fetchAuditLogs({
+      limit: 1,
+    })
+    const log = logs.entries.first();
 
-    var messages = ``;
+    if(!log) return;
 
-    for (var i = 0; i < authors.length; i++) {
-      messages += `${authors[i]}#${discriminators[i]}: ${content[i] ? content[i] : "Embed"}\n`
-    }
-  
-    const sourceBin = await create([{name: "Messages deleted", content: messages}])
-    sourceBinURL = sourceBin.url
+    const NoOfMessages = messages.size;
+    const message = await messages.map((m) => m);
+    const channel = messages.first().channel;
+    const ID = Math.floor(Math.random() * 5485444) + 4000000;
 
-    const Log = new MessageEmbed()
+    const messageDeleteBulk = new MessageEmbed()
     .setColor(message_log_colour)
-    .setTitle("__Bulk deleted messages 📕__")
-    .setDescription(`${authors.length} messages was **bulk deleted** in <#${channel[0]}> <t:${happen}:R>`)
-    .addFields({name: "Deleted messages", value: `${sourceBinURL}`,})
+    .setTitle("Bulk deleted messages 📕")
     .setTimestamp();
 
-    const message_logs = client.channels.cache
-    .get(message_logs_id)
-    .send({ embeds: [Log] });
+    try { 
+      const attachment = await discordTranscripts.generateFromMessages(message, channel, { returnBuffer: false, fileName: `transcript-${ID}.html` });
+
+      if (log.action == "MESSAGE_BULK_DELETE") { 
+        messageDeleteBulk.setDescription(`\`${NoOfMessages}\` messages were **bulk deleted** in ${channel} by \`${log.executor.tag}\` <t:${happen}:R>.`)
+      } else {
+        messageDeleteBulk.setDescription(`\`${NoOfMessages}\` messages were **bulk deleted** in ${channel} <t:${happen}:R>.`)
+      }
+
+      message_logs.send({ embeds: [messageDeleteBulk], files: [attachment] });
+    } catch (e) {
+      console.log(e)
+    }
   },
 };
