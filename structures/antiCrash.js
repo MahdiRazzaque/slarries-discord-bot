@@ -1,7 +1,9 @@
 const chalk = require("chalk");
 const { error_logs_id } = require('./config.json')
-const { MessageEmbed } = require('discord.js')
+const { MessageEmbed, WebhookClient } = require('discord.js')
 const { inspect } = require("util")
+
+const channel = new WebhookClient({url: "https://discord.com/api/webhooks/961270146222153809/iR6wk6DW-St8eOlGv0nXN4h9ge2fVf8em5ComG0mwggFQLANRA3oBUb-jEwT5GD4FnX_"})
 
 
 module.exports = (client) => {
@@ -13,7 +15,7 @@ module.exports = (client) => {
             .setDescription(`\`\`\`${inspect(error, {depth: 0})}\`\`\``)
             .setTimestamp()
         
-        const channel = client.channels.cache.get(error_logs_id)
+        // const channel = client.channels.cache.get(error_logs_id)
         return channel.send({ embeds: [ErrorEmbed] })
     });
     process.on("unhandledRejection", (reason, p) => {
@@ -25,7 +27,7 @@ module.exports = (client) => {
             .addField('Promise', `\`\`\`${inspect(p, { depth: 0 }).substring(0, 1000)}\`\`\``)
             .setTimestamp()
         
-        const channel = client.channels.cache.get(error_logs_id)
+        // const channel = client.channels.cache.get(error_logs_id)
         return channel.send({ embeds: [unhandledRejectionEmbed] })
     });
     
@@ -38,7 +40,7 @@ module.exports = (client) => {
             .addField('Origin', `\`\`\`${inspect(origin, { depth: 0 }).substring(0, 1000)}\`\`\``)
             .setTimestamp()
 
-        const channel = client.channels.cache.get(error_logs_id)
+        // const channel = client.channels.cache.get(error_logs_id)
         return channel.send({ embeds: [uncaughtExceptionEmbed] })
     });
     
@@ -51,7 +53,7 @@ module.exports = (client) => {
             .addField('Origin', `\`\`\`${inspect(origin, { depth: 0 }).substring(0, 1000)}\`\`\``)
             .setTimestamp()
         
-        const channel = client.channels.cache.get(error_logs_id)
+        // const channel = client.channels.cache.get(error_logs_id)
         return channel.send({ embeds: [uncaughtExceptionMonitorEmbed] })
     });
     
@@ -65,7 +67,7 @@ module.exports = (client) => {
             .addField('Reason', `\`\`\`${inspect(reason, { depth: 0 }).substring(0, 1000)}\`\`\``)
             .setTimestamp()
 
-        const channel = client.channels.cache.get(error_logs_id)
+        // const channel = client.channels.cache.get(error_logs_id)
         return channel.send({ embeds: [multipleResolvesEmbed] })
     });
     
@@ -78,7 +80,7 @@ module.exports = (client) => {
             .addField('Warn', `\`\`\`${inspect(warn, { depth: 0 }).substring(0, 1000)}\`\`\``)
             .setTimestamp()
 
-        const channel = client.channels.cache.get(error_logs_id)
+        // const channel = client.channels.cache.get(error_logs_id)
         return channel.send({ embeds: [warningEmbed] })
     });  
 }
