@@ -3,7 +3,6 @@ const { MessageEmbed, Message, Client } = require("discord.js");
 module.exports = {
   name: "ping",
   aliases: ["latency", "lag"],
-  permission: "ADMINISTRATOR",
   description: "Check the bots ping",
   cooldown: 5,
   botCommandChannelOnly: true,
@@ -15,7 +14,7 @@ module.exports = {
    * @param {Message} message 
    * @param {Client} client 
    */
-  execute(message, args, commandName, client) {
+  execute(message, args, commandName, Prefix, client) {
     message.channel.send("ㅤ").then(async (resultMessage) => {
     const ping = resultMessage.createdTimestamp - message.createdTimestamp;
     const response = new MessageEmbed()
@@ -25,7 +24,7 @@ module.exports = {
         { name: "Ping", value: `${ping}ms` },
         { name: "API Latency", value: `${Math.round(client.ws.ping)}ms` }
       );
-    await message.reply({ embeds: [response] });
+    await message.reply({ embeds: [response], allowedMentions: { repliedUser: false }});
     resultMessage.delete();
   });
   },
