@@ -116,24 +116,24 @@ module.exports = {
             case "link":
                 const linkUser = await linkDB.findOne({ id: interaction.member.id });
                 if (linkUser && linkUser.uuid) {
-                  return interaction.reply({ embeds: [new MessageEmbed().setDescription(`${client.emojisObj.animated_cross} Your account is already connected!`)], allowedMentions: { repliedUser: false } })
+                  return interaction.reply({ embeds: [new MessageEmbed().setDescription(`${client.emojisObj.animated_cross} Your account is already connected!`)]})
                 }
                 hypixel.getPlayer(player).then(async (player) => {
                     if (!player.socialMedia.find((s) => s.id === 'DISCORD')) {
-                      return interaction.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This minecraft account does not have a discord account connected to it.\n\nWatch the GIF to learn how to connect your discord account.`).setImage('https://thumbs.gfycat.com/DentalTemptingLeonberger-size_restricted.gif')], allowedMentions: { repliedUser: false } })
+                      return interaction.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This minecraft account does not have a discord account connected to it.\n\nWatch the GIF to learn how to connect your discord account.`).setImage('https://thumbs.gfycat.com/DentalTemptingLeonberger-size_restricted.gif')]})
                     }
 
                     if (player.socialMedia.find((s) => s.id === 'DISCORD').link !== interaction.user.tag) {
-                      return interaction.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} ${player.nickname}'s connected discord tag doesn't match your discord tag.`)], allowedMentions: { repliedUser: false } })
+                      return interaction.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} ${player.nickname}'s connected discord tag doesn't match your discord tag.`)]})
                     }
 
                     const user1 = await linkDB.findOne({ uuid: player.uuid });
                     if (user1) {                      
-                      return interaction.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} That player has already been linked to another account.`)], allowedMentions: { repliedUser: false } })
+                      return interaction.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} That player has already been linked to another account.`)]})
                     }
 
                     new linkDB({ id: interaction.member.id, uuid: player.uuid }).save(() => {
-                        interaction.reply({ embeds: [new MessageEmbed().setColor(minecraft_embed_colour).setDescription(`${client.emojisObj.animated_tick} ${player.nickname} has been successfully linked to your account.`)], allowedMentions: { repliedUser: false } })
+                        interaction.reply({ embeds: [new MessageEmbed().setColor(minecraft_embed_colour).setDescription(`${client.emojisObj.animated_tick} ${player.nickname} has been successfully linked to your account.`)]})
                       });
                 }).catch(e => {return errorHandling(e)});
 
@@ -141,13 +141,13 @@ module.exports = {
             case "unlink":
                 const unlinkUser = await linkDB.findOne({ id: interaction.member.id });
                 if (!unlinkUser) {
-                  return interaction.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This discord account does not have a minecraft account linked to it.`) .setImage('https://thumbs.gfycat.com/DentalTemptingLeonberger-size_restricted.gif')], allowedMentions: { repliedUser: false } })
+                  return interaction.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This discord account does not have a minecraft account linked to it.`) .setImage('https://thumbs.gfycat.com/DentalTemptingLeonberger-size_restricted.gif')]})
                 }
         
                 const username = await fetch(`https://playerdb.co/api/player/minecraft/${unlinkUser.uuid}`).then(res => res.json())
         
                 unlinkUser.deleteOne(() => {
-                return interaction.reply({ embeds: [new MessageEmbed().setColor(minecraft_embed_colour) .setDescription(`${client.emojisObj.animated_tick} ${username.data.player.username} has been successfully unlinked to your account.`)], allowedMentions: { repliedUser: false } })
+                return interaction.reply({ embeds: [new MessageEmbed().setColor(minecraft_embed_colour) .setDescription(`${client.emojisObj.animated_tick} ${username.data.player.username} has been successfully been unlinked from your account.`)]})
                 });
             break;
 
@@ -208,7 +208,7 @@ module.exports = {
                     
                     playerEmbed.addField("Status", `\`•\` **Status**: \`${playerIsOnline}\` \n\`•\` **First Login**: <t:${player.firstLoginTimestamp.toString().slice(0, -3)}:R> \n\`•\` **Last login**: ${lastLoginTimestamp} \n\`•\` **Last played**: \`${player.recentlyPlayedGame || "Unknown"}\` `, true)
 
-                    await interaction.reply({ embeds: [playerEmbed], allowedMentions: { repliedUser: false } })   
+                    await interaction.reply({ embeds: [playerEmbed]})   
                     
                 }).catch(e => {return errorHandling(e)});
                 break;
@@ -259,7 +259,7 @@ module.exports = {
                                 .setTitle(`[${player.rank}] ${player.nickname}   |   ${player.stats.duels.division}`)
                                 .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
                                 .addField(' ​', `\`•\` **Matches**: \`${commaNumber(player.stats.duels.playedGames)}\`\n\`•\` **Coins**: \`${commaNumber(player.stats.duels.playedGames)}\`\n\`•\` **Winstreak**: \`${commaNumber(player.stats.duels.coins)}\`\n\`•\` **Best Winstreak**: \`${commaNumber(player.stats.duels.bestWinstreak)}\`\n\`•\` **Wins**: \`${commaNumber(player.stats.duels.wins)}\`\n\`•\` **Losses**: \`${commaNumber(player.stats.duels.losses)}\`\n\`•\` **WLR**: \`${commaNumber(player.stats.duels.WLRatio)}\`\n\`•\` **Kills**: \`${commaNumber(player.stats.duels.kills)}\`\n\`•\` **Deaths**: \`${commaNumber(player.stats.duels.deaths)}\`\n\`•\` **KDR**: \`${commaNumber(player.stats.duels.KDRatio)}\``, true)
-                            interaction.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
+                            interaction.reply({ embeds: [embed]});
                         }).catch(e => {return errorHandling(e)});
                         break;
 
@@ -271,7 +271,7 @@ module.exports = {
                                 .setTitle(`[${player.rank}] ${player.nickname}   |   ${player.stats.duels.classic.division}`)
                                 .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
                                 .addField(' ​', `\`•\` **Matches**: \`${commaNumber(player.stats.duels.classic.playedGames)}\`\n\`•\` **Coins**: \`${commaNumber(player.stats.duels.classic.playedGames)}\`\n\`•\` **Winstreak**: \`${commaNumber(player.stats.duels.classic.winstreak)}\`\n\`•\` **Best Winstreak**: \`${commaNumber(player.stats.duels.classic.bestWinstreak)}\`\n\`•\` **Wins**: \`${commaNumber(player.stats.duels.classic.wins)}\`\n\`•\` **Losses**: \`${commaNumber(player.stats.duels.classic.losses)}\`\n\`•\` **WLR**: \`${commaNumber(player.stats.duels.classic.WLRatio)}\`\n\`•\` **Kills**: \`${commaNumber(player.stats.duels.classic.kills)}\`\n\`•\` **Deaths**: \`${commaNumber(player.stats.duels.classic.deaths)}\`\n\`•\` **KDR**: \`${commaNumber(player.stats.duels.classic.KDRatio)}\``,true)
-                            interaction.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
+                            interaction.reply({ embeds: [embed]});
             
                         }).catch(e => {return errorHandling(e)});
                         break;
@@ -290,7 +290,7 @@ module.exports = {
                                 .addField('Fours', `\`•\` **Matches**: \`${commaNumber(player.stats.duels.uhc.meetup.playedGames)}\` \n\`•\` **Best WS**: \`${commaNumber(player.stats.duels.uhc.meetup.bestWinstreak)}\` \n\`•\` **Winstreak**: \`${commaNumber(player.stats.duels.uhc.meetup.winstreak)}\` \n\`•\` **Wins**: \`${commaNumber(player.stats.duels.uhc.meetup.wins)}\` \n\`•\` **Losses**: \`${commaNumber(player.stats.duels.uhc.meetup.losses)}\` \n\`•\` **WLR**: \`${commaNumber(player.stats.duels.uhc.meetup.WLRatio)}\` \n\`•\` **Kills**: \`${commaNumber(player.stats.duels.uhc.meetup.kills)}\` \n\`•\` **Deaths**: \`${commaNumber(player.stats.duels.uhc.meetup.deaths)}\` \n\`•\` **KDR**: \`${commaNumber(player.stats.duels.uhc.meetup.KDRatio)}\` `, true)
                                 .addField(` ​`, ` ​`, true)
 
-                            interaction.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
+                            interaction.reply({ embeds: [embed]});
                         }).catch(e => {return errorHandling(e)});
                         break;
 
