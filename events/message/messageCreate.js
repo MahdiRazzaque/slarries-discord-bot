@@ -10,7 +10,7 @@ module.exports = {
    * @param {Message} message
    */
   async execute(message, client) {
-    if (!message.content.startsWith(Prefix) || message.author.bot) return;
+    if (!message.content.startsWith(Prefix) || message.author.bot) return
 
     const args = message.content.slice(Prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLocaleLowerCase();
@@ -23,7 +23,7 @@ module.exports = {
     if (!command) return;
 
     //Maintenance check
-    if (client.maintenance) { // && message.author.id != "381791690454859778"
+    if (client.maintenance && message.author.id != "381791690454859778") {
         const Response = new MessageEmbed()
             .setTitle("👷‍♂️ MAINTENANCE 👷‍♂️")
             .setDescription("Sorry the bot will be back shortly when everything is working correctly.")
@@ -32,29 +32,45 @@ module.exports = {
         return message.reply({ embeds: [Response], ephemeral: true });
     }
 
-    //Bot command channelonly check
-    if(command.botCommandChannelOnly == true && !owners.includes(message.author.id) && !botOwners.includes(message.author.id)) {
+    if(message.guild) {
+      //Bot command channelonly check
+      if(command.botCommandChannelOnly == true && !owners.includes(message.author.id) && !botOwners.includes(message.author.id)) {
         if(!botCommandChannels.includes(message.channel.id)) {
             return message.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} **This command (${Prefix}${command.name}) can only be used in bot command channels.**`).addField("Bot command channels", `<#${botCommandChannels.map((c) => c).join(">, <#")}>`)]}).then((sent) => {setTimeout(() => {sent.delete(); message.delete()}, 2500)})}
-    }
+      }
 
-    //Guild based command disabling
-    const data = await DB.findOne({ GuildID: message.guild.id })
+      //Guild based command disabling
+      const data = await DB.findOne({ GuildID: message.guild.id })
 
-    if (!data) {
-    await DB.create({ GuildID: message.guild.id, Commands: []})
-    } else {
-    if (data.Commands.includes(commandName))
-    return message.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} **This command (/${command.name}) is currently disabled**`)], ephemeral: true})
-    }
+      if (!data) {
+      await DB.create({ GuildID: message.guild.id, Commands: []})
+      } else {
+      if (data.Commands.includes(commandName))
+      return message.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} **This command (/${command.name}) is currently disabled**`)], ephemeral: true})
+      }
 
-    if (command.permission) {
-      const authorPerms = message.channel.permissionsFor(message.author);
-      if (!authorPerms || !authorPerms.has(command.permission)) {
-        const NoPermsEmbed = new MessageEmbed()
-          .setColor("RED")
-          .setDescription(`${client.emojisObj.animated_cross} You need the ${command.permission} to use this command`);
-        return message.reply({ embeds: [NoPermsEmbed] })
+      if (command.permission) {
+        const authorPerms = message.channel.permissionsFor(message.author);
+        if (!authorPerms || !authorPerms.has(command.permission)) {
+          const NoPermsEmbed = new MessageEmbed()
+            .setColor("RED")
+            .setDescription(`${client.emojisObj.animated_cross} You need the ${command.permission} to use this command`);
+          return message.reply({ embeds: [NoPermsEmbed] })
+        }
+      }
+
+      //Roles check
+      if(command.roles && command.roles.length > 0) {
+        for (var i = 0; i < command.roles.length; i++) {
+            if (!message.member.roles.cache.has(command.roles[i])) {
+                continue;
+            } 
+            if (message.member.roles.cache.has(command.roles[i])) {
+                var valid = true;
+          }
+      }
+      if(!valid)
+          return message.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} **To use this command (${Prefix}${command.name}), you need one of the following roles:\n<@&${command.roles.map((r) => r).join(">, <@&")}>**`)]});
       }
     }
 
@@ -77,20 +93,6 @@ module.exports = {
             const command_logs = client.channels.cache.get(command_logs_id).send({embeds: [new MessageEmbed().setColor("RED").setTitle("Command misuse").setDescription(`${client.emojisObj.animated_cross} ${message.author} tried to use a bot owner only prefix command in ${message.channel}.`).addField("Command", `/${command.name}`).setAuthor({name: message.author.tag, iconURL: message.author.avatarURL({ dynamic: true, size: 512 })}).setFooter({text: `ID| ${message.author.id}`})]})
             return message.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} **This command (${Prefix}${command.name}) can only be used by the owners of this bot.**`)]})  
         }
-    }
-
-    //Roles check
-    if(command.roles && command.roles.length > 0) {
-        for (var i = 0; i < command.roles.length; i++) {
-            if (!message.member.roles.cache.has(command.roles[i])) {
-                continue;
-            } 
-            if (message.member.roles.cache.has(command.roles[i])) {
-                var valid = true;
-        }
-    }
-    if(!valid)
-        return message.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} **To use this command (${Prefix}${command.name}), you need one of the following roles:\n<@&${command.roles.map((r) => r).join(">, <@&")}>**`)]});
     }
 
     //Whitelist check
@@ -124,7 +126,7 @@ module.exports = {
     setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
     try {
-      command.execute(message, args, commandName, client);
+      command.execute(message, args, commandName, Prefix, client);
     } catch (error) {
       console.log(error);
       const ErrorEmbed = new MessageEmbed()
