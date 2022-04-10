@@ -15,7 +15,9 @@ module.exports = {
     * @param {Message} message 
     * @param {Client} client 
     */
-    async execute(message, args, commandName, client) {
+    async execute(message, args, commandName, Prefix, client) {
+        if(message.guild === null)
+            return message.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} **This command (${Prefix}${commandName}) can only be used inside servers.**`)]})
         const { guild } = message;
 
         // Owner Variables
