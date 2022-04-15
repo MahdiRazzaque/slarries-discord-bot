@@ -17,7 +17,7 @@ function welcome(member) {
     header: `Welcome to ${member.guild.name}`
   });
 
-  const image = 'https://badboy.is-a.dev/api/image/welcomecard?' + params
+  const image = 'https://badboy.is-a.dev/api/image/welcomecard?' + params + "&apikey=X6MPM1K6IXMN1WC3MY"
   return image;
 }
 
