@@ -7,5 +7,7 @@ module.exports = model(
         List: [],
         ChannelID: String,
         MessageID: String,
+        PrivacyMode: Boolean,
+        MessageCreateToAdd: Boolean,
     })
 )
