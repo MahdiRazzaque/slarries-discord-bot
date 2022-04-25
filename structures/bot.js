@@ -8,16 +8,17 @@ const Ascii = require("ascii-table");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const client = new Client({ intents: 32767, partials: ["REACTION", "CHANNEL", "MESSAGE"] });
+const client = new Client({ intents: 32767, partials: ["REACTION", "CHANNEL", "MESSAGE"], allowedMentions: {repliedUser: false}});
 
-//Command Handler
+//Collections
 client.commands = new Collection();
 client.prefixcommands = new Collection();
 client.cooldowns = new Collection();
 client.events = new Collection();
 client.filters = new Collection();
-client.filtersLog = new Collection()
+client.filtersLog = new Collection();
 
+//Handlers
 require("../systems/giveawaySystem")(client);
 
 ["events", "commands", "prefixCommands"].forEach((handler) => {

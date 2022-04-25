@@ -32,7 +32,7 @@ module.exports = {
         }   
     }
 
-    const data = await linkDB.findOne({id: message.member.id});
+    const data = await linkDB.findOne({id: message.author.id});
     var player = args[0]
 
     if(data && !player) {
@@ -64,15 +64,18 @@ module.exports = {
                 .setPlaceholder("Use this menu to select different modes.")
                 .addOptions([{ label: "Overall", value: "bedwars-overall" }, { label: "Solos", value: "bedwars-solos" }, { label: "Doubles", value: "bedwars-doubles" }, { label: "Threes", value: "bedwars-threes" }, { label: "Fours", value: "bedwars-fours" }, { label: "4v4", value: "bedwars-4v4" }, { label: "Ultimate Doubles", value: "bedwars-dream-ultimate-doubles" }, { label: "Ultimate Fours", value: "bedwars-dream-ultimate-fours" }, { label: "Rush Doubles", value: "bedwars-dream-rush-doubles" }, { label: "Rush Fours", value: "bedwars-dream-rush-fours" }, { label: "Armed Doubles", value: "bedwars-dream-armed-doubles" }, { label: "Armed Fours", value: "bedwars-dream-armed-fours" }, { label: "Lucky Doubles", value: "bedwars-dream-lucky-doubles" }, { label: "Lucky Fours", value: "bedwars-dream-lucky-fours" }, { label: "Voidless Doubles", value: "bedwars-dream-voidless-doubles" }, { label: "Voidless Fours", value: "bedwars-dream-voidless-fours" }])
         )
+        if(message.guild) {
+            const M = await message.reply({embeds: [bedwarsOverall], components: [bedwarsRow]});
 
-        const M = await message.reply({embeds: [bedwarsOverall], components: [bedwarsRow], allowedMentions: {repliedUser: false}});
-
-        await DB.create({GuildID: message.guildId, MessageID: M.id, Player: player, TypeOfStats: "bedwars", InteractionMemberID: message.member.id})
-
-        setTimeout(async () => {
-            await M.edit({components: []}).catch((e) => {console.log(e)})
-            await DB.deleteOne({GuildID: message.guildId, MessageID: M.id, Player: player, TypeOfStats: "bedwars", InteractionMemberID: message.member.id})
-        }, 60 * 1000)
+            await DB.create({GuildID: message.guildId, MessageID: M.id, Player: player, TypeOfStats: "bedwars", InteractionMemberID: message.author.id})
+    
+            setTimeout(async () => {
+                await M.edit({components: []}).catch((e) => {console.log(e)})
+                await DB.deleteOne({GuildID: message.guildId, MessageID: M.id, Player: player, TypeOfStats: "bedwars", InteractionMemberID: message.author.id})
+            }, 60 * 1000)
+        } else {
+            await message.reply({embeds: [bedwarsOverall.setFooter({text: "To see other mode stats, please use this command inside a server."})]});
+        }
 
     }).catch(e => {return errorHandling(e)});
   },

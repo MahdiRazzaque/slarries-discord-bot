@@ -63,6 +63,6 @@ module.exports = {
                 { name: `**Creation Date:**`, value: `\`\`\`${moment(guild.createdTimestamp).format("LT")} ${moment(guild.createdTimestamp).format("LL")} (${moment(guild.createdTimestamp).fromNow()})\`\`\``, inline: false },
             );
             
-        return message.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
+        return message.reply({embeds: [embed]});
   },
 };

@@ -46,6 +46,6 @@ module.exports = {
         { name: "👧🏻 Users", value: `${client.users.cache.size}`, inline: true },
       )
       
-    message.reply({ embeds: [Response], allowedMentions: { repliedUser: false }});
+    message.reply({ embeds: [Response]});
   },
 };

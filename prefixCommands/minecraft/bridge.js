@@ -21,18 +21,19 @@ module.exports = {
    * @param {Client} client 
    */
   async execute(message, args, commandName, Prefix, client) {
+
     function errorHandling (e) {
         console.log(e)
         if (e.message === errors.PLAYER_DOES_NOT_EXIST) {
-            return message.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} I could not find that player in the API. Check spelling and name history.`)], allowedMentions: { repliedUser: false }, ephemeral: true })
+            return message.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} I could not find that player in the API. Check spelling and name history.`)], ephemeral: true })
         } else if (e.message === errors.PLAYER_HAS_NEVER_LOGGED) {
-            return message.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} That player has never logged into Hypixel.`)], allowedMentions: { repliedUser: false }, ephemeral: true })
+            return message.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} That player has never logged into Hypixel.`)], ephemeral: true })
         } else { 
-            return message.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} An error has occurred.`)], allowedMentions: { repliedUser: false }, ephemeral: true })
+            return message.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} An error has occurred.`)], ephemeral: true })
         }   
     }
 
-    const data = await linkDB.findOne({id: message.member.id});
+    const data = await linkDB.findOne({id: message.author.id});
     var player = args[0]
 
     if(data && !player) {
@@ -60,15 +61,19 @@ module.exports = {
                 .addOptions([{ label: "Overall", value: "bridge-overall" }, { label: "1v1", value: "bridge-1v1" }, { label: "2v2", value: "bridge-2v2" }, { label: "3v3", value: "bridge-3v3" }, { label: "4v4", value: "bridge-4v4" }, { label: "2v2v2v2", value: "bridge-2v2v2v2" }, { label: "3v3v3v3", value: "bridge-3v3v3v3" }, { label: "Capture the flag", value: "bridge-ctf" }])
         )
         
-        const M = await message.reply({embeds: [bridgeOverall], components: [bridgeRow], allowedMentions: {repliedUser: false}})
+        if(message.guild) {
+            const M = await message.reply({embeds: [bridgeOverall], components: [bridgeRow]})
 
-        await DB.create({GuildID: message.guildId, MessageID: M.id, Player: player, TypeOfStats: "bridge", InteractionMemberID: message.member.id})
-
-        setTimeout(async () => {
-            await M.edit({components: []}).catch(() => {})
-            await DB.deleteOne({GuildID: message.guildId, MessageID: M.id, Player: player, TypeOfStats: "bridge", InteractionMemberID: message.member.id})
-        }, 60 * 1000)
-        
+            await DB.create({GuildID: message.guildId, MessageID: M.id, Player: player, TypeOfStats: "bridge", InteractionMemberID: message.author.id})
+    
+            setTimeout(async () => {
+                await M.edit({components: []}).catch(() => {})
+                await DB.deleteOne({GuildID: message.guildId, MessageID: M.id, Player: player, TypeOfStats: "bridge", InteractionMemberID: message.author.id})
+            }, 60 * 1000)
+        } else {
+            await message.reply({embeds: [bridgeOverall.setFooter({text: "To see other mode stats, please use this command inside a server."})]})
+        }
+      
     }).catch(e => {return errorHandling(e)});
 
   },
