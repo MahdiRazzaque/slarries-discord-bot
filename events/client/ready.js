@@ -1,5 +1,4 @@
 const { Client } = require("discord.js");
-const modmailClient = require("../modMail/modmail")
 const mongoose = require("mongoose");
 const express = require("express");
 const app = express();
@@ -11,7 +10,6 @@ module.exports = {
   once: true,
   async execute(client) {
     console.log("======================================================================")
-    modmailClient.ready()
     setInterval(() => {
       if (client.maintenance) {
         client.user.setStatus("dnd");
@@ -49,6 +47,7 @@ module.exports = {
     client.emojisObj = emojis;
     console.log(client.emojisObj)
     
+    //Always online
     app.get("/", function (req, res) {
       res.write("<h1> Connected as " + client.user.tag + "</h1>");
       res.write("<h2> Ready! &#128994 </h2>");
