@@ -12,12 +12,14 @@ function welcome(member) {
     }),
     memcount: member.guild.memberCount,
     discrim: member.user.discriminator, //tag of user #6969
-    username: member.user.username,
+    name: member.user.username,
     bg: "https://file.coffee/u/bZcr9HMO3Nc-MW.png",
     header: `Welcome to ${member.guild.name}`
   });
 
-  const image = 'https://badboy.is-a.dev/api/image/welcomecard?' + params + "&apikey=X6MPM1K6IXMN1WC3MY"
+  const image = 'https://badboy.is-a.dev/api/image/welcomecard?' + params + 
+    "&apikey=DMNP5F9U51VZILZO9C"
+
   return image;
 }
 
