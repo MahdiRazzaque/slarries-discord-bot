@@ -182,7 +182,7 @@ module.exports = {
                         const guildTag = player.guild.tag || "None"
 
                         playerEmbed.setTitle(`[${player.rank}] ${player.nickname}`)
-                        playerEmbed.addField("Guild", `\`•\` **Name**: \`${player.guild.name}\` \n\`•\` **Rank**: \`${guildRank}\` \n\`•\` **Level**: \`${commaNumber(player.guild.level)}\` \n\`•\` **Tag**: \`${guildTag}\` \n\`•\` **Weekly experience**: \`${commaNumber(player.guild.totalWeeklyGexp)}\` `, true)
+                        playerEmbed.addField("Guild", `\`•\` **Name**: \`${player.guild.name}\` \n\`•\` **Rank**: \`${guildRank}\` \n\`•\` **Level**: \`${commaNumber(player.guild.level)}\` \n\`•\` **Tag**: \`${guildTag}\``, true)
                     }
 
                     var socialMedias = ``
