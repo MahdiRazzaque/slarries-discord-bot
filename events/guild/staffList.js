@@ -6,7 +6,6 @@ const Staff = [
     "Admin",
     "Slayer Carrier",
     "Dungeon Carrier",
-    "Modmail Support",
 ]
 
 const Config = {
