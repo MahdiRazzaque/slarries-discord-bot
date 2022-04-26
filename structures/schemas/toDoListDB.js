@@ -4,7 +4,7 @@ module.exports = model(
     "toDoListDB",
     new Schema({
         MemberID: String,
-        List: [],
+        List: Array,
         ChannelID: String,
         MessageID: String,
         PrivacyMode: Boolean,

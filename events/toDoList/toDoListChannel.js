@@ -10,6 +10,7 @@ module.exports = {
    */
   async execute(message, client) {
     if(message.author.id == client.user.id) return;
+    if(message.author.bot) return message.delete();
 
     async function updateList(message) {
 

@@ -1,5 +1,6 @@
-const { CommandInteraction, MessageEmbed, Client, Message } = require("discord.js");
-const DB = require("../../structures/schemas/toDoListDB");
+const { CommandInteraction, MessageEmbed, Client, Permissions } = require("discord.js");
+const toDoListDB = require("../../structures/schemas/toDoListDB");
+const toDoListSetupDB = require("../../structures/schemas/toDoListSetupDB");
 const { system_embed_colour } = require("../../structures/config.json");
 
 module.exports = {
@@ -9,16 +10,9 @@ module.exports = {
     disabled: false,
     options: [
         {
-            name: "privacy",
-            description: "Enable or disable privacy mode.",
+            name: "help",
+            description: "View a help embed, showcasing all to-do-list commands.",
             type: "SUB_COMMAND",
-            options: [{ name: "option", description: "True = enable, False = disable", type: "BOOLEAN", required: true}]
-        },
-        {
-            name: "add-messages-to-list",
-            description: "Set whether messages sent in dedicated to do list channels will be added to the list.",
-            type: "SUB_COMMAND",
-            options: [{ name: "option", description: "True = enable, False = disable", type: "BOOLEAN", required: true}]
         },
         {
             name: "show",
@@ -75,17 +69,40 @@ module.exports = {
             type: "SUB_COMMAND",
         },
         {
-            name: "set-channel",
-            description: "Set a channel where your to-do list will be saved and updated.",
-            type: "SUB_COMMAND",
-            options: [{ name: "channel", description: "Set a channel.", type: "CHANNEL", channelTypes: ["GUILD_TEXT"], required: true}]
-        },
-        {
             name: "refresh",
             description: "Refresh your channel saved to-do-list, if you believe it is incorrect.",
             type: "SUB_COMMAND",
 
-        }
+        },
+        {
+            name: "privacy",
+            description: "Enable or disable privacy mode.",
+            type: "SUB_COMMAND",
+            options: [{ name: "option", description: "True = enable, False = disable", type: "BOOLEAN", required: true}]
+        },
+        {
+            name: "add-messages-to-list",
+            description: "Set whether messages sent in dedicated to do list channels will be added to the list.",
+            type: "SUB_COMMAND",
+            options: [{ name: "option", description: "True = enable, False = disable", type: "BOOLEAN", required: true}]
+        },
+        {
+            name: "create-channel",
+            description: "Create channel where your to-do list will be saved and updated.",
+            type: "SUB_COMMAND",
+        },
+        {
+            name: "delete-channel",
+            description: "Delete the channel where your to-do list is saved and updated.",
+            type: "SUB_COMMAND",
+        },
+        {
+            name: "set-channel",
+            description: "Set a channel where your to-do list will be saved and updated. (Requires MANAGE_CHANNELS)",
+            type: "SUB_COMMAND",
+            options: [{ name: "channel", description: "Set a channel.", type: "CHANNEL", channelTypes: ["GUILD_TEXT"], required: true}]
+        },
+
     ],
     /**
      * @param {CommandInteraction} interaction
@@ -95,7 +112,7 @@ module.exports = {
 
         async function updateList() {
 
-            var data = await DB.findOne({ MemberID: interaction.member.id})
+            var data = await toDoListDB.findOne({ MemberID: interaction.member.id})
                       
             var List = data.List
 
@@ -127,10 +144,12 @@ module.exports = {
         const itemNumber = interaction.options.getInteger("item-number")
         const option = interaction.options.getBoolean("option")
 
-        var data = await DB.findOne({ MemberID: interaction.member.id})
+        const setup = await toDoListSetupDB.findOne({ Guild: interaction.guild.id});
+
+        var data = await toDoListDB.findOne({ MemberID: interaction.member.id})
 
         if(!data)
-            data = await DB.create({ MemberID: interaction.member.id, List: []})
+            data = await toDoListDB.create({ MemberID: interaction.member.id, List: []})
 
         var ephemeral;
 
@@ -161,26 +180,30 @@ module.exports = {
             return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("Your to-do list is too long, please clear it using /to-do-list clear.")], ephemeral})
 
         switch(interaction.options.getSubcommand()) {
-            case "privacy":
-                if(option) {
-                    await DB.findOneAndUpdate({MemberID: interaction.member.id}, {PrivacyMode: true})
-                    return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Privacy mode has been enabled.`)], ephemeral: true})
-                } else {
-                    await DB.findOneAndUpdate({MemberID: interaction.member.id}, {PrivacyMode: false})
-                    return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Privacy mode has been disabled.`)], ephemeral: data.ChannelID == interaction.channel.id ? true: false})
-                }
-
-            break;
-
-            case "add-messages-to-list":
-                if(option) {
-                    await DB.findOneAndUpdate({MemberID: interaction.member.id}, {MessageCreateToAdd: true})
-                    return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Messages sent in to dedicated to-do list channels will automatically be added to the list.`)], ephemeral: true})
-                } else {
-                    await DB.findOneAndUpdate({MemberID: interaction.member.id}, {MessageCreateToAdd: false})
-                    return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Messages sent in to dedicated to-do list channels will no longer automatically be added to the list.`)], ephemeral: data.ChannelID == interaction.channel.id ? true: false})
-                }
-
+            case "help":
+                const toDoListCommandHelp = new MessageEmbed()
+                    .setColor(system_embed_colour)
+                    .setTitle(`To-do list system setup help`)
+                    .setDescription(
+                    `\`•\` **/to-do-list help**: \`Displays this embed.\`` + `\n` +
+                    `\`•\` **/to-do-list show**: \`Sends your current to-do list.\`` + `\n` +
+                    `\`•\` **/to-do-list add [item]**: \`Adds an item to your to-do list.\`` + `\n` +
+                    `\`•\` **/to-do-list remove [item]**: \`Removes an item to your to-do list.\`` + `\n` +
+                    `\`•\` **/to-do-list tick [item-number]**: \`Tick an item off in your to-do list.\`` + `\n` +
+                    `\`•\` **/to-do-list untick [item-number]**: \`Untick an item in your to-do list.\`` + `\n` +
+                    `\`•\` **/to-do-list tick-all**: \`Tick off all items in your to-do list.\`` + `\n` +
+                    `\`•\` **/to-do-list untick-all**: \`Untick all items in your to-do list.\`` + `\n` + 
+                    `\`•\` **/to-do-list clear**: \`Clear all items in your to-do list.\`` + `\n` +
+                    `\`•\` **/to-do-list clear-ticked**: \`Clear items which are ticked off in your to-do list.\`` + `\n` + 
+                    `\`•\` **/to-do-list clear-unticked**: \`Clear items which are not ticked off in your to-do list.\`` + `\n` + 
+                    `\`•\` **/to-do-list refresh**: \`Refresh your to-do list message in your dedicated channel, if it exists.\`` + `\n` +
+                    `\`•\` **/to-do-list privacy [T/F]**: \`Enables or disables privacy mode, which hides all your to-do list messages from other users.\`` + `\n` + 
+                    `\`•\` **/to-do-list add-messages-to-list [T/F]**: \`Enables or disables if messages sent in your dedicated to-do list channel are automatically added to the list.\`` + `\n` + 
+                    `\`•\` **/to-do-list create-channel**: \`Create a channel in which your to-do list will be sent and updated.\`` + `\n` + 
+                    `\`•\` **/to-do-list delete-channel**: \`Delete the channel where your to-do list is saved and updated.\`` + `\n` + 
+                    `\`•\` **/to-do-list set-channel**: \`Set a channel in which your to-do list will be sent and updated (Requires MANAGE_CHANNELS)\``
+                    )
+                return interaction.reply({embeds: [toDoListCommandHelp], ephemeral})
             break;
 
             case "show":
@@ -189,7 +212,7 @@ module.exports = {
 
             case "add":
                 List.push({"name": item, "tickedOff": false})
-                await DB.findOneAndUpdate({MemberID: interaction.member.id}, {List: List})
+                await toDoListDB.findOneAndUpdate({MemberID: interaction.member.id}, {List: List})
         
                 await updateList()
 
@@ -204,7 +227,7 @@ module.exports = {
 
                 List.splice(itemNumber-1, 1)
 
-                await DB.findOneAndUpdate({MemberID: interaction.member.id}, {List: List})
+                await toDoListDB.findOneAndUpdate({MemberID: interaction.member.id}, {List: List})
 
                 await updateList()
 
@@ -219,7 +242,7 @@ module.exports = {
                     return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} \`${List[itemNumber-1].name}\` has already been ticked off.`)], ephemeral})
 
                 List[itemNumber-1].tickedOff = true
-                await DB.findOneAndUpdate({MemberID: interaction.member.id}, {List: List})
+                await toDoListDB.findOneAndUpdate({MemberID: interaction.member.id}, {List: List})
 
                 await updateList()
 
@@ -234,7 +257,7 @@ module.exports = {
                     return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} \`${List[itemNumber-1].name}\` has not been ticked off.`)], ephemeral})
 
                 List[itemNumber-1].tickedOff = false
-                await DB.findOneAndUpdate({MemberID: interaction.member.id}, {List: List})
+                await toDoListDB.findOneAndUpdate({MemberID: interaction.member.id}, {List: List})
 
                 await updateList()
 
@@ -245,7 +268,7 @@ module.exports = {
                 for (let i = 0; i < List.length; i++) {
                     List[i].tickedOff = true
                 }
-                await DB.findOneAndUpdate({MemberID: interaction.member.id}, {List: List})
+                await toDoListDB.findOneAndUpdate({MemberID: interaction.member.id}, {List: List})
                 
                 await updateList()
 
@@ -256,7 +279,7 @@ module.exports = {
                 for (let i = 0; i < List.length; i++) {
                     List[i].tickedOff = false
                 }
-                await DB.findOneAndUpdate({MemberID: interaction.member.id}, {List: List})
+                await toDoListDB.findOneAndUpdate({MemberID: interaction.member.id}, {List: List})
                 
                 await updateList()
 
@@ -264,7 +287,7 @@ module.exports = {
             break;
 
             case "clear":
-                await DB.findOneAndUpdate({MemberID: interaction.member.id}, {List: []})
+                await toDoListDB.findOneAndUpdate({MemberID: interaction.member.id}, {List: []})
 
                 await updateList()
 
@@ -279,7 +302,7 @@ module.exports = {
                     }
                 }
 
-                await DB.findOneAndUpdate({MemberID: interaction.member.id}, {List: List})
+                await toDoListDB.findOneAndUpdate({MemberID: interaction.member.id}, {List: List})
 
                 await updateList()
 
@@ -293,21 +316,111 @@ module.exports = {
                         await List.splice(i, 1)
                 }
 
-                await DB.findOneAndUpdate({MemberID: interaction.member.id}, {List: List})
+                await toDoListDB.findOneAndUpdate({MemberID: interaction.member.id}, {List: List})
 
                 await updateList()
 
                 return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Unticked items in your list have been cleared.`)], ephemeral})
             break;
 
+            case "refresh":  
+                await updateList()
+
+                return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Your to-do list has been refreshed.`)], ephemeral})
+            break;
+
+            case "privacy":
+                if(option) {
+                    await toDoListDB.findOneAndUpdate({MemberID: interaction.member.id}, {PrivacyMode: true})
+                    return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Privacy mode has been enabled.`)], ephemeral: true})
+                } else {
+                    await toDoListDB.findOneAndUpdate({MemberID: interaction.member.id}, {PrivacyMode: false})
+                    return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Privacy mode has been disabled.`)], ephemeral: data.ChannelID == interaction.channel.id ? true: false})
+                }
+
+            break;
+
+            case "add-messages-to-list":
+                if(option) {
+                    await toDoListDB.findOneAndUpdate({MemberID: interaction.member.id}, {MessageCreateToAdd: true})
+                    return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Messages sent in to dedicated to-do list channels will automatically be added to the list.`)], ephemeral: true})
+                } else {
+                    await toDoListDB.findOneAndUpdate({MemberID: interaction.member.id}, {MessageCreateToAdd: false})
+                    return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Messages sent in to dedicated to-do list channels will no longer automatically be added to the list.`)], ephemeral: data.ChannelID == interaction.channel.id ? true: false})
+                }
+
+            break;
+            
+            case "create-channel":
+                if(!setup || setup.CategoryID == "None")
+                    return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This server has not set up dedicated to-do list channels.`)], ephemeral})
+
+                var toDoListChannel = client.channels.cache.get(data.ChannelID)
+
+                if(toDoListChannel)
+                    return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You already have a channel created, please use that instead. \n${toDoListChannel}`)], ephemeral})
+
+                toDoListChannel = await interaction.guild.channels.create(`${interaction.member.nickname ? interaction.member.nickname : interaction.member.displayName}`, {
+                    type: "GUILD_TEXT",
+                    parent: setup.CategoryID,
+                    permissionOverwrites: [
+                        {
+                            id: client.user.id, 
+                            allow: ["SEND_MESSAGES", "VIEW_CHANNEL", "READ_MESSAGE_HISTORY", "MANAGE_MESSAGES"]
+                        },
+                        {
+                            id: interaction.member.id, 
+                            allow: ["SEND_MESSAGES", "VIEW_CHANNEL", "READ_MESSAGE_HISTORY", "MANAGE_MESSAGES", "USE_APPLICATION_COMMANDS"]
+                        },
+                        {
+                            id: interaction.guild.id, 
+                            deny: ["SEND_MESSAGES", "VIEW_CHANNEL", "READ_MESSAGE_HISTORY"]
+                        },
+                    ],
+                }).then(async (channel) => {
+                    const message = await channel.send({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription("Setting up to-do list...")]})
+                    await toDoListDB.findOneAndUpdate({ChannelID: channel.id, MessageID: message.id})
+                    await updateList()
+                    return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Your to-do list has successfully been set up in ${channel} `)], ephemeral})
+                })
+                .catch((e) => {
+                    return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} An error occured whilst creating your channel. \n\`\`\`${e}\`\`\``)], ephemeral})
+                })
+            break;
+
+            case "delete-channel":        
+                if(!setup || setup.CategoryID == "None")
+                    return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This server has not set up dedicated to-do list channels.`)], ephemeral})
+
+                var toDoListChannel = client.channels.cache.get(data.ChannelID)
+
+                if(!toDoListChannel)
+                    return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You haven't created a to-do list channel created. Please use \`/to-do-list create-channel\` to create one.`)], ephemeral})
+
+                toDoListChannel.delete().then(() => {
+                    return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Your to-do list channel has successfully been deleted.`)], ephemeral})
+                })
+
+
+            break;
             
             case "set-channel":
-                var channel = interaction.options.getChannel("channel")
+
+                if(!interaction.member.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS))
+                    return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You need the permission \`MANAGE_CHANNELS\` to set your own channel.`)]});
+
+                var toDoListChannel = client.channels.cache.get(data.ChannelID)
+
+                if(toDoListChannel)
+                    return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You already have a channel created, please delete that to use a custom channel. \n${toDoListChannel}`)], ephemeral})
+
+                var channel = interaction.options.getChannel("channel");
 
                 try {
                     const message = await channel.send({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription("Setting up to-do list...")]})
-                    await DB.findOneAndUpdate({ChannelID: channel.id, MessageID: message.id})
-                    interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Your to-do list has successfully been set up in ${channel} `)], ephemeral})
+                    await toDoListDB.findOneAndUpdate({ChannelID: channel.id, MessageID: message.id})
+                    await updateList()
+                    return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Your to-do list has successfully been set up in ${channel} `)], ephemeral})
                 } catch (error) {
                     if(error.message === "Missing Access") {
                         return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} The bot does not have access to this channel.`)], ephemeral})
@@ -316,14 +429,11 @@ module.exports = {
                     }    
                 }
 
-                await updateList()
+                
             break;
 
-            case "refresh":  
-                await updateList()
 
-                return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Your to-do list has been refreshed.`)], ephemeral})
-            break;
+
         }
     }
 }

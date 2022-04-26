@@ -1,5 +1,6 @@
 const { Client, CommandInteraction, MessageEmbed, Collection } = require("discord.js");
-const { owners, botOwners, command_logs_id, botCommandChannels } = require("../../structures/config.json")
+const { owners, botOwners, command_logs_id, botCommandChannels } = require("../../structures/config.json");
+const toDoListDB = require("../../structures/schemas/toDoListDB");
 const DB = require("../../structures/schemas/disabledCommandsDB")
 
 module.exports = {
@@ -23,7 +24,13 @@ module.exports = {
     if (interaction.isCommand() || interaction.isContextMenu()) {
       const command = client.commands.get(interaction.commandName);
       if (!command)
-        return (interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("🛑 An error has occured whilst running this command")]}) && client.commands.delete(interaction.commandName));
+        return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("🛑 An error has occured whilst running this command")]}) && client.commands.delete(interaction.commandName);
+
+      if(interaction.commandName != "to-do-list") {
+        const toDoList = toDoListDB.findOne({ChannelID: interaction.channel.id})
+        if(toDoList.ChannelID == interaction.channel.id)
+          return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("You can only use `/to-do-list` commands in this channel.")], ephemeral: true})
+      }
 
       //Bot command channel only check
       if(command.botCommandChannelOnly == true && !owners.includes(interaction.member.id) && !botOwners.includes(interaction.member.id)) {
