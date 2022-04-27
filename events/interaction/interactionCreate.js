@@ -26,12 +26,16 @@ module.exports = {
       if (!command)
         return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("🛑 An error has occured whilst running this command")]}) && client.commands.delete(interaction.commandName);
 
-      if(interaction.commandName != "to-do-list") {
-        const toDoList = toDoListDB.findOne({ChannelID: interaction.channel.id})
-        if(toDoList.ChannelID == interaction.channel.id)
-          return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You can only use \`/to-do-list\` commands in this channel.`)], ephemeral: true})
-        if(toDoList.MemberID != interaction.member.id)
+      const toDoList = await toDoListDB.findOne({ChannelID: interaction.channel.id})
+
+      if(toDoList) {
+        if(interaction.commandName != "to-do-list") {
+          if(toDoList.ChannelID == interaction.channel.id)
+            return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You can only use \`/to-do-list\` commands in this channel.`)], ephemeral: true})
+        }
+        if(toDoList.MemberID != interaction.member.id && toDoList.ChannelID == interaction.channel.id)
           return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This isn't your to-do list channel.`)], ephemeral: true})
+  
       }
 
       //Bot command channel only check

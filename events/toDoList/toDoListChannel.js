@@ -9,9 +9,6 @@ module.exports = {
    * @param {Message} message
    */
   async execute(message, client) {
-    if(message.author.id == client.user.id) return;
-    if(message.author.bot) return message.delete();
-
     async function updateList(message) {
 
         var data = await DB.findOne({ MemberID: message.author.id})
@@ -57,6 +54,11 @@ module.exports = {
             list += `\`\`\`${i+1}. ${List[i].name} ${List[i].tickedOff ? "✅" : "☐"}\`\`\`\n`
           }
     }
+
+    if(data.ChannelID != message.channel.id) return;
+
+    if(message.author.id == client.user.id) return;
+    if(message.author.bot) return message.delete();
 
     if(data.MessageCreateToAdd && data.MemberID == message.author.id) {
         List.push({"name": message.content, "tickedOff": false})
