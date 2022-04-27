@@ -220,8 +220,8 @@ module.exports = {
             break;
 
             case "remove":
-                if(itemNumber < 0 || itemNumber > data.List.length)
-                    return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`This item is not in your list.`)], ephemeral})
+                if(itemNumber < 1 || itemNumber > data.List.length)
+                    return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This item is not in your list.`)], ephemeral})
 
                 const itemRemoved = List[itemNumber-1]
 
@@ -235,7 +235,7 @@ module.exports = {
             break;
 
             case "tick":
-                if(itemNumber < 0 || itemNumber > data.List.length)
+                if(itemNumber < 1 || itemNumber > data.List.length)
                     return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This item is not in your list.`)], ephemeral})
                 
                 if(List[itemNumber-1].tickedOff == true)
@@ -250,7 +250,7 @@ module.exports = {
             break;
 
             case "untick":
-                if(itemNumber < 0 || itemNumber > data.List.length)
+                if(itemNumber < 1 || itemNumber > data.List.length)
                     return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This item is not in your list.`)], ephemeral})
 
                 if(List[itemNumber-1].tickedOff == false)
@@ -296,13 +296,7 @@ module.exports = {
 
             
             case "clear-ticked":
-                for (let i = 0; i < List.length; i++) {
-                    if(List[i].tickedOff == true) {
-                        await List.splice(i, 1)
-                    }
-                }
-
-                await toDoListDB.findOneAndUpdate({MemberID: interaction.member.id}, {List: List})
+                await toDoListDB.findOneAndUpdate({MemberID: interaction.member.id}, {List: List.filter(item => item.tickedOff == false)})
 
                 await updateList()
 
@@ -311,12 +305,7 @@ module.exports = {
 
             
             case "clear-unticked":
-                for (let i = 0; i < List.length; i++) {
-                    if(List[i].tickedOff != true)
-                        await List.splice(i, 1)
-                }
-
-                await toDoListDB.findOneAndUpdate({MemberID: interaction.member.id}, {List: List})
+                await toDoListDB.findOneAndUpdate({MemberID: interaction.member.id}, {List: List.filter(item => item.tickedOff == true)})
 
                 await updateList()
 
@@ -377,15 +366,16 @@ module.exports = {
                             deny: ["SEND_MESSAGES", "VIEW_CHANNEL", "READ_MESSAGE_HISTORY"]
                         },
                     ],
-                }).then(async (channel) => {
-                    const message = await channel.send({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription("Setting up to-do list...")]})
-                    await toDoListDB.findOneAndUpdate({ChannelID: channel.id, MessageID: message.id})
-                    await updateList()
-                    return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Your to-do list has successfully been set up in ${channel} `)], ephemeral})
-                })
-                .catch((e) => {
+                }).catch((e) => {
                     return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} An error occured whilst creating your channel. \n\`\`\`${e}\`\`\``)], ephemeral})
                 })
+
+                await toDoListChannel.send({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription("Setting up to-do list...")]}).then(async (message) => {
+                    await toDoListDB.findOneAndUpdate({MemberID: interaction.member.id}, {ChannelID: toDoListChannel.id, MessageID: message.id})
+                    await updateList()
+                    return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Your to-do list has successfully been set up in ${toDoListChannel} `)], ephemeral})
+                })
+
             break;
 
             case "delete-channel":        
@@ -417,23 +407,19 @@ module.exports = {
                 var channel = interaction.options.getChannel("channel");
 
                 try {
-                    const message = await channel.send({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription("Setting up to-do list...")]})
-                    await toDoListDB.findOneAndUpdate({ChannelID: channel.id, MessageID: message.id})
-                    await updateList()
-                    return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Your to-do list has successfully been set up in ${channel} `)], ephemeral})
+                    await channel.send({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription("Setting up to-do list...")]}).then(async (message) => {
+                        await toDoListDB.findOneAndUpdate({MemberID: interaction.member.id}, {ChannelID: channel.id, MessageID: message.id})
+                        await updateList()
+                        return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Your to-do list has successfully been set up in ${channel} `)], ephemeral})
+                    })
                 } catch (error) {
                     if(error.message === "Missing Access") {
                         return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} The bot does not have access to this channel.`)], ephemeral})
                     } else {
                         return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} An error occured. \n\n \`\`\`${error}\`\`\``)], ephemeral})
                     }    
-                }
-
-                
+                }      
             break;
-
-
-
         }
     }
 }

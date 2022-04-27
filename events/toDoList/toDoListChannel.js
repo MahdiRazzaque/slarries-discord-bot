@@ -58,20 +58,25 @@ module.exports = {
           }
     }
 
-    if(data.MessageCreateToAdd) {
+    if(data.MessageCreateToAdd && data.MemberID == message.author.id) {
         List.push({"name": message.content, "tickedOff": false})
         await DB.findOneAndUpdate({MemberID: message.author.id}, {List: List})
 
         await updateList(message)
 
         return message.delete()
+    } else if(data.MemberID != message.author.id) {
+        const notYourChannelreply = await message.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This isn't your to-do list channel.`)]})
+        setTimeout(async () => {
+            await notYourChannelreply.delete()
+            await message.delete()
+        }, 3000)
     } else {
         const reply = await message.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You cannot speak in this channel \nIf you would like to add an item to the list by sending a message in this channel, please use the command \`/to-do-list add-messages-to-list\` to enable this function.`)]})
         setTimeout(async () => {
             await reply.delete()
             await message.delete()
-        }, 5000)
-        
+        }, 5000)     
     }
   },
 };

@@ -20,6 +20,8 @@ function welcome(member) {
   const image = 'https://badboy.is-a.dev/api/image/welcomecard?' + params + 
     "&apikey=DMNP5F9U51VZILZO9C"
 
+  console.log(image)
+
   return image;
 }
 

@@ -29,7 +29,9 @@ module.exports = {
       if(interaction.commandName != "to-do-list") {
         const toDoList = toDoListDB.findOne({ChannelID: interaction.channel.id})
         if(toDoList.ChannelID == interaction.channel.id)
-          return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("You can only use `/to-do-list` commands in this channel.")], ephemeral: true})
+          return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You can only use \`/to-do-list\` commands in this channel.`)], ephemeral: true})
+        if(toDoList.MemberID != interaction.member.id)
+          return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This isn't your to-do list channel.`)], ephemeral: true})
       }
 
       //Bot command channel only check
