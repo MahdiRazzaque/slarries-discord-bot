@@ -20,8 +20,6 @@ function welcome(member) {
   const image = 'https://badboy.is-a.dev/api/image/welcomecard?' + params + 
     "&apikey=DMNP5F9U51VZILZO9C"
 
-  console.log(image)
-
   return image;
 }
 
@@ -52,41 +50,41 @@ module.exports = {
     .then(() => channel.send({ embeds: [welcomeMessage], files: [new MessageAttachment(welcome(member), "attachment://welcome.png")]}))
     .then(() => channel.send(`${member.user}`));
 
-    // const captcha = new Captcha();
-    // captcha.async = true;
-    // captcha.addDecoy();
-    // captcha.drawTrace();
-    // captcha.drawCaptcha()
+//    const captcha = new Captcha();
+//    captcha.async = true;
+//    captcha.addDecoy();
+//    captcha.drawTrace();
+//    captcha.drawCaptcha()
 
-    // const captchaAttachment = new MessageAttachment(await captcha.png, "captcha.png");
+//    const captchaAttachment = new MessageAttachment(await captcha.png, "captcha.png");
 
-    // const captchaEmbed = new MessageEmbed()
-    //   .setDescription("Please complete this captcha. \n *You have ten minutes.*")
-    //   .setImage("attachment://captcha.png")
+//    const captchaEmbed = new MessageEmbed()
+//      .setDescription("Please complete this captcha. \n *You have ten minutes.*")
+//      .setImage("attachment://captcha.png")
 
-    // const msg = await member.send({
-    //   files: [captchaAttachment],
-    //   embeds: [captchaEmbed]
-    // })
+//    const msg = await member.send({
+//      files: [captchaAttachment],
+//      embeds: [captchaEmbed]
+//    })
 
-    // const filter = (message) => {
-    //   if(message.author.id !== member.id) return;
-    //   if(message.content === captcha.text) return true;
-    //   else member.send({embeds: [new MessageEmbed().setColor("RED").setDescription("That is not the right answer. ❌")]});
+//    const filter = (message) => {
+//      if(message.author.id !== member.id) return;
+//      if(message.content === captcha.text) return true;
+//      else member.send({embeds: [new MessageEmbed().setColor("RED").setDescription("That is not the right answer. ❌")]});
   
-    // };
+//    };
 
-    // try {
-    //   const response = await msg.channel.awaitMessages({filter, max: 1, time: 100000, errors: ["time"]}) //600000
+//    try {
+//      const response = await msg.channel.awaitMessages({filter, max: 1, time: 100000, errors: ["time"]}) //600000
 
-    //   if(response) {
-    //     member.roles.add("916385872562229325")
-    //     member.send({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`You have been verified in ${guild.name}`)]});
+//      if(response) {
+//        member.roles.add("916385872562229325")
+//        member.send({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`You have been verified in ${guild.name}`)]});
         
-    //   }
-    // } catch (err) {
-    //   await member.send({embeds: [new MessageEmbed().setColor("RED").setTitle("Failed to solve captcha").setDescription("You did not answer the captcha in time so I have kicked you.").addField("Guild Invite", "https://discord.io/slarries")]});
-    //   member.kick("Did not answer captcha in time.")
-    // }
+//      }
+//    } catch (err) {
+//      await member.send({embeds: [new MessageEmbed().setColor("RED").setTitle("Failed to solve captcha").setDescription("You did not answer the captcha in time so I have kicked you.").addField("Guild Invite", "https://discord.io/slarries")]});
+//      member.kick("Did not answer captcha in time.")
+//    }
   },
 };

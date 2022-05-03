@@ -26,6 +26,10 @@ module.exports = {
       if (!command)
         return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("🛑 An error has occured whilst running this command")]}) && client.commands.delete(interaction.commandName);
 
+      if (command.permission && !interaction.member.permissions.has(command.permission)) {
+    return interaction.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`You do not have the required permission for this command: \`${interaction.commandName}\`.`)], ephemeral: true })
+}
+
       const toDoList = await toDoListDB.findOne({ChannelID: interaction.channel.id})
 
       if(toDoList) {
@@ -35,7 +39,6 @@ module.exports = {
         }
         if(toDoList.MemberID != interaction.member.id && toDoList.ChannelID == interaction.channel.id)
           return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This isn't your to-do list channel.`)], ephemeral: true})
-  
       }
 
       //Bot command channel only check
