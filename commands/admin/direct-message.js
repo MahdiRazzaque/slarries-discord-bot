@@ -5,7 +5,7 @@ module.exports = {
   name: "direct-message",
   description: "Send a message to the user.",
   usage: "/send-message",
-  permission: "ADMINISTRATOR",
+  userPermissions: ["ADMINISTRATOR"],
   options: [
     {
       name: "message",

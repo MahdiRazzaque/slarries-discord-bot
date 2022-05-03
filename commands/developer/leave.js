@@ -5,7 +5,7 @@ module.exports = {
     name: 'leave',
     description: 'Leave a guild using guild ID',
     usage: "/leave",
-    permission: "ADMINISTRATOR",
+    userPermissions: ["ADMINISTRATOR"],
     disabled: false,
     botOwnerOnly: true,
     options: [

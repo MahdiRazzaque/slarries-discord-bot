@@ -5,7 +5,7 @@ module.exports = {
     name: "unlock",
     description: "Lift a lockdown from a channel",
     usage: "/unlock",
-    permission: "MANAGE_CHANNELS",
+    userPermissions: ["MANAGE_CHANNELS"],
     /**
      * 
      * @param {CommandInteraction} interaction 

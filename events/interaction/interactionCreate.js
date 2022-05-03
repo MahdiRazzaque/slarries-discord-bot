@@ -2,6 +2,7 @@ const { Client, CommandInteraction, MessageEmbed, Collection } = require("discor
 const { owners, botOwners, command_logs_id, botCommandChannels } = require("../../structures/config.json");
 const toDoListDB = require("../../structures/schemas/toDoListDB");
 const DB = require("../../structures/schemas/disabledCommandsDB")
+const { nicerPermissions } = require("../../functions/nicerPermissions.js")
 
 module.exports = {
   name: "interactionCreate",
@@ -25,10 +26,24 @@ module.exports = {
       const command = client.commands.get(interaction.commandName);
       if (!command)
         return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("🛑 An error has occured whilst running this command")]}) && client.commands.delete(interaction.commandName);
-
-      if (command.permission && !interaction.member.permissions.has(command.permission)) {
-    return interaction.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`You do not have the required permission for this command: \`${interaction.commandName}\`.`)], ephemeral: true })
-}
+      
+    if (!interaction.memberPermissions.has(command.userPermissions || [])) {
+      var missingPermissions = []
+      command.userPermissions.forEach((permission) => {
+        if(!interaction.member.permissions.has(permission))
+          missingPermissions.push(permission)
+      })
+      
+      return interaction.reply({
+        embeds: [
+          new MessageEmbed()
+            .setDescription("You do not have the required permissions to use this command.")
+            .addField("Required permissions", `\`\`\`${command.userPermissions.map((permission) => nicerPermissions(permission)).join(", ")}\`\`\``)
+            .addField("Missing permissions", `\`\`\`${missingPermissions.map((permission) => nicerPermissions(permission)).join(", ")}\`\`\``)
+            .setColor("RED")
+        ],
+  });
+  }
 
       const toDoList = await toDoListDB.findOne({ChannelID: interaction.channel.id})
 

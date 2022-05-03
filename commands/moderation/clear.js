@@ -9,7 +9,7 @@ module.exports = {
   name: "clear",
   description: "Deletes a specified number of messages from a channel or a target.",
   usage: "/clear",
-  permission: "MANAGE_MESSAGES",
+  userPermissions: ["MANAGE_MESSAGES"],
   disabled: false,
   options: [
     {

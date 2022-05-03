@@ -6,7 +6,7 @@ module.exports = {
   name: "giveaway",
   description: "A complete giveaway system.",
   usage: "/giveaway",
-  permission: "ADMINISTRATOR",
+  userPermissions: ["ADMINISTRATOR"],
   disabled: false,
   options: [
     {

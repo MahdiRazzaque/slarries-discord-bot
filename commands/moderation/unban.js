@@ -4,7 +4,7 @@ const { moderation_embed_colour, guild_logs_id } = require("../../structures/con
 module.exports = {
 	name: "unban",
 	description: "Used to unban a target id.",
-	permission: "BAN_MEMBERS",
+	userPermissions: ["BAN_MEMBERS"],
 	usage: "/unban",
 	disabled: false,
 	options: [{

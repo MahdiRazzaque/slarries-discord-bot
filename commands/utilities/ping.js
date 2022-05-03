@@ -6,6 +6,7 @@ module.exports = {
   usage: "/ping",
   cooldown: 5,
   disabled: false,
+  userPermissions: ["KICK_MEMBERS", "MANAGE_MESSAGES"],
   /**
    *
    * @param {CommandInteraction} interaction

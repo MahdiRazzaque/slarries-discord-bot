@@ -5,7 +5,7 @@ const { system_embed_colour } = require("../../structures/config.json")
 module.exports = {
     name: "ticket",
     description: "Ticket actions.",
-    permission: "ADMINISTRATOR",
+    userPermissions: ["ADMINISTRATOR"],
     usage: "/ticket",
     roles: ["917054077869912177", "925013507546693632"],
     options: [

@@ -7,7 +7,7 @@ module.exports = {
     name: 'nuke',
     description: "Nukes a channel",
     usage: "/nuke",
-    permisson: "ADMINISTRATOR",
+    userPermissions: ["ADMINISTRATOR"],
     disabled: false,
     options: [
       {

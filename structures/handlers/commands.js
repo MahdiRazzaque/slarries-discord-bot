@@ -19,10 +19,19 @@ module.exports = async (client, PG, Ascii) => {
     if (!command.type && !command.description)
       return Table.addRow(command.name, "🔸 FAILED", "Missing a description.");
 
-    if (command.permission) {
-      if (Perms.includes(command.permission)) command.defaultPermission = false;
-      else
-        return Table.addRow( command.name, "🔸 FAILED", "Permission is invalid." );
+    var invalidPermission = false
+
+    if (command.userPermissions && command.userPermissions.length > 0) {
+      command.userPermissions.forEach((permission) => {
+        if (Perms.includes(permission)) {
+          //command.defaultPermission = false;
+        } else {
+          invalidPermission = true
+        }
+          
+        if(invalidPermission)
+          return Table.addRow( command.name, "🔸 FAILED", `Permission(s) are invalid.` );
+      })
     }
 
     client.commands.set(command.name, command);

@@ -4,7 +4,7 @@ module.exports = {
     name: "poll",
     description: "Create a poll",
     usage: "/poll",
-    permission: "ADMINISTRATOR",
+    userPermissions: ["ADMINISTRATOR"],
     disabled: false,
     options: [
       {

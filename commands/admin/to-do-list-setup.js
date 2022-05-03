@@ -5,7 +5,7 @@ module.exports = {
     name: "to-do-list-setup",
     description: "Manage this server's to-do-list command.",
     usage: "/to-do-list",
-    permission: "ADMINISTRATOR",
+    userPermissions: ["ADMINISTRATOR"],
     options: [
         {
             name: "help",

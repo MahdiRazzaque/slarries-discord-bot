@@ -6,7 +6,7 @@ module.exports = {
   name: "maintenance",
   description: "Put the bot into maintenance mode.",
   usage: "/maintenance",
-  permission: "ADMINISTRATOR",
+  userPermissions: ["ADMINISTRATOR"],
   disabled: false,
   botOwnerOnly: true,
   /**

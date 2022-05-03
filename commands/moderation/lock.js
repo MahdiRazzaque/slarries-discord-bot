@@ -6,7 +6,7 @@
      name: "lock",
      description: "Lockdown this channel",
      usage: "/lock",
-     permission: "MANAGE_CHANNELS",
+     userPermissions: ["MANAGE_CHANNELS"],
      options: [
          {
              name: "time",

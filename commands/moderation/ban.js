@@ -7,7 +7,7 @@ module.exports = {
   name: "ban",
   description: "Used to ban a target",
   usage: "/ban",
-  permission: "BAN_MEMBERS",
+  userPermissions: ["BAN_MEMBERS"],
   disabled: false,
   options: [
     {

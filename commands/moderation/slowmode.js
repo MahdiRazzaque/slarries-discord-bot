@@ -6,7 +6,7 @@ module.exports = {
   name: "slowmode",
   description: "Slows down the rate at which messages can be sent.",
   usage: "/slowmode",
-  permission: "MANAGE_MESSAGES",
+  userPermissions: ["MANAGE_MESSAGES"],
   disabled: false,
   options: [
     {

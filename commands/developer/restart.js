@@ -4,6 +4,7 @@ const { developer_embed_colour } = require("../../structures/config.json");
 module.exports = {
   name: "restart",
   description: "Restart the bot",
+  userPermissions: ["ADMINISTRATOR"],
   botOwnerOnly: true,
   /**
    * @param {CommandInteraction} interaction

@@ -5,7 +5,7 @@ module.exports = {
     name: 'activity',
     description: 'Sets the activity for the bot.',
     usage: "/activity",
-    permission: "ADMINISTRATOR",
+    userPermissions: ["ADMINISTRATOR"],
     disabled: false,
     botOwnerOnly: true,
     options: [

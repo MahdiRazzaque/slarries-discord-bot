@@ -5,7 +5,7 @@ module.exports = {
   name: "role",
   description: "Add or remove the role from the member",
   usage: "/role",
-  permission: "MANAGE_ROLES",
+  userPermissions: ["MANAGE_ROLES"],
   disabled: false,
   options: [
     {

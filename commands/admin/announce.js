@@ -5,7 +5,7 @@ module.exports = {
   name: "announce",
   description: "Announce a message to the announcement channel.",
   usage: "/announce",
-  permission: "ADMINISTRATOR",
+  userPermissions: ["ADMINISTRATOR"],
   disabled: false,
   ownerOnly: true,
   options: [

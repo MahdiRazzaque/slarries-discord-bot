@@ -8,7 +8,7 @@ module.exports = {
     usage: "/filter",
     disabled: false,
     ownerOnly: true,
-    permission: "MANAGE_MESSAGES",
+    userPermissions: ["MANAGE_MESSAGES"],
     options: [
         {
             name: "clear",

@@ -72,7 +72,7 @@ module.exports = {
         }]
     }],
     usage: "/rr-menu",
-    permission: "ADMINISTRATOR",
+    userPermissions: ["ADMINISTRATOR"],
     disabled: false,
     ownerOnly: true,
 

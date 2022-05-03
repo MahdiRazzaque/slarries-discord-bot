@@ -5,7 +5,7 @@ module.exports = {
   name: "emmit",
   description: "Event emitter",
   usage: "/emit",
-  permission: "ADMINISTRATOR",
+  userPermissions: ["ADMINISTRATOR"],
   disabled: false,
   botOwnerOnly: true,
   options: [

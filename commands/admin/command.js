@@ -6,7 +6,7 @@ module.exports = {
   name: "command",
   description: "Disable or enable a slash command.",
   usage: "/command",
-  permisson: "ADMINISTRATOR",
+  userPermissions: ["ADMINISTRATOR"],
   options: [
       {
         name: "disable",

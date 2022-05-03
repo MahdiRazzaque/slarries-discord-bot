@@ -5,7 +5,7 @@ module.exports = {
   name: "send-preset-embed",
   description: "Send a preset embed to a specific channel.",
   usage: "/send-preset-embed",
-  permission: "ADMINISTRATOR",
+  userPermissions: ["ADMINISTRATOR"],
   disabled: false,
   ownerOnly: true,
   options: [

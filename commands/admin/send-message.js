@@ -5,7 +5,7 @@ module.exports = {
   name: "send-message",
   description: "Send a message to a specific channel.",
   usage: "/send-message",
-  permission: "ADMINISTRATOR",
+  userPermissions: ["ADMINISTRATOR"],
   disabled: false,
   options: [
     {

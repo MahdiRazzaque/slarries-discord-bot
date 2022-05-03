@@ -5,7 +5,7 @@ module.exports = {
     name: "send-embed",
     description: "Generate a custom embed!",
     usage: "/send-embed",
-    permission: "ADMINISTRATOR",
+    userPermissions: ["ADMINISTRATOR"],
     disabled: false,
     options: [
         { name: "colour", description: "Provide a colour for the embed.", type: "STRING"},

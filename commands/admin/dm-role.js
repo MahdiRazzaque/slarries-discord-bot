@@ -9,7 +9,7 @@ module.exports = {
   description: "Message a user if they have a certain role.",
   usage: "/dm-role",
   disabled: false,
-  permission: "ADMINISTRATOR",
+  userPermissions: ["ADMINISTRATOR"],
   options: [
      {
       name: "role",

@@ -9,7 +9,7 @@ module.exports = {
   name: "kick",
   description: "Used to kick a target",
   usage: "/kick",
-  permission: "KICK_MEMBERS",
+  userPermissions: ["KICK_MEMBERS"],
   disabled: false,
   options: [
     {
@@ -57,7 +57,7 @@ module.exports = {
 
     Target.send({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle(`👮 You've been kicked From ${interaction.guild.name}!`).addFields({name: "Reason", value: Reason}, {name: "Kicked by", value: interaction.member.user.tag})]})
 
-    await delay(1000).then(() => Target.kick({ reason: Reason }));
+    await delay(1000).then(() => Target.kick(Reason));
 
     interaction.reply({ embeds: [success] });
   },
