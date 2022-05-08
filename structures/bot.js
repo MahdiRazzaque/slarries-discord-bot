@@ -8,7 +8,7 @@ const Ascii = require("ascii-table");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const client = new Client({ intents: 32767, partials: ["REACTION", "CHANNEL", "MESSAGE"], allowedMentions: {repliedUser: false}});
+const client = new Client({ intents: 131071, partials: ["REACTION", "CHANNEL", "MESSAGE"], allowedMentions: {repliedUser: false}});
 
 //Collections
 client.commands = new Collection();
@@ -47,26 +47,6 @@ client.discordTogether = new DiscordTogether(client);
 
 //Anti Crash
 require("./antiCrash")(client);
-
-// process.on('warning', (info) => {
-//   console.log("[warning]")
-//   console.log(info.stack)
-//   })
-
-// process.on("uncaughtException", (error) => {
-//   console.log("[uncaughtException]")
-//   console.log(error.stack)
-// })
-
-// process.on("unhandledRejection", (error) => {
-//   console.log("[unhandledRejection]")
-//   console.log(error.stack)
-// })
-
-// process.on("uncaughtException", (error) => {
-//   console.log(error.stack)
-// })
-
 
 //Logging into the bot
 client.login(process.env.TOKEN);
