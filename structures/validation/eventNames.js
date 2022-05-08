@@ -3,23 +3,23 @@ module.exports = {
         "applicationCommandCreate",
         "applicationCommandDelete",
         "applicationCommandUpdate",
-        "channelCreate", //Created log
-        "channelDelete", //Created log
+        "channelCreate", 
+        "channelDelete", 
         "channelPinsUpdate",
-        "channelUpdate", //Created log
+        "channelUpdate", 
         "debug",
-        "emojiCreate", //Created log
-        "emojiDelete", //Created log
-        "emojiUpdate", //Created log
+        "emojiCreate", 
+        "emojiDelete", 
+        "emojiUpdate", 
         "error",
-        "guildBanAdd", //Created log
-        "guildBanRemove", //Created log
+        "guildBanAdd", 
+        "guildBanRemove", 
         "guildCreate", 
         "guildDelete",
         "guildIntegrationsUpdate",
-        "guildMemberAdd", //Created log
+        "guildMemberAdd", 
         "guildMemberAvailable", 
-        'guildMemberRemove', //Created log
+        'guildMemberRemove', 
         'guildMembersChunk',
         'guildMemberUpdate',
         'guildUnavailable',
@@ -32,18 +32,18 @@ module.exports = {
         'inviteDelete',
         "message",
         'messageCreate',
-        'messageDelete', //Created log
+        'messageDelete', 
         'messageDeleteBulk',
         'messageReactionAdd',
         'messageReactionRemove',
         'messageReactionRemoveAll',
         'messageReactionRemoveEmoji',
-        'messageUpdate', //Created log
+        'messageUpdate', 
         'presenceUpdate',
         'rateLimit',
         'ready',
-        'roleCreate', //Created log
-        'roleDelete', //Created log
+        'roleCreate', 
+        'roleDelete', 
         'roleUpdate',
         'shardDisconnect',
         "shardError",
@@ -67,5 +67,11 @@ module.exports = {
         "voiceStateUpdate",
         "warn",
         "webhookUpdate",
+        "guildScheduledEventCreate",
+        "guildScheduledEventDelete",
+        "guildScheduledEventUpdate",
+        "guildScheduledEventUserAdd",
+        "guildScheduledEventUserRemove",
+        "scheduledEvent",
     ]
 }
