@@ -1,5 +1,5 @@
 const { Client, MessageEmbed, MessageAttachment } = require("discord.js");
-//const { Captcha } = require ("captcha-canvas");
+const Captcha = require("@haileybot/captcha-generator");
 
 function delay(time) {
   return new Promise((resolve) => setTimeout(resolve, time));
@@ -49,42 +49,38 @@ module.exports = {
     delay(1000)
     .then(() => channel.send({ embeds: [welcomeMessage], files: [new MessageAttachment(welcome(member), "attachment://welcome.png")]}))
     .then(() => channel.send(`${member.user}`));
-
-//    const captcha = new Captcha();
-//    captcha.async = true;
-//    captcha.addDecoy();
-//    captcha.drawTrace();
-//    captcha.drawCaptcha()
-
-//    const captchaAttachment = new MessageAttachment(await captcha.png, "captcha.png");
-
-//    const captchaEmbed = new MessageEmbed()
-//      .setDescription("Please complete this captcha. \n *You have ten minutes.*")
-//      .setImage("attachment://captcha.png")
-
-//    const msg = await member.send({
-//      files: [captchaAttachment],
-//      embeds: [captchaEmbed]
-//    })
-
-//    const filter = (message) => {
-//      if(message.author.id !== member.id) return;
-//      if(message.content === captcha.text) return true;
-//      else member.send({embeds: [new MessageEmbed().setColor("RED").setDescription("That is not the right answer. ❌")]});
   
-//    };
+  let captcha = new Captcha();
 
-//    try {
-//      const response = await msg.channel.awaitMessages({filter, max: 1, time: 100000, errors: ["time"]}) //600000
+   const captchaAttachment = new MessageAttachment(captcha.JPEGStream, "captcha.jpeg");
 
-//      if(response) {
-//        member.roles.add("916385872562229325")
-//        member.send({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`You have been verified in ${guild.name}`)]});
+   const captchaEmbed = new MessageEmbed()
+     .setDescription("Please complete this captcha. \n *You have ten minutes.*")
+     .setImage("attachment://captcha.jpeg")
+
+   const msg = await member.send({
+     files: [captchaAttachment],
+     embeds: [captchaEmbed]
+   })
+
+   const filter = (message) => {
+     if(message.author.id !== member.id) return;
+     if(message.content.toUpperCase() === captcha.value) return true;
+     else member.send({embeds: [new MessageEmbed().setColor("RED").setDescription("That is not the right answer. ❌")]});
+  
+   };
+
+   try {
+     const response = await msg.channel.awaitMessages({filter, max: 1, time: 10000, errors: ["time"]}) //600000
+
+     if(response) {
+       member.roles.add("916385872562229325")
+       member.send({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`You have been verified in ${guild.name}`)]});
         
-//      }
-//    } catch (err) {
-//      await member.send({embeds: [new MessageEmbed().setColor("RED").setTitle("Failed to solve captcha").setDescription("You did not answer the captcha in time so I have kicked you.").addField("Guild Invite", "https://discord.io/slarries")]});
-//      member.kick("Did not answer captcha in time.")
-//    }
+     }
+   } catch (err) {
+     await member.send({embeds: [new MessageEmbed().setColor("RED").setTitle("Failed to solve captcha").setDescription("You did not answer the captcha in time so you have been kicked you.").addField("Guild Invite", "https://discord.io/slarries")]});
+     member.kick("Did not answer captcha in time.")
+   }
   },
 };
