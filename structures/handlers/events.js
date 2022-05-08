@@ -1,7 +1,7 @@
 const { Events } = require("../validation/eventNames");
 
 module.exports = async (client, PG, Ascii) => {
-  const Table = new Ascii("Events Loaded");
+  const Table = new Ascii("Events Loaded").setHeading(`Name`, `Status`, `Reason`);
 
   (await PG(`${process.cwd()}/events/*/*.js`)).map(async (file) => {
     const event = require(file);
@@ -11,15 +11,7 @@ module.exports = async (client, PG, Ascii) => {
         return Table.addRow(file.split("/")[7], "🔸 FAILED", "Event name is missing.");
   }
 
-    if(event.disabled) {
-      if(event.disabled == false) {
-        if (event.once) {
-          client.once(event.name, (...args) => event.execute(...args, client));
-        } else {
-          client.on(event.name, (...args) => event.execute(...args, client));
-        }
-      }
-    } else {
+    if(!event.disabled) {
       if (event.once) {
         client.once(event.name, (...args) => event.execute(...args, client));
       } else  {

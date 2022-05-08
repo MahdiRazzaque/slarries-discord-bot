@@ -25,7 +25,7 @@ module.exports = async (client, PG, Ascii) => {
     client.prefixcommands.set(command.name, command);
     prefixCommandsArray.push(command);
 
-    Table.setHeading(`Name`, `Status`);
+    Table.setHeading(`Name`, `Status`, `Reason`);
     await Table.addRow(command.name, "🔹 Success");
   });
   console.log(Table.toString());
