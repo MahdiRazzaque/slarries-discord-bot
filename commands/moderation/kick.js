@@ -46,14 +46,20 @@ module.exports = {
       .setAuthor({name: `${Target.user.tag}`, iconURL: `${Target.user.avatarURL({ dynamic: true, size: 512 })}`})
       .setThumbnail(Target.user.avatarURL({ dynamic: true, size: 512 }));
 
-    if (Target.id === interaction.member.id)
-      return interaction.reply({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle(`Error ${client.emojisObj.animated_cross}`).setDescription("🙄 You can't kick yourself")], ephemeral: true});
+    if(Target.id === interaction.member.id)
+      return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You can't kick yourself.`)], ephemeral: true});
+  
+     if(Target.id === client.user.id)
+      return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} I can't kick myself.`)], ephemeral: true});
 
-    if (Target.permissions.has("ADMINISTRATOR"))
-      return interaction.reply({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle(`Error ${client.emojisObj.animated_cross}`).setDescription("🙄 You can't kick an Admin")], ephemeral: true});
+    if(Target.permissions.has("ADMINISTRATOR"))
+      return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You can't kick an admin.`)], ephemeral: true});
 
-    if (Target.permissions.has("MANAGE_GUILD"))
-      return interaction.reply({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle(`Error ${client.emojisObj.animated_cross}`).setDescription("🙄 You can't kick an Moderator")], ephemeral: true});
+    if(Target.permissions.has("MANAGE_GUILD"))
+      return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You can't kick a moderator.`)], ephemeral: true});
+  
+	if(!Target.kickable)
+		return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} I don't have the permissions to kick ${Target}.`)], ephemeral: true});
 
     Target.send({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle(`👮 You've been kicked From ${interaction.guild.name}!`).addFields({name: "Reason", value: Reason}, {name: "Kicked by", value: interaction.member.user.tag})]})
 
