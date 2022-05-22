@@ -11,15 +11,8 @@ module.exports = {
    */
   async execute(oldUser, newUser, client) {
 
-    const guild_logs = thread.guild.channels.cache.get(guild_logs_id)
+    const guild_logs = client.channels.cache.get(guild_logs_id)
     let happen = Math.floor(new Date().getTime()/1000.0)
-
-    const userUpdate = new MessageEmbed()
-      .setColor(guild_log_colour)
-      .setTitle("User Updated 🎭")
-      .setTimestamp();
-
-      guild_logs.send({ embeds: [threadCreate] });
 
     if (oldUser.username !== newUser.username) {
         const usernameChanged = new MessageEmbed()
