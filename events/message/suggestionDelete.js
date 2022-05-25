@@ -9,7 +9,7 @@ module.exports = {
    * @param {Message} message
    */
   async execute(message, client) {
-    if(message.guild === null) return;
+    if(!message.guild) return;
 
     const suggestSetup = await suggestSetupDB.findOne({ GuildID: message.guild.id });
     if(!suggestSetup) return;

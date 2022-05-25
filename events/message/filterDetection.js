@@ -9,9 +9,7 @@ module.exports = {
      * @param {Client} client 
      */
     async execute(message, client) {
-        if(message.author.bot) return;
-        if(message.guild === null) return;
-
+        if(message.author.bot || !message.guild) return;
         const { content, guild, author, channel } = message;
 
         //const messageContent = content.toLowerCase().split(" ");

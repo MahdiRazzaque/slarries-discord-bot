@@ -8,9 +8,7 @@ module.exports = {
      * @param {Message} message
      */
     async execute(message) {
-        
-        if(message.author.bot) return;
-        if(message.guild === null) return;
+        if(message.author.bot || !message.guild) return;
 
         await DB.deleteOne({GuildID: message.guild.id, UserID: message.author.id})
         

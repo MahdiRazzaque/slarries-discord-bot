@@ -10,7 +10,7 @@ module.exports = {
    * @param {Message} message
    */
   async execute(message, client) {
-    if (!message.content.startsWith(Prefix) || message.author.bot) return
+    if (!message.content.startsWith(Prefix) || message.author.bot) return;
 
     const args = message.content.slice(Prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLocaleLowerCase();
