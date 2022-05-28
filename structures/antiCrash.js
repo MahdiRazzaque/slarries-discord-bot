@@ -60,6 +60,9 @@ module.exports = (client) => {
     });
     
     process.on("multipleResolves", (type, promise, reason) => {
+      if(reason.includes("FetchError: request to https://discord.com/api/v9/gateway/bot failed")) return;
+      console.log(`Reason: ${reason}`)
+
         console.log(type, promise, reason)
         const multipleResolvesEmbed = new MessageEmbed()
             .setTitle('Multiple Resolves')
