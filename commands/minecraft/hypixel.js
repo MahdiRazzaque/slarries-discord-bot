@@ -215,8 +215,46 @@ module.exports = {
 
             case "bedwars":
                 hypixel.getPlayer(player).then(async(player) => {
+
+                  var bedwarsEmbedColour = "GREYPLE"
+                  star = player.stats.bedwars.level
+                  switch (Math.floor(star/100)) {
+                    case 0:
+                    	bedwarsEmbedColour = "GREYPLE"
+                      break;
+                    case 1:
+                    	bedwarsEmbedColour = "WHITE"
+                      break;
+                    case 2:
+                      bedwarsEmbedColour = "GOLD"
+                      break;
+                   	case 3:
+                      bedwarsEmbedColour = "AQUA"
+                      break;
+                    case 4:
+                      bedwarsEmbedColour = "GREEN"
+                      break;
+                    case 5:
+                      bedwarsEmbedColour = "DARK_BLUE"
+                      break;
+                    case 6:
+                      bedwarsEmbedColour = "DARK_RED"
+                      break;
+                    case 7:
+                      bedwarsEmbedColour = "LUMINOUS_VIVID_PINK"
+                      break;
+                    case 8:
+                      bedwarsEmbedColour = "DARK_BLUE"
+                      break;
+                    case 9:
+                      bedwarsEmbedColour = "DARK_PURPLE"
+                      break;
+                    default:
+                      bedwarsEmbedColour = "YELLOW"
+                  }
+                  
                     const bedwarsOverall = new MessageEmbed()
-                        .setColor(minecraft_embed_colour)
+                        .setColor(bedwarsEmbedColour)
                         .setAuthor({name: 'Overall Bedwars Stats', iconURL: 'https://hypixel.net/styles/hypixel-v2/images/game-icons/BedWars-64.png'})
                         .setTitle(`[${player.rank}] ${player.nickname}   |   ${player.stats.bedwars.prestige} Prestige`)
                         .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)

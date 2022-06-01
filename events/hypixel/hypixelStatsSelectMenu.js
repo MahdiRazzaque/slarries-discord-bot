@@ -44,8 +44,45 @@ module.exports = {
             case "bedwars":
                 hypixel.getPlayer(player).then(async(player) => {
 
+                  var bedwarsEmbedColour = "GREYPLE"
+                  star = player.stats.bedwars.level
+                  switch (Math.floor(star/100)) {
+                    case 0:
+                    	bedwarsEmbedColour = "GREYPLE"
+                      break;
+                    case 1:
+                    	bedwarsEmbedColour = "WHITE"
+                      break;
+                    case 2:
+                      bedwarsEmbedColour = "GOLD"
+                      break;
+                   	case 3:
+                      bedwarsEmbedColour = "AQUA"
+                      break;
+                    case 4:
+                      bedwarsEmbedColour = "GREEN"
+                      break;
+                    case 5:
+                      bedwarsEmbedColour = "DARK_BLUE"
+                      break;
+                    case 6:
+                      bedwarsEmbedColour = "DARK_RED"
+                      break;
+                    case 7:
+                      bedwarsEmbedColour = "LUMINOUS_VIVID_PINK"
+                      break;
+                    case 8:
+                      bedwarsEmbedColour = "DARK_BLUE"
+                      break;
+                    case 9:
+                      bedwarsEmbedColour = "DARK_PURPLE"
+                      break;
+                    default:
+                      bedwarsEmbedColour = "YELLOW"
+                  }
+
                     const bedwarsOverall = new MessageEmbed()
-                        .setColor(minecraft_embed_colour)
+                        .setColor(bedwarsEmbedColour)
                         .setAuthor({name: 'Overall Bedwars Stats', iconURL: 'https://hypixel.net/styles/hypixel-v2/images/game-icons/BedWars-64.png'})
                         .setTitle(`[${player.rank}] ${player.nickname}   |   ${player.stats.bedwars.prestige} Prestige`)
                         .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
@@ -59,7 +96,7 @@ module.exports = {
                         .addField("Resources collected (All modes)", `\`•\` **Iron**: \`${commaNumber(player.stats.bedwars.collectedItemsTotal.iron)}\` \n\`•\` **Gold**: \`${commaNumber(player.stats.bedwars.collectedItemsTotal.gold)}\` \n\`•\` **Diamond**: \`${commaNumber(player.stats.bedwars.collectedItemsTotal.diamond)}\` \n\`•\` **Emerald**: \`${commaNumber(player.stats.bedwars.collectedItemsTotal.emerald)}\` `, true)
         
                     const bedwarsSolos = new MessageEmbed()
-                        .setColor(minecraft_embed_colour)
+                        .setColor(bedwarsEmbedColour)
                         .setAuthor({name: 'Solo Bedwars Stats', iconURL: 'https://hypixel.net/styles/hypixel-v2/images/game-icons/BedWars-64.png'})
                         .setTitle(`[${player.rank}] ${player.nickname}   |   ${player.stats.bedwars.prestige} Prestige`)
                         .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
@@ -71,7 +108,7 @@ module.exports = {
                         .addField("Milestones", `\`•\` **Wins to ${commaNumber(Math.ceil(player.stats.bedwars.solo.WLRatio))} WLR**: \`${commaNumber((player.stats.bedwars.solo.losses*Math.ceil(player.stats.bedwars.solo.WLRatio))-player.stats.bedwars.solo.wins)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars.solo.KDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars.solo.deaths*Math.ceil(player.stats.bedwars.solo.KDRatio))-player.stats.bedwars.solo.kills)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars.solo.finalKDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars.solo.finalDeaths*Math.ceil(player.stats.bedwars.solo.finalKDRatio))-player.stats.bedwars.solo.finalKills)}\` \n\`•\` **Beds to ${commaNumber(Math.ceil(player.stats.bedwars.solo.beds.BLRatio))} BBLR**: \`${commaNumber((player.stats.bedwars.solo.beds.lost*Math.ceil(player.stats.bedwars.solo.beds.BLRatio))-player.stats.bedwars.solo.beds.broken)}\` `, true)
         
                     const bedwarsDoubles = new MessageEmbed()
-                        .setColor(minecraft_embed_colour)
+                        .setColor(bedwarsEmbedColour)
                         .setAuthor({name: 'Doubles Bedwars Stats', iconURL: 'https://hypixel.net/styles/hypixel-v2/images/game-icons/BedWars-64.png'})
                         .setTitle(`[${player.rank}] ${player.nickname}   |   ${player.stats.bedwars.prestige} Prestige`)
                         .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
@@ -84,7 +121,7 @@ module.exports = {
                         .addField("Milestones", `\`•\` **Wins to ${commaNumber(Math.ceil(player.stats.bedwars.doubles.WLRatio))} WLR**: \`${commaNumber((player.stats.bedwars.doubles.losses*Math.ceil(player.stats.bedwars.doubles.WLRatio))-player.stats.bedwars.doubles.wins)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars.doubles.KDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars.doubles.deaths*Math.ceil(player.stats.bedwars.doubles.KDRatio))-player.stats.bedwars.doubles.kills)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars.doubles.finalKDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars.doubles.finalDeaths*Math.ceil(player.stats.bedwars.doubles.finalKDRatio))-player.stats.bedwars.doubles.finalKills)}\` \n\`•\` **Beds to ${commaNumber(Math.ceil(player.stats.bedwars.doubles.beds.BLRatio))} BBLR**: \`${commaNumber((player.stats.bedwars.doubles.beds.lost*Math.ceil(player.stats.bedwars.doubles.beds.BLRatio))-player.stats.bedwars.doubles.beds.broken)}\` `, true)
         
                     const bedwarsThrees = new MessageEmbed()
-                        .setColor(minecraft_embed_colour)
+                        .setColor(bedwarsEmbedColour)
                         .setAuthor({name: 'Threes Bedwars Stats', iconURL: 'https://hypixel.net/styles/hypixel-v2/images/game-icons/BedWars-64.png'})
                         .setTitle(`[${player.rank}] ${player.nickname}   |   ${player.stats.bedwars.prestige} Prestige`)
                         .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
@@ -97,7 +134,7 @@ module.exports = {
                         .addField("Milestones", `\`•\` **Wins to ${commaNumber(Math.ceil(player.stats.bedwars.threes.WLRatio))} WLR**: \`${commaNumber((player.stats.bedwars.threes.losses*Math.ceil(player.stats.bedwars.threes.WLRatio))-player.stats.bedwars.threes.wins)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars.threes.KDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars.threes.deaths*Math.ceil(player.stats.bedwars.threes.KDRatio))-player.stats.bedwars.threes.kills)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars.threes.finalKDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars.threes.finalDeaths*Math.ceil(player.stats.bedwars.threes.finalKDRatio))-player.stats.bedwars.threes.finalKills)}\` \n\`•\` **Beds to ${commaNumber(Math.ceil(player.stats.bedwars.threes.beds.BLRatio))} BBLR**: \`${commaNumber((player.stats.bedwars.threes.beds.lost*Math.ceil(player.stats.bedwars.threes.beds.BLRatio))-player.stats.bedwars.threes.beds.broken)}\` `, true)
         
                     const bedwarsFours = new MessageEmbed()
-                        .setColor(minecraft_embed_colour)
+                        .setColor(bedwarsEmbedColour)
                         .setAuthor({name: 'Fours Bedwars Stats', iconURL: 'https://hypixel.net/styles/hypixel-v2/images/game-icons/BedWars-64.png'})
                         .setTitle(`[${player.rank}] ${player.nickname}   |   ${player.stats.bedwars.prestige} Prestige`)
                         .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
@@ -110,7 +147,7 @@ module.exports = {
                         .addField("Milestones", `\`•\` **Wins to ${commaNumber(Math.ceil(player.stats.bedwars.fours.WLRatio))} WLR**: \`${commaNumber((player.stats.bedwars.fours.losses*Math.ceil(player.stats.bedwars.fours.WLRatio))-player.stats.bedwars.fours.wins)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars.fours.KDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars.fours.deaths*Math.ceil(player.stats.bedwars.fours.KDRatio))-player.stats.bedwars.fours.kills)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars.fours.finalKDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars.fours.finalDeaths*Math.ceil(player.stats.bedwars.fours.finalKDRatio))-player.stats.bedwars.fours.finalKills)}\` \n\`•\` **Beds to ${commaNumber(Math.ceil(player.stats.bedwars.fours.beds.BLRatio))} BBLR**: \`${commaNumber((player.stats.bedwars.fours.beds.lost*Math.ceil(player.stats.bedwars.fours.beds.BLRatio))-player.stats.bedwars.fours.beds.broken)}\` `, true)
         
                     const bedwarsFourVFour = new MessageEmbed()
-                        .setColor(minecraft_embed_colour)
+                        .setColor(bedwarsEmbedColour)
                         .setAuthor({name: '4v4 Bedwars Stats', iconURL: 'https://hypixel.net/styles/hypixel-v2/images/game-icons/BedWars-64.png'})
                         .setTitle(`[${player.rank}] ${player.nickname}   |   ${player.stats.bedwars.prestige} Prestige`)
                         .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
@@ -123,7 +160,7 @@ module.exports = {
                         .addField("Milestones", `\`•\` **Wins to ${commaNumber(Math.ceil(player.stats.bedwars["4v4"].WLRatio))} WLR**: \`${commaNumber((player.stats.bedwars["4v4"].losses*Math.ceil(player.stats.bedwars["4v4"].WLRatio))-player.stats.bedwars["4v4"].wins)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars["4v4"].KDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars["4v4"].deaths*Math.ceil(player.stats.bedwars["4v4"].KDRatio))-player.stats.bedwars["4v4"].kills)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars["4v4"].finalKDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars["4v4"].finalDeaths*Math.ceil(player.stats.bedwars["4v4"].finalKDRatio))-player.stats.bedwars["4v4"].finalKills)}\` \n\`•\` **Beds to ${commaNumber(Math.ceil(player.stats.bedwars["4v4"].beds.BLRatio))} BBLR**: \`${commaNumber((player.stats.bedwars["4v4"].beds.lost*Math.ceil(player.stats.bedwars["4v4"].beds.BLRatio))-player.stats.bedwars["4v4"].beds.broken)}\` `, true)
         
                     const bedwarsCastle = new MessageEmbed()
-                        .setColor(minecraft_embed_colour)
+                        .setColor(bedwarsEmbedColour)
                         .setAuthor({name: 'Castle Bedwars Stats', iconURL: 'https://hypixel.net/styles/hypixel-v2/images/game-icons/BedWars-64.png'})
                         .setTitle(`[${player.rank}] ${player.nickname}   |   ${player.stats.bedwars.prestige} Prestige`)
                         .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
@@ -136,7 +173,7 @@ module.exports = {
                         .addField("Milestones", `\`•\` **Wins to ${commaNumber(Math.ceil(player.stats.bedwars.castle.WLRatio))} WLR**: \`${commaNumber((player.stats.bedwars.castle.losses*Math.ceil(player.stats.bedwars.castle.WLRatio))-player.stats.bedwars.castle.wins)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars.castle.KDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars.castle.deaths*Math.ceil(player.stats.bedwars.castle.KDRatio))-player.stats.bedwars.castle.kills)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars.castle.finalKDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars.castle.finalDeaths*Math.ceil(player.stats.bedwars.castle.finalKDRatio))-player.stats.bedwars.castle.finalKills)}\` \n\`•\` **Beds to ${commaNumber(Math.ceil(player.stats.bedwars.castle.beds.BLRatio))} BBLR**: \`${commaNumber((player.stats.bedwars.castle.beds.lost*Math.ceil(player.stats.bedwars.castle.beds.BLRatio))-player.stats.bedwars.castle.beds.broken)}\` `, true)
                         
                     const bedwarsDreamUltimateDoubles = new MessageEmbed()
-                        .setColor(minecraft_embed_colour)
+                        .setColor(bedwarsEmbedColour)
                         .setAuthor({name: 'Ultimate Doubles Bedwars Stats', iconURL: 'https://hypixel.net/styles/hypixel-v2/images/game-icons/BedWars-64.png'})
                         .setTitle(`[${player.rank}] ${player.nickname}   |   ${player.stats.bedwars.prestige} Prestige`)
                         .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
@@ -149,7 +186,7 @@ module.exports = {
                         .addField("Milestones", `\`•\` **Wins to ${commaNumber(Math.ceil(player.stats.bedwars.dream.ultimate.doubles.WLRatio))} WLR**: \`${commaNumber((player.stats.bedwars.dream.ultimate.doubles.losses*Math.ceil(player.stats.bedwars.dream.ultimate.doubles.WLRatio))-player.stats.bedwars.dream.ultimate.doubles.wins)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars.dream.ultimate.doubles.KDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars.dream.ultimate.doubles.deaths*Math.ceil(player.stats.bedwars.dream.ultimate.doubles.KDRatio))-player.stats.bedwars.dream.ultimate.doubles.kills)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars.dream.ultimate.doubles.finalKDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars.dream.ultimate.doubles.finalDeaths*Math.ceil(player.stats.bedwars.dream.ultimate.doubles.finalKDRatio))-player.stats.bedwars.dream.ultimate.doubles.finalKills)}\` \n\`•\` **Beds to ${commaNumber(Math.ceil(player.stats.bedwars.dream.ultimate.doubles.beds.BLRatio))} BBLR**: \`${commaNumber((player.stats.bedwars.dream.ultimate.doubles.beds.lost*Math.ceil(player.stats.bedwars.dream.ultimate.doubles.beds.BLRatio))-player.stats.bedwars.dream.ultimate.doubles.beds.broken)}\` `, true)
         
                     const bedwarsDreamUltimateFours = new MessageEmbed()
-                        .setColor(minecraft_embed_colour)
+                        .setColor(bedwarsEmbedColour)
                         .setAuthor({name: 'Ultimate Fours Bedwars Stats', iconURL: 'https://hypixel.net/styles/hypixel-v2/images/game-icons/BedWars-64.png'})
                         .setTitle(`[${player.rank}] ${player.nickname}   |   ${player.stats.bedwars.prestige} Prestige`)
                         .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
@@ -162,7 +199,7 @@ module.exports = {
                         .addField("Milestones", `\`•\` **Wins to ${commaNumber(Math.ceil(player.stats.bedwars.dream.ultimate.fours.WLRatio))} WLR**: \`${commaNumber((player.stats.bedwars.dream.ultimate.fours.losses*Math.ceil(player.stats.bedwars.dream.ultimate.fours.WLRatio))-player.stats.bedwars.dream.ultimate.fours.wins)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars.dream.ultimate.fours.KDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars.dream.ultimate.fours.deaths*Math.ceil(player.stats.bedwars.dream.ultimate.fours.KDRatio))-player.stats.bedwars.dream.ultimate.fours.kills)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars.dream.ultimate.fours.finalKDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars.dream.ultimate.fours.finalDeaths*Math.ceil(player.stats.bedwars.dream.ultimate.fours.finalKDRatio))-player.stats.bedwars.dream.ultimate.fours.finalKills)}\` \n\`•\` **Beds to ${commaNumber(Math.ceil(player.stats.bedwars.dream.ultimate.fours.beds.BLRatio))} BBLR**: \`${commaNumber((player.stats.bedwars.dream.ultimate.fours.beds.lost*Math.ceil(player.stats.bedwars.dream.ultimate.fours.beds.BLRatio))-player.stats.bedwars.dream.ultimate.fours.beds.broken)}\` `, true)
         
                     const bedwarsDreamRushDoubles = new MessageEmbed()
-                        .setColor(minecraft_embed_colour)
+                        .setColor(bedwarsEmbedColour)
                         .setAuthor({name: 'Rush Doubles Bedwars Stats', iconURL: 'https://hypixel.net/styles/hypixel-v2/images/game-icons/BedWars-64.png'})
                         .setTitle(`[${player.rank}] ${player.nickname}   |   ${player.stats.bedwars.prestige} Prestige`)
                         .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
@@ -175,7 +212,7 @@ module.exports = {
                         .addField("Milestones", `\`•\` **Wins to ${commaNumber(Math.ceil(player.stats.bedwars.dream.rush.doubles.WLRatio))} WLR**: \`${commaNumber((player.stats.bedwars.dream.rush.doubles.losses*Math.ceil(player.stats.bedwars.dream.rush.doubles.WLRatio))-player.stats.bedwars.dream.rush.doubles.wins)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars.dream.rush.doubles.KDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars.dream.rush.doubles.deaths*Math.ceil(player.stats.bedwars.dream.rush.doubles.KDRatio))-player.stats.bedwars.dream.rush.doubles.kills)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars.dream.rush.doubles.finalKDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars.dream.rush.doubles.finalDeaths*Math.ceil(player.stats.bedwars.dream.rush.doubles.finalKDRatio))-player.stats.bedwars.dream.rush.doubles.finalKills)}\` \n\`•\` **Beds to ${commaNumber(Math.ceil(player.stats.bedwars.dream.rush.doubles.beds.BLRatio))} BBLR**: \`${commaNumber((player.stats.bedwars.dream.rush.doubles.beds.lost*Math.ceil(player.stats.bedwars.dream.rush.doubles.beds.BLRatio))-player.stats.bedwars.dream.rush.doubles.beds.broken)}\` `, true)
         
                     const bedwarsDreamRushFours = new MessageEmbed()
-                        .setColor(minecraft_embed_colour)
+                        .setColor(bedwarsEmbedColour)
                         .setAuthor({name: 'Rush Fours Bedwars Stats', iconURL: 'https://hypixel.net/styles/hypixel-v2/images/game-icons/BedWars-64.png'})
                         .setTitle(`[${player.rank}] ${player.nickname}   |   ${player.stats.bedwars.prestige} Prestige`)
                         .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
@@ -188,7 +225,7 @@ module.exports = {
                         .addField("Milestones", `\`•\` **Wins to ${commaNumber(Math.ceil(player.stats.bedwars.dream.rush.fours.WLRatio))} WLR**: \`${commaNumber((player.stats.bedwars.dream.rush.fours.losses*Math.ceil(player.stats.bedwars.dream.rush.fours.WLRatio))-player.stats.bedwars.dream.rush.fours.wins)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars.dream.rush.fours.KDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars.dream.rush.fours.deaths*Math.ceil(player.stats.bedwars.dream.rush.fours.KDRatio))-player.stats.bedwars.dream.rush.fours.kills)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars.dream.rush.fours.finalKDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars.dream.rush.fours.finalDeaths*Math.ceil(player.stats.bedwars.dream.rush.fours.finalKDRatio))-player.stats.bedwars.dream.rush.fours.finalKills)}\` \n\`•\` **Beds to ${commaNumber(Math.ceil(player.stats.bedwars.dream.rush.fours.beds.BLRatio))} BBLR**: \`${commaNumber((player.stats.bedwars.dream.rush.fours.beds.lost*Math.ceil(player.stats.bedwars.dream.rush.fours.beds.BLRatio))-player.stats.bedwars.dream.rush.fours.beds.broken)}\` `, true)
         
                     const bedwarsDreamArmedDoubles = new MessageEmbed()
-                        .setColor(minecraft_embed_colour)
+                        .setColor(bedwarsEmbedColour)
                         .setAuthor({name: 'Armed Doubles Bedwars Stats', iconURL: 'https://hypixel.net/styles/hypixel-v2/images/game-icons/BedWars-64.png'})
                         .setTitle(`[${player.rank}] ${player.nickname}   |   ${player.stats.bedwars.prestige} Prestige`)
                         .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
@@ -201,7 +238,7 @@ module.exports = {
                         .addField("Milestones", `\`•\` **Wins to ${commaNumber(Math.ceil(player.stats.bedwars.dream.armed.doubles.WLRatio))} WLR**: \`${commaNumber((player.stats.bedwars.dream.armed.doubles.losses*Math.ceil(player.stats.bedwars.dream.armed.doubles.WLRatio))-player.stats.bedwars.dream.armed.doubles.wins)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars.dream.armed.doubles.KDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars.dream.armed.doubles.deaths*Math.ceil(player.stats.bedwars.dream.armed.doubles.KDRatio))-player.stats.bedwars.dream.armed.doubles.kills)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars.dream.armed.doubles.finalKDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars.dream.armed.doubles.finalDeaths*Math.ceil(player.stats.bedwars.dream.armed.doubles.finalKDRatio))-player.stats.bedwars.dream.armed.doubles.finalKills)}\` \n\`•\` **Beds to ${commaNumber(Math.ceil(player.stats.bedwars.dream.armed.doubles.beds.BLRatio))} BBLR**: \`${commaNumber((player.stats.bedwars.dream.armed.doubles.beds.lost*Math.ceil(player.stats.bedwars.dream.armed.doubles.beds.BLRatio))-player.stats.bedwars.dream.armed.doubles.beds.broken)}\` `, true)
         
                     const bedwarsDreamArmedFours = new MessageEmbed()
-                        .setColor(minecraft_embed_colour)
+                        .setColor(bedwarsEmbedColour)
                         .setAuthor({name: 'Armed Fours Bedwars Stats', iconURL: 'https://hypixel.net/styles/hypixel-v2/images/game-icons/BedWars-64.png'})
                         .setTitle(`[${player.rank}] ${player.nickname}   |   ${player.stats.bedwars.prestige} Prestige`)
                         .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
@@ -214,7 +251,7 @@ module.exports = {
                         .addField("Milestones", `\`•\` **Wins to ${commaNumber(Math.ceil(player.stats.bedwars.dream.armed.fours.WLRatio))} WLR**: \`${commaNumber((player.stats.bedwars.dream.armed.fours.losses*Math.ceil(player.stats.bedwars.dream.armed.fours.WLRatio))-player.stats.bedwars.dream.armed.fours.wins)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars.dream.armed.fours.KDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars.dream.armed.fours.deaths*Math.ceil(player.stats.bedwars.dream.armed.fours.KDRatio))-player.stats.bedwars.dream.armed.fours.kills)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars.dream.armed.fours.finalKDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars.dream.armed.fours.finalDeaths*Math.ceil(player.stats.bedwars.dream.armed.fours.finalKDRatio))-player.stats.bedwars.dream.armed.fours.finalKills)}\` \n\`•\` **Beds to ${commaNumber(Math.ceil(player.stats.bedwars.dream.armed.fours.beds.BLRatio))} BBLR**: \`${commaNumber((player.stats.bedwars.dream.armed.fours.beds.lost*Math.ceil(player.stats.bedwars.dream.armed.fours.beds.BLRatio))-player.stats.bedwars.dream.armed.fours.beds.broken)}\` `, true)
         
                     const bedwarsDreamLuckyDoubles = new MessageEmbed()
-                        .setColor(minecraft_embed_colour)
+                        .setColor(bedwarsEmbedColour)
                         .setAuthor({name: 'Lucky Doubles Bedwars Stats', iconURL: 'https://hypixel.net/styles/hypixel-v2/images/game-icons/BedWars-64.png'})
                         .setTitle(`[${player.rank}] ${player.nickname}   |   ${player.stats.bedwars.prestige} Prestige`)
                         .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
@@ -227,7 +264,7 @@ module.exports = {
                         .addField("Milestones", `\`•\` **Wins to ${commaNumber(Math.ceil(player.stats.bedwars.dream.lucky.doubles.WLRatio))} WLR**: \`${commaNumber((player.stats.bedwars.dream.lucky.doubles.losses*Math.ceil(player.stats.bedwars.dream.lucky.doubles.WLRatio))-player.stats.bedwars.dream.lucky.doubles.wins)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars.dream.lucky.doubles.KDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars.dream.lucky.doubles.deaths*Math.ceil(player.stats.bedwars.dream.lucky.doubles.KDRatio))-player.stats.bedwars.dream.lucky.doubles.kills)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars.dream.lucky.doubles.finalKDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars.dream.lucky.doubles.finalDeaths*Math.ceil(player.stats.bedwars.dream.lucky.doubles.finalKDRatio))-player.stats.bedwars.dream.lucky.doubles.finalKills)}\` \n\`•\` **Beds to ${commaNumber(Math.ceil(player.stats.bedwars.dream.lucky.doubles.beds.BLRatio))} BBLR**: \`${commaNumber((player.stats.bedwars.dream.lucky.doubles.beds.lost*Math.ceil(player.stats.bedwars.dream.lucky.doubles.beds.BLRatio))-player.stats.bedwars.dream.lucky.doubles.beds.broken)}\` `, true)
             
                     const bedwarsDreamLuckyFours = new MessageEmbed()
-                        .setColor(minecraft_embed_colour)
+                        .setColor(bedwarsEmbedColour)
                         .setAuthor({name: 'Lucky Fours Bedwars Stats', iconURL: 'https://hypixel.net/styles/hypixel-v2/images/game-icons/BedWars-64.png'})
                         .setTitle(`[${player.rank}] ${player.nickname}   |   ${player.stats.bedwars.prestige} Prestige`)
                         .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
@@ -240,7 +277,7 @@ module.exports = {
                         .addField("Milestones", `\`•\` **Wins to ${commaNumber(Math.ceil(player.stats.bedwars.dream.lucky.fours.WLRatio))} WLR**: \`${commaNumber((player.stats.bedwars.dream.lucky.fours.losses*Math.ceil(player.stats.bedwars.dream.lucky.fours.WLRatio))-player.stats.bedwars.dream.lucky.fours.wins)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars.dream.lucky.fours.KDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars.dream.lucky.fours.deaths*Math.ceil(player.stats.bedwars.dream.lucky.fours.KDRatio))-player.stats.bedwars.dream.lucky.fours.kills)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars.dream.lucky.fours.finalKDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars.dream.lucky.fours.finalDeaths*Math.ceil(player.stats.bedwars.dream.lucky.fours.finalKDRatio))-player.stats.bedwars.dream.lucky.fours.finalKills)}\` \n\`•\` **Beds to ${commaNumber(Math.ceil(player.stats.bedwars.dream.lucky.fours.beds.BLRatio))} BBLR**: \`${commaNumber((player.stats.bedwars.dream.lucky.fours.beds.lost*Math.ceil(player.stats.bedwars.dream.lucky.fours.beds.BLRatio))-player.stats.bedwars.dream.lucky.fours.beds.broken)}\` `, true)
         
                     const bedwarsDreamVoidlessDoubles = new MessageEmbed()
-                        .setColor(minecraft_embed_colour)
+                        .setColor(bedwarsEmbedColour)
                         .setAuthor({name: 'Voidless Doubles Bedwars Stats', iconURL: 'https://hypixel.net/styles/hypixel-v2/images/game-icons/BedWars-64.png'})
                         .setTitle(`[${player.rank}] ${player.nickname}   |   ${player.stats.bedwars.prestige} Prestige`)
                         .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
@@ -253,7 +290,7 @@ module.exports = {
                         .addField("Milestones", `\`•\` **Wins to ${commaNumber(Math.ceil(player.stats.bedwars.dream.voidless.doubles.WLRatio))} WLR**: \`${commaNumber((player.stats.bedwars.dream.voidless.doubles.losses*Math.ceil(player.stats.bedwars.dream.voidless.doubles.WLRatio))-player.stats.bedwars.dream.voidless.doubles.wins)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars.dream.voidless.doubles.KDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars.dream.voidless.doubles.deaths*Math.ceil(player.stats.bedwars.dream.voidless.doubles.KDRatio))-player.stats.bedwars.dream.voidless.doubles.kills)}\` \n\`•\` **Finals to ${commaNumber(Math.ceil(player.stats.bedwars.dream.voidless.doubles.finalKDRatio))} FKDR**: \`${commaNumber((player.stats.bedwars.dream.voidless.doubles.finalDeaths*Math.ceil(player.stats.bedwars.dream.voidless.doubles.finalKDRatio))-player.stats.bedwars.dream.voidless.doubles.finalKills)}\` \n\`•\` **Beds to ${commaNumber(Math.ceil(player.stats.bedwars.dream.voidless.doubles.beds.BLRatio))} BBLR**: \`${commaNumber((player.stats.bedwars.dream.voidless.doubles.beds.lost*Math.ceil(player.stats.bedwars.dream.voidless.doubles.beds.BLRatio))-player.stats.bedwars.dream.voidless.doubles.beds.broken)}\` `, true)
             
                     const bedwarsDreamVoidlessFours = new MessageEmbed()
-                        .setColor(minecraft_embed_colour)
+                        .setColor(bedwarsEmbedColour)
                         .setAuthor({name: 'Voidless Fours Bedwars Stats', iconURL: 'https://hypixel.net/styles/hypixel-v2/images/game-icons/BedWars-64.png'})
                         .setTitle(`[${player.rank}] ${player.nickname}   |   ${player.stats.bedwars.prestige} Prestige`)
                         .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
