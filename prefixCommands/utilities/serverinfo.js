@@ -17,7 +17,7 @@ module.exports = {
     */
     async execute(message, args, commandName, Prefix, client) {
         if(message.guild === null)
-            return message.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} **This command (${Prefix}${commandName}) can only be used inside servers.**`)]})
+            return message.noMentionReply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} **This command (${Prefix}${commandName}) can only be used inside servers.**`)]})
         const { guild } = message;
 
         // Owner Variables
@@ -63,6 +63,6 @@ module.exports = {
                 { name: `**Creation Date:**`, value: `\`\`\`${moment(guild.createdTimestamp).format("LT")} ${moment(guild.createdTimestamp).format("LL")} (${moment(guild.createdTimestamp).fromNow()})\`\`\``, inline: false },
             );
             
-        return message.reply({embeds: [embed]});
+        return message.noMentionReply({embeds: [embed]});
   },
 };

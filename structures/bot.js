@@ -8,7 +8,7 @@ const Ascii = require("ascii-table");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const client = new Client({ intents: 131071, partials: ["REACTION", "CHANNEL", "MESSAGE"], allowedMentions: {repliedUser: false}});
+const client = new Client({ intents: 131071, partials: ["REACTION", "CHANNEL", "MESSAGE"]}); //, allowedMentions: {repliedUser: false}
 
 //Collections
 client.commands = new Collection();

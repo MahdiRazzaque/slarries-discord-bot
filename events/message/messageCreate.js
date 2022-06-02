@@ -125,6 +125,11 @@ module.exports = {
     timestamps.set(message.author.id, now);
     setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
+    message.noMentionReply = async (options) => {
+      options.allowedMentions = { repliedUser: false };
+      return await message.reply(options);
+    };
+    
     try {
       command.execute(message, args, commandName, Prefix, client);
     } catch (error) {

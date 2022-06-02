@@ -25,11 +25,11 @@ module.exports = {
     function errorHandling (e) {
         console.log(e)
         if (e.message === errors.PLAYER_DOES_NOT_EXIST) {
-            return message.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} I could not find that player in the API. Check spelling and name history.`)], ephemeral: true })
+            return message.noMentionReply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} I could not find that player in the API. Check spelling and name history.`)], ephemeral: true })
         } else if (e.message === errors.PLAYER_HAS_NEVER_LOGGED) {
-            return message.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} That player has never logged into Hypixel.`)], ephemeral: true })
+            return message.noMentionReply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} That player has never logged into Hypixel.`)], ephemeral: true })
         } else { 
-            return message.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} An error has occurred.`)], ephemeral: true })
+            return message.noMentionReply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} An error has occurred.`)], ephemeral: true })
         }   
     }
 
@@ -41,7 +41,7 @@ module.exports = {
     } else if (player) {
         player = player
     } else {
-        return message.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You did not provide a valid player or you haven't linked your account. \n\n If you would like to like your account, use /hypixel link`)]})
+        return message.noMentionReply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You did not provide a valid player or you haven't linked your account. \n\n If you would like to like your account, use /hypixel link`)]})
     }
 
     hypixel.getPlayer(player).then(async (player) => {
@@ -62,7 +62,7 @@ module.exports = {
         )
         
         if(message.guild) {
-            const M = await message.reply({embeds: [bridgeOverall], components: [bridgeRow]})
+            const M = await message.noMentionReply({embeds: [bridgeOverall], components: [bridgeRow]})
 
             await DB.create({GuildID: message.guildId, MessageID: M.id, Player: player, TypeOfStats: "bridge", InteractionMemberID: message.author.id})
     
@@ -71,7 +71,7 @@ module.exports = {
                 await DB.deleteOne({GuildID: message.guildId, MessageID: M.id, Player: player, TypeOfStats: "bridge", InteractionMemberID: message.author.id})
             }, 60 * 1000)
         } else {
-            await message.reply({embeds: [bridgeOverall.setFooter({text: "To see other mode stats, please use this command inside a server."})]})
+            await message.noMentionReply({embeds: [bridgeOverall.setFooter({text: "To see other mode stats, please use this command inside a server."})]})
         }
       
     }).catch(e => {return errorHandling(e)});

@@ -24,11 +24,11 @@ module.exports = {
     function errorHandling (e) {
         console.log(e)
         if (e.message === errors.PLAYER_DOES_NOT_EXIST) {
-            return message.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} I could not find that player in the API. Check spelling and name history.`)], allowedMentions: { repliedUser: false }, ephemeral: true })
+            return message.noMentionReply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} I could not find that player in the API. Check spelling and name history.`)], allowedMentions: { repliedUser: false }, ephemeral: true })
         } else if (e.message === errors.PLAYER_HAS_NEVER_LOGGED) {
-            return message.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} That player has never logged into Hypixel.`)], allowedMentions: { repliedUser: false }, ephemeral: true })
+            return message.noMentionReply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} That player has never logged into Hypixel.`)], allowedMentions: { repliedUser: false }, ephemeral: true })
         } else { 
-            return message.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} An error has occurred.`)], allowedMentions: { repliedUser: false }, ephemeral: true })
+            return message.noMentionReply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} An error has occurred.`)], allowedMentions: { repliedUser: false }, ephemeral: true })
         }   
     }
 
@@ -40,7 +40,7 @@ module.exports = {
     } else if (player) {
         player = player
     } else {
-        return message.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You did not provide a valid player or you haven't linked your account. \n\n If you would like to like your account, use /hypixel link`)]})
+        return message.noMentionReply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You did not provide a valid player or you haven't linked your account. \n\n If you would like to like your account, use /hypixel link`)]})
     }
 
     hypixel.getPlayer(player).then(async(player) => {
@@ -102,7 +102,7 @@ module.exports = {
                 .addOptions([{ label: "Overall", value: "bedwars-overall" }, { label: "Solos", value: "bedwars-solos" }, { label: "Doubles", value: "bedwars-doubles" }, { label: "Threes", value: "bedwars-threes" }, { label: "Fours", value: "bedwars-fours" }, { label: "4v4", value: "bedwars-4v4" }, { label: "Ultimate Doubles", value: "bedwars-dream-ultimate-doubles" }, { label: "Ultimate Fours", value: "bedwars-dream-ultimate-fours" }, { label: "Rush Doubles", value: "bedwars-dream-rush-doubles" }, { label: "Rush Fours", value: "bedwars-dream-rush-fours" }, { label: "Armed Doubles", value: "bedwars-dream-armed-doubles" }, { label: "Armed Fours", value: "bedwars-dream-armed-fours" }, { label: "Lucky Doubles", value: "bedwars-dream-lucky-doubles" }, { label: "Lucky Fours", value: "bedwars-dream-lucky-fours" }, { label: "Voidless Doubles", value: "bedwars-dream-voidless-doubles" }, { label: "Voidless Fours", value: "bedwars-dream-voidless-fours" }])
         )
         if(message.guild) {
-            const M = await message.reply({embeds: [bedwarsOverall], components: [bedwarsRow]});
+            const M = await message.noMentionReply({embeds: [bedwarsOverall], components: [bedwarsRow]});
 
             await DB.create({GuildID: message.guildId, MessageID: M.id, Player: player, TypeOfStats: "bedwars", InteractionMemberID: message.author.id})
     
@@ -111,7 +111,7 @@ module.exports = {
                 await DB.deleteOne({GuildID: message.guildId, MessageID: M.id, Player: player, TypeOfStats: "bedwars", InteractionMemberID: message.author.id})
             }, 60 * 1000)
         } else {
-            await message.reply({embeds: [bedwarsOverall.setFooter({text: "To see other mode stats, please use this command inside a server."})]});
+            await message.noMentionReply({embeds: [bedwarsOverall.setFooter({text: "To see other mode stats, please use this command inside a server."})]});
         }
 
     }).catch(e => {return errorHandling(e)});

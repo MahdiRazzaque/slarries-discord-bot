@@ -24,7 +24,7 @@ module.exports = {
         { name: "Ping", value: `${ping}ms` },
         { name: "API Latency", value: `${Math.round(client.ws.ping)}ms` }
       );
-    await message.reply({embeds: [response]});
+    await message.noMentionReply({embeds: [response]});
     resultMessage.delete();
   });
   },
