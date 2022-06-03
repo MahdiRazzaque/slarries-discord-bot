@@ -57,22 +57,23 @@ module.exports = {
     } else {
       suggestionsChannel = interaction.guild.channels.cache.get(suggestSetup.ChannelID)
     }
+
+    var suggestionManager;
     
     if(suggestSetup.SuggestionManagers.length <= 0 || !suggestSetup.SuggestionManagers) {
-      console.log("suggestSetup.SuggestionManagers.length <= 0 || !suggestSetup.SuggestionManagers")
       if(interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
-        var suggestionManager = true;
-      } else if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) 
+        suggestionManager = true;
+      } else if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)  && interaction.options.getSubcommand() != "delete") 
         return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You are not a suggestion manager.`)], ephemeral: true});    
     } else {
       for (var i = 0; i < suggestSetup.SuggestionManagers.length; i++) {
         if (!interaction.member.roles.cache.has(suggestSetup.SuggestionManagers[i])) 
           continue;
           
-        if (interaction.member.roles.cache.has(suggestSetup.SuggestionManagers[i])) 
-          var suggestionManager = true;
+        if (interaction.member.roles.cache.has(suggestSetup.SuggestionManagers[i]) || interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) 
+          suggestionManager = true;
     }
-    if(!suggestionManager)
+    if(!suggestionManager && interaction.options.getSubcommand() != "delete")
       return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You are not a suggestion manager.`)], ephemeral: true});
     }
 
