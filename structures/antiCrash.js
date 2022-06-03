@@ -60,7 +60,7 @@ module.exports = (client) => {
     });
     
     process.on("multipleResolves", (type, promise, reason) => {
-      if(reason.includes("FetchError: request to https://discord.com/api/")) return;
+      //if(reason.includes("FetchError: request to https://discord.com/api/")) return;
       
         console.log(type, promise, reason)
         const multipleResolvesEmbed = new MessageEmbed()

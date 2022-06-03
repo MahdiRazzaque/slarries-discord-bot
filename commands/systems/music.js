@@ -42,7 +42,7 @@ module.exports = {
             options: [{ name: "set", description: "Choose a filter", type: "STRING", required: true,
             choices: [
                 {name: "🔌 Turn off all filters", value: "false"},
-                {name: "📣 Toggle 8d filter", value: "8d"},
+                {name: "📣 Toggle 3d filter", value: "3d"},
                 {name: "📣 Toggle bassboost filter", value: "bassboost"},
                 {name: "📣 Toggle echo filter", value: "echo"},
                 {name: "📣 Toggle nightcore filter", value: "nightcore"},
@@ -171,65 +171,14 @@ module.exports = {
                     const queue = await client.distube.getQueue(VoiceChannel);
 
                     if(!queue)
-                    return interaction.reply({content: "⛔ There is no queue"});
+                      return interaction.reply({content: "⛔ There is no queue"});
 
-                    switch(options.getString("set")) {
-                        case "false" : 
-                        await queue.setFilter(false);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Turned off all filters.`)]});
-                        case "8d" : 
-                        await queue.setFilter(`3d`);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Toggled the 8D filter.`)]});
-                        case "karaoke" : 
-                        await queue.setFilter(`karaoke`);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Toggled the karaoke filter.`)]});                        
-                        case "vaporwave" : 
-                        await queue.setFilter(`vaporwave`);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Toggled the vaporwave filter.`)]});
-                        case "flanger" : 
-                        await queue.setFilter(`flanger`);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Toggled the flanger filter.`)]});
-                        case "gate" : 
-                        await queue.setFilter(`gate`);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Toggled the gate filter.`)]});
-                        case "haas" : 
-                        await queue.setFilter(`haas`);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Toggled the hass filter.`)]});
-                        case "reverse" : 
-                        await queue.setFilter(`reverse`);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Toggled the reverse filter.`)]});
-                        case "mcompand" : 
-                        await queue.setFilter(`mcompand`);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Toggled the mcoapand filter.`)]});
-                        case "phaser" : 
-                        await queue.setFilter(`phaser`);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Toggled the phaser filter.`)]});
-
-                        case "tremolo" : 
-                        await queue.setFilter(`tremolo`);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Toggled the tremelo filter.`)]});
-
-
-                        case "earwax" : 
-                        await queue.setFilter(`earwax`);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Toggled the earwax filter.`)]});
-
-                        case "bassboost" : 
-                        await queue.setFilter(`bassboost`);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Toggled the bassboost filter.`)]});
-                        
-                        case "echo" : 
-                        await queue.setFilter(`echo`);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Toggled the echo filter.`)]});
-                        
-                        case "nightcore" : 
-                        await queue.setFilter(`nightcore`);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Toggled the nightcore filter.`)]});
-                        
-                        case "surround" : 
-                        await queue.setFilter(`surround`);
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Toggled the surround filter.`)]});
-                        
+                    if(options.getString("set") == "false") {
+                      await queue.setFilter(false);
+                      return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Turned off all filters.`).addField("Enabled filters", queue.filters.join(", ") || "None")]});
+                    } else {
+                      await queue.setFilter(options.getString("set"));
+                      return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Toggled the ${options.getString("set")} filter.`).addField("Enabled filters", queue.filters.join(", ") || "None")]});
                     }
                 }
             }
