@@ -3,6 +3,8 @@ const { createTranscript } = require("discord-html-transcripts");
 const { transcripts_channel_id, ticket_enabled } = require("../../structures/config.json");
 const DB = require("../../structures/schemas/ticketDB");
 
+function delay(time) {return new Promise((resolve) => setTimeout(resolve, time))}
+
 module.exports = {
     name: "interactionCreate",
     /**
@@ -22,89 +24,95 @@ module.exports = {
 
         const Embed = new MessageEmbed().setColor("BLUE");
 
-        DB.findOne({ ChannelID: channel.id }, async(err, docs) => {
-            if(err) throw err;
-            if(!docs) return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("No data related to this ticket was found, please delete this ticket manually.")], ephemeral: true})
-            
-            switch(customId) {
-                case "lock-ticket" :
-                    if(docs.Locked == true)
-                        return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("This ticket is already locked.")], ephemeral: true});
-                    await DB.updateOne({ ChannelID: channel.id }, { Locked: true });
-                    Embed.setDescription("🔒 | This ticket is now locked.")
-                    docs.MembersID.forEach((m) => {
-                        channel.permissionOverwrites.edit(m, {SEND_MESSAGES: false}, {VIEW_CHANNEL: true})  
-                    })
-                    return interaction.reply({ embeds: [Embed] });
-                    break;
-                case "unlock-ticket":
-                    if(docs.Locked == false)
-                        return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("This ticket is already unlocked.")], ephemeral: true});
-                    await DB.updateOne({ ChannelID: channel.id }, { Locked: false });
-                    Embed.setDescription("🔓 | This ticket is now unlocked.")
-                    docs.MembersID.forEach((m) => {
-                        channel.permissionOverwrites.edit(m, {SEND_MESSAGES: true}, {VIEW_CHANNEL: true})  
-                    })
-                    return interaction.reply({ embeds: [Embed] });
-                    break;
-                case "close-ticket":
-                    if(docs.Closed == true)
-                        return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("This ticket is already closed, please wait for it to get deleted.")], ephemeral: true});
-                    const attachment = await createTranscript(channel, {limit: -1, returnBuffer: false, fileName: `${docs.Type} - ${docs.TicketID}.html`})
-                    await DB.updateOne({ ChannelID: channel.id }, { Closed: true });
+        const data = await DB.findOne({ ChannelID: channel.id })
 
+        if(!data) return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("No data related to this ticket was found, please delete this ticket manually.")], ephemeral: true})
+        
+        switch(customId) {
+            case "lock-ticket" :
+                if(data.Locked == true)
+                    return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("This ticket is already locked.")], ephemeral: true});
+                await DB.updateOne({ ChannelID: channel.id }, { Locked: true });
+                Embed.setDescription("🔒 | This ticket is now locked.")
+                data.MembersID.forEach((m) => {
+                    channel.permissionOverwrites.edit(m, {SEND_MESSAGES: false}, {VIEW_CHANNEL: true})  
+                })
+                return interaction.reply({ embeds: [Embed] });
+                break;
+            case "unlock-ticket":
+                if(data.Locked == false)
+                    return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("This ticket is already unlocked.")], ephemeral: true});
+                await DB.updateOne({ ChannelID: channel.id }, { Locked: false });
+                Embed.setDescription("🔓 | This ticket is now unlocked.")
+                data.MembersID.forEach((m) => {
+                    channel.permissionOverwrites.edit(m, {SEND_MESSAGES: true}, {VIEW_CHANNEL: true})  
+                })
+                return interaction.reply({ embeds: [Embed] });
+                break;
+            case "close-ticket":
+                if(data.Closed == true)
+                    return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("This ticket is already closed, please wait for it to get deleted.")], ephemeral: true});
+
+                const attachment = await createTranscript(channel, {limit: -1, returnBuffer: false, fileName: `${data.Type} - ${data.TicketID}.html`})
+                await DB.updateOne({ ChannelID: channel.id }, { Closed: true });
+
+                var memberTags = []
+
+                await data.MembersID.forEach(async (member) => {
+                    var member = await interaction.guild.members.fetch(member)
                     
-                    try {
+                    if(member)
+                        memberTags.push(`${member.user.tag}`)
+                })
 
-                      const reply = await interaction.reply({embeds: [new MessageEmbed().setColour("BLUE").setDescription("Closing ticket")], fetchReply: true})
-
-                        var claimedBy
-
-                        if(!docs.ClaimedBy) {
-                            claimedBy = "No one claimed this ticket."
-                        } else {
-                            claimedBy = `<@!${docs.ClaimedBy}>`
-                        }
-
-                        const transcriptEmbed = new MessageEmbed()
-                            .setColor("BLUE")
-                            .setTitle("Ticket Closed")
-                            .addFields(
-                                {name: "Ticket ID", value: `${docs.TicketID}`, inline: true},
-                                {name: "Type", value: `${docs.Type}`, inline: true},
-                                {name: "Claimed by", value: `${claimedBy}`, inline: true},
-                                {name: "Open time", value: `<t:${docs.OpenTime}:R>`, inline: true},
-                                {name: "Closed time", value: `<t:${parseInt(Date.now() / 1000)}:R>`, inline: true},
-                                {name: "Opened by", value: `<@!${docs.MembersID[0]}>`, inline: true},
-                                {name: "Members", value: `<@!${docs.MembersID.map(m => m).join(">, <@!")}>`, inline: true},
-                            )
-
-                        const Message = await guild.channels.cache.get(transcripts_channel_id).send({ embeds: [transcriptEmbed], files: [attachment]}); 
-                        
-                        await reply.edit({ embeds: [Embed.setDescription(`The transcript is now saved [TRANSCRIPT](${Message.url})`)]});
-
-                        for (var i = 0; i < docs.MembersID.length; i++) {
-                            var member = client.users.cache.get(docs.MembersID[i]);
-
-                            member.send({embeds: [transcriptEmbed.setTitle(`Ticket closed in ${interaction.guild.name}`)], files: [attachment]}).catch((e) => {})
-                        }
+                const transcriptEmbed = new MessageEmbed()
+                .setColor("BLUE")
+                .setTitle(`Ticket Closed | ID: ${data.TicketID}`)
+                .addFields(
+                    {name: "Type", value: `${data.Type}`, inline: true},
+                    {name: "Opened by", value: `<@!${data.MembersID[0]}>`, inline: true},
+                    {name: "Claimed by", value: data.ClaimedBy ? `<@!${data.ClaimedBy}>` : "`No one claimed this ticket`" , inline: true},
+                    {name: "Open time", value: `<t:${data.OpenTime}:R>`, inline: true},
+                    {name: "Closed time", value: `<t:${parseInt(Date.now() / 1000)}:R>`, inline: true},
+                    {name: "Closed by", value: `\`${interaction.member.user.tag}\``, inline: true},
+                    {name: "Members", value: `\`${memberTags.join(`\`\n\``)}\``, inline: true},
+                )
                     
-                        setTimeout(() => {channel.delete()}, 10 * 500)
-                    } catch (e) {
-                        interaction.channel.send({embeds: [new MessageEmbed().setColor("RED").setDescription("An error occurred (Most likely the member left). \n\n This channel will now be deleted in 10sec and a transcript will automatically be generated.")]});
-                        await guild.channels.cache.get(transcripts_channel_id).send({ embeds: [transcriptEmbed.setFooter({text: "This ticket failed to close, so it was closed automatically."})], files: [attachment]});
-                        setTimeout(() => {channel.delete()}, 10 * 1000)    
-                    }
-                    break;
-                case "claim-ticket":
-                    if(docs.Claimed == true) 
-                        return interaction.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`This ticket has already been claimed by <@${docs.ClaimedBy}>`)], ephemeral: true});
+                async function dmMembers(members) {
+                    members.forEach(async(member) => {
+                        var fetchedMember = await interaction.guild.members.fetch(member)
 
-                    await DB.updateOne({ChannelID: channel.id}, {Claimed: true, ClaimedBy: interaction.member.id});
+                        if(fetchedMember)
+                            await fetchedMember.send({embeds: [transcriptEmbed.setTitle(`Ticket closed in ${interaction.guild.name} | ID: ${data.TicketID}`)], files: [attachment]}).catch((e) => {})
+                    })
+                }
+    
+                try {
 
-                    Embed.setDescription(`🛄 This ticket has now been claimed by ${interaction.member}`)
-                    interaction.reply({embeds: [Embed]})
-            }
-        });
+                    const reply = await interaction.reply({embeds: [new MessageEmbed().setColor("ORANGE").setDescription("Closing ticket")], fetchReply: true})
+
+                    const sendTranscript = await guild.channels.cache.get(transcripts_channel_id).send({ embeds: [transcriptEmbed], files: [attachment]}); 
+                    
+                    await reply.edit({ embeds: [Embed.setDescription(`The transcript is now saved [TRANSCRIPT](${sendTranscript.url})`)]});
+
+                    await dmMembers(data.MembersID)
+                
+                    setTimeout(() => {channel.delete()}, 10 * 500)
+                } catch (e) {
+                    await interaction.channel.send({embeds: [new MessageEmbed().setColor("RED").setDescription("An error occurred. \n\n This channel will now be deleted in 10 seconds and a transcript will automatically be generated.")]});
+                    await guild.channels.cache.get(transcripts_channel_id).send({ embeds: [transcriptEmbed.setFooter({text: "This ticket failed to close, so it was closed automatically."})], files: [attachment]});
+                    await dmMembers(data.MembersID)
+                    setTimeout(() => {channel.delete()}, 10 * 1000)    
+                }
+                break;
+            case "claim-ticket":
+                if(data.Claimed == true) 
+                    return interaction.reply({ embeds: [new MessageEmbed().setColor("RED").setDescription(`This ticket has already been claimed by <@${data.ClaimedBy}>`)], ephemeral: true});
+
+                await DB.updateOne({ChannelID: channel.id}, {Claimed: true, ClaimedBy: interaction.member.id});
+
+                Embed.setDescription(`🛄 This ticket has now been claimed by ${interaction.member}`)
+                interaction.reply({embeds: [Embed]})
+        }
     }
 }

@@ -30,7 +30,7 @@ module.exports = {
      * 
      * @param {CommandInteraction} interacion 
      */
-    async execute(interaction) {
+    async execute(interaction, client) {
         const { guildId, options, channel } = interaction;
 
         const Action = options.getString("action");

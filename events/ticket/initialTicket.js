@@ -58,7 +58,7 @@ module.exports = {
 
                 Embed.setAuthor({name: `${guild.name} | TicketID: ${ID}`, iconURL: guild.iconURL({dynamic:true})})
                 Embed.setTitle(`Hello and welcome to your slayer carrying service.`)
-                Embed.setDescription(`**A <@&917054077869912177> will be with you shortly.** \n \n While you wait please follow the following for requesting your carry: \n> IGN: \n> Slayer which you want killed: \n> Number of bosses: \n> If you need to borrow goblin armour and wither cloak sword:`)
+                Embed.setDescription(`**A <@&917054077869912177> will be with you shortly.** \n \n While you wait please follow the following format for requesting your carry: \n> IGN: \n> Slayer which you want killed: \n> Number of bosses: \n> If you need to borrow goblin armour and wither cloak sword:`)
                 Embed.addFields(
                     {name: "💰 Prices", value: "<#917056569353580584>", inline: true},
                     {name: "🏕 How to survive", value: "<#917063326587031603>", inline: true},

@@ -52,7 +52,7 @@ module.exports = {
                 const channel = interaction.options.getChannel("category");
 
                 if(!interaction.guild.me.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS))
-                    return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`❌ I need the permission \`MANAGE_CHANNELS\` to create to do list channels.`)]})
+                    return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} I need the permission \`MANAGE_CHANNELS\` to create to do list channels.`)]})
 
                 var reply = await interaction.reply({embeds: [new MessageEmbed().setColor("AQUA").setDescription(`Attempting to setup to do list channels in \`${channel.name}\``)], fetchReply: true})
 
@@ -79,20 +79,20 @@ module.exports = {
                     
                     await DB.findOneAndUpdate({GuildID: interaction.guild.id}, {CategoryID: channel.id})
 
-                    return reply.edit({embeds: [new MessageEmbed().setColor("AQUA").setDescription(`✅ The category in which to-do list channels will be created has been set to \`${channel.name}\``)]})
+                    return reply.edit({embeds: [new MessageEmbed().setColor("AQUA").setDescription(`${client.emojisObj.animated_tick} The category in which to-do list channels will be created has been set to \`${channel.name}\``)]})
                 } catch (error) {
-                    return reply.edit({embeds: [new MessageEmbed().setColor("RED").setDescription(`❌ An error occured.\n \`\`\`${error}\`\`\``)]})
+                    return reply.edit({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} An error occured.\n \`\`\`${error}\`\`\``)]})
                 }
             break;
             
             case "current-category":
                 if(data.CategoryID == "None") {
-                    return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`❌ The category currently not setup.`)]})
+                    return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} The category currently not setup.`)]})
 
                 } else {
                     const category = client.channels.cache.get(data.CategoryID)
 
-                    return interaction.reply({embeds: [new MessageEmbed().setColor("AQUA").setDescription(`✅ The category currently set to \`${category.name}\``)]})
+                    return interaction.reply({embeds: [new MessageEmbed().setColor("AQUA").setDescription(`${client.emojisObj.animated_tick} The category currently set to \`${category.name}\``)]})
                 }
             break;
         }
