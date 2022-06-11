@@ -56,6 +56,8 @@ module.exports = {
                     
                     try {
 
+                      const reply = await interaction.reply({embeds: [new MessageEmbed().setColour("BLUE").setDescription("Closing ticket")], fetchReply: true})
+
                         var claimedBy
 
                         if(!docs.ClaimedBy) {
@@ -79,7 +81,7 @@ module.exports = {
 
                         const Message = await guild.channels.cache.get(transcripts_channel_id).send({ embeds: [transcriptEmbed], files: [attachment]}); 
                         
-                        interaction.reply({ embeds: [Embed.setDescription(`The transcript is now saved [TRANSCRIPT](${Message.url})`)]});
+                        await reply.edit({ embeds: [Embed.setDescription(`The transcript is now saved [TRANSCRIPT](${Message.url})`)]});
 
                         for (var i = 0; i < docs.MembersID.length; i++) {
                             var member = client.users.cache.get(docs.MembersID[i]);
@@ -89,9 +91,8 @@ module.exports = {
                     
                         setTimeout(() => {channel.delete()}, 10 * 500)
                     } catch (e) {
-                        console.log(e)
                         interaction.channel.send({embeds: [new MessageEmbed().setColor("RED").setDescription("An error occurred (Most likely the member left). \n\n This channel will now be deleted in 10sec and a transcript will automatically be generated.")]});
-                        const failedMessage = await guild.channels.cache.get(transcripts_channel_id).send({ embeds: [transcriptEmbed.setFooter({text: "This ticket failed to close, so it was closed automatically."})], files: [attachment]});
+                        await guild.channels.cache.get(transcripts_channel_id).send({ embeds: [transcriptEmbed.setFooter({text: "This ticket failed to close, so it was closed automatically."})], files: [attachment]});
                         setTimeout(() => {channel.delete()}, 10 * 1000)    
                     }
                     break;
