@@ -65,12 +65,14 @@ module.exports = {
                         memberTags.push(`${member.user.tag}`)
                 })
 
+                const openedMember = await member.guild.members.fetch(data.MembersID[0])
+
                 const transcriptEmbed = new MessageEmbed()
                 .setColor("BLUE")
                 .setTitle(`Ticket Closed | ID: ${data.TicketID}`)
                 .addFields(
                     {name: "Type", value: `${data.Type}`, inline: true},
-                    {name: "Opened by", value: `<@!${data.MembersID[0]}>`, inline: true},
+                    {name: "Opened by", value: `\`${openedMember.user.tag}\``, inline: true},
                     {name: "Claimed by", value: data.ClaimedBy ? `<@!${data.ClaimedBy}>` : "`No one claimed this ticket`" , inline: true},
                     {name: "Open time", value: `<t:${data.OpenTime}:R>`, inline: true},
                     {name: "Closed time", value: `<t:${parseInt(Date.now() / 1000)}:R>`, inline: true},

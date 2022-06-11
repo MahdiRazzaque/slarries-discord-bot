@@ -42,9 +42,9 @@ module.exports = {
             case "add":
                 DB.findOne({ GuildID: guildId, ChannelID: channel.id }, async (err, docs) => {
                     if (err) throw err;
-                    if (!docs) return interaction.reply({ embeds: [Embed.setColor("RED").setDescription(`${client.emojisObj.animated_tick} This channel is not tied with a ticket.`)], ephemeral: true})
+                    if (!docs) return interaction.reply({ embeds: [Embed.setColor("RED").setDescription(`${client.emojisObj.animated_cross} This channel is not tied with a ticket.`)], ephemeral: true})
                     
-                    if(docs.MembersID.includes(Member.id)) return interaction.reply({ embeds: [Embed.setColor("RED").setDescription(`${client.emojisObj.animated_tick} This member is already part of this ticket.`)], ephemeral: true})
+                    if(docs.MembersID.includes(Member.id)) return interaction.reply({ embeds: [Embed.setColor("RED").setDescription(`${client.emojisObj.animated_cross} This member is already part of this ticket.`)], ephemeral: true})
                     
                     docs.MembersID.push(Member.id)
 
@@ -58,9 +58,9 @@ module.exports = {
             case "remove":
                 DB.findOne({ GuildID: guildId, ChannelID: channel.id }, async (err, docs) => {
                     if (err) throw err;
-                    if (!docs) return interaction.reply({ embeds: [Embed.setColor("RED").setDescription(`${client.emojisObj.animated_tick} This channel is not tied with a ticket.`)], ephemeral: true})
+                    if (!docs) return interaction.reply({ embeds: [Embed.setColor("RED").setDescription(`${client.emojisObj.animated_cross} This channel is not tied with a ticket.`)], ephemeral: true})
                     
-                    if(!docs.MembersID.includes(Member.id)) return interaction.reply({ embeds: [Embed.setColor("RED").setDescription(`${client.emojisObj.animated_tick} This member is not part of this ticket.`)], ephemeral: true})
+                    if(!docs.MembersID.includes(Member.id)) return interaction.reply({ embeds: [Embed.setColor("RED").setDescription(`${client.emojisObj.animated_cross} This member is not part of this ticket.`)], ephemeral: true})
                     
                     docs.MembersID.remove(Member.id)
 
