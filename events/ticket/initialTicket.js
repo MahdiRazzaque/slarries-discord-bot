@@ -99,7 +99,7 @@ module.exports = {
             ],
         })
         .then(async(channel) => {
-            await DB.create({ GuildID: guild.id, MembersID: member.id, TicketID: ID, ChannelID: channel.id, Closed: false, Locked: false, Type: customId, Claimed: false, OpenTime: parseInt(channel.createdTimestamp / 1000) })
+            await DB.create({ GuildID: guild.id, MembersID: [member.id], TicketID: ID, ChannelID: channel.id, Closed: false, Locked: false, Type: customId, Claimed: false, OpenTime: parseInt(channel.createdTimestamp / 1000) })
 
             channel.send({content: `Welcome <@${interaction.user.id}> ||<@&${helperRoleId}>||`, embeds: [Embed], components: [Buttons]})
 

@@ -37,6 +37,11 @@ module.exports = {
       .catch((err) => { 
         console.log(err)
       });
+    
+    //Systems
+    ["lockdownSystem", "chatFilterSystem", "giveawaySystem", "ticketSystem"].forEach((system) => {
+        require(`../../systems/${system}`)(client);
+    });  
 
     require("../../systems/lockdownSystem")(client);
     require("../../systems/chatFilterSystem")(client);

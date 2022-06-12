@@ -43,6 +43,5 @@ module.exports = {
             msg.edit({ embeds: [List], content: " " })
     
         }, 300 * 1000)
-
     }
 }

@@ -4,6 +4,7 @@
     "botCommandChannels": ["916385873405309012", "922074045149757500", "937415493973864478", "916385874068000850"],
     "unverified_id": "931883459834699817",
     
+    "guildID": "916385872356733000",
     "Prefix": "!",
 
     "admin_embed_colour": "AQUA",
@@ -36,6 +37,8 @@
     "everyone_id": "916385872356733000",
     "parent_id": "916385874416123923",
     "open_ticket_channel": "916385874697150504",
-    "transcripts_channel_id": "922915715797880932"
+    "transcripts_channel_id": "922915715797880932",
+    "ticketCheckChannelID": "985509932398936164",
+    "ticketCheckMessageID": "985509958923735080"
   }
   

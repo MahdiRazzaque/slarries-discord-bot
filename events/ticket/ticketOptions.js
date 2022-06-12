@@ -2,6 +2,7 @@ const { ButtonInteraction, MessageEmbed } = require("discord.js");
 const { createTranscript } = require("discord-html-transcripts");
 const { transcripts_channel_id, ticket_enabled } = require("../../structures/config.json");
 const DB = require("../../structures/schemas/ticketDB");
+const axios = require("axios")
 
 function delay(time) {return new Promise((resolve) => setTimeout(resolve, time))}
 
@@ -53,27 +54,33 @@ module.exports = {
                 if(data.Closed == true)
                     return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("This ticket is already closed, please wait for it to get deleted.")], ephemeral: true});
 
+                const reply = await interaction.reply({embeds: [new MessageEmbed().setColor("ORANGE").setDescription("Closing ticket")], fetchReply: true})
+
                 const attachment = await createTranscript(channel, {limit: -1, returnBuffer: false, fileName: `${data.Type} - ${data.TicketID}.html`})
                 await DB.updateOne({ ChannelID: channel.id }, { Closed: true });
 
                 var memberTags = []
 
                 await data.MembersID.forEach(async (member) => {
-                    var member = await interaction.guild.members.fetch(member)
+                    var member = await axios.get(`https://api.badboy.is-a.dev/json/discorduser?id=${member}`)
                     
-                    if(member)
-                        memberTags.push(`${member.user.tag}`)
+                    if(member) 
+                        memberTags.push(member.data.tag)
+
+                    if(!member)
+                        memberTags.push(`Unknown Member`)
                 })
 
-                const openedMember = await member.guild.members.fetch(data.MembersID[0])
+                const openedMember = await axios.get(`https://api.badboy.is-a.dev/json/discorduser?id=${data.MembersID[0]}`)
+                const claimedMember = await axios.get(`https://api.badboy.is-a.dev/json/discorduser?id=${data.ClaimedBy}`)
 
                 const transcriptEmbed = new MessageEmbed()
                 .setColor("BLUE")
                 .setTitle(`Ticket Closed | ID: ${data.TicketID}`)
                 .addFields(
                     {name: "Type", value: `${data.Type}`, inline: true},
-                    {name: "Opened by", value: `\`${openedMember.user.tag}\``, inline: true},
-                    {name: "Claimed by", value: data.ClaimedBy ? `<@!${data.ClaimedBy}>` : "`No one claimed this ticket`" , inline: true},
+                    {name: "Opened by", value: `\`${openedMember ? openedMember.data.tag : "Unknown Member"}\``, inline: true},
+                    {name: "Claimed by", value: data.ClaimedBy ? `\`${claimedMember.data.tag}\`` : "`No one claimed this ticket`" , inline: true},
                     {name: "Open time", value: `<t:${data.OpenTime}:R>`, inline: true},
                     {name: "Closed time", value: `<t:${parseInt(Date.now() / 1000)}:R>`, inline: true},
                     {name: "Closed by", value: `\`${interaction.member.user.tag}\``, inline: true},
@@ -82,7 +89,7 @@ module.exports = {
                     
                 async function dmMembers(members) {
                     members.forEach(async(member) => {
-                        var fetchedMember = await interaction.guild.members.fetch(member)
+                        var fetchedMember = await interaction.guild.members.fetch(member).catch((e) => {})
 
                         if(fetchedMember)
                             await fetchedMember.send({embeds: [transcriptEmbed.setTitle(`Ticket closed in ${interaction.guild.name} | ID: ${data.TicketID}`)], files: [attachment]}).catch((e) => {})
@@ -90,8 +97,6 @@ module.exports = {
                 }
     
                 try {
-
-                    const reply = await interaction.reply({embeds: [new MessageEmbed().setColor("ORANGE").setDescription("Closing ticket")], fetchReply: true})
 
                     const sendTranscript = await guild.channels.cache.get(transcripts_channel_id).send({ embeds: [transcriptEmbed], files: [attachment]}); 
                     
