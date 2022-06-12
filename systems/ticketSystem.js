@@ -112,5 +112,5 @@ module.exports = async(client) => {
 
         ticketCheckEmbed.addField("Next check ⌛", `<t:${updateDate}:R>`)
         msg.edit({ embeds: [ticketCheckEmbed], content: " " })
-    }, 10 * 1000)
+    }, 300 * 1000)
 }
