@@ -119,11 +119,7 @@ module.exports = {
                             if (!player.queue.length) return interaction.editReply({ embeds: [client.errorEmbed("There is nothing in the queue.")] });
                             await player.stop();
 
-                            const skipEmbed = new MessageEmbed()
-                                .setColor("BLURPLE")
-                                .setDescription(`🔹 | Skipped.`)
-
-                            return interaction.editReply({ embeds: [skipEmbed] });
+                            return interaction.editReply({ embeds: [client.successEmbed("Skipped.", "⏭", "BLURPLE")] });
                         }
                         case "nowplaying": {
                             if (!player.queue.current) return interaction.editReply({ embeds: [client.errorEmbed("There is nothing playing.")] });

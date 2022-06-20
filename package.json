@@ -59,7 +59,7 @@
     "ytdl-core": "^4.10.1"
   },
   "devDependencies": {
-    "node": "^16.14.2"
+    "node": "^16.15.1"
   },
   "repository": {
     "type": "git",
