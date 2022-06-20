@@ -1,193 +1,207 @@
-const { CommandInteraction, Client, MessageEmbed } = require('discord.js');
-const { system_embed_colour } = require("../../structures/config.json");
+const { CommandInteraction, MessageEmbed, Client, MessageButton } = require("discord.js");
+const util = require("../../functions/erela.js");
+const genius = require("genius-lyrics");
+const gClient = new genius.Client();
 
 module.exports = {
     name: "music",
-    description: "Complete music system",
-    usage: "/music",
-    disabled: false,
-    botCommandChannelOnly: true,
+    description: "A complete music system",
     options: [
         {
             name: "play",
-            description: "play a song.",
+            description: "Plays a song.",
             type: "SUB_COMMAND",
-            options: [{ name: "query", description: "Provide a name or a url of the song", type: "STRING", required: true}]
+            options: [{ name: "query", description: "Provide the name of the song or URL.", type: "STRING", required: true }]
         },
         {
             name: "volume",
-            description: "change the volume",
+            description: "Alter the volume.",
             type: "SUB_COMMAND",
-            options: [{ name: "percent", description: "10 = 10%", type: "NUMBER", required: true}]
-        },
-        {
-            name: "seek",
-            description: "Seeks to the specified time in the song.",
-            value: "seek",
-            type: "SUB_COMMAND",
-            options: [
-                {
-                    name: "time",
-                    description: "Provide a position (in seconds) to seek.",
-                    type: "NUMBER",
-                    required: true
-                },
-            ]
-
-        },
-        {
-            name: "filters",
-            description: "Toggle filters",
-            type: "SUB_COMMAND",
-            options: [{ name: "set", description: "Choose a filter", type: "STRING", required: true,
-            choices: [
-                {name: "🔌 Turn off all filters", value: "false"},
-                {name: "📣 Toggle 3d filter", value: "3d"},
-                {name: "📣 Toggle bassboost filter", value: "bassboost"},
-                {name: "📣 Toggle echo filter", value: "echo"},
-                {name: "📣 Toggle nightcore filter", value: "nightcore"},
-                {name: "📣 Toggle surround filter", value: "surround"},
-                {name: "📣 Toggle karaoke filter", value: "karaoke"},
-                {name: "📣 Toggle vaporwave filter", value: "vaporwave"},
-                {name: "📣 Toggle flanger filter", value: "flanger"},
-                {name: "📣 Toggle gate filter", value: "gate"},
-                {name: "📣 Toggle haas filter", value: "haas"},
-                {name: "📣 Toggle reverse filter", value: "reverse"},
-                {name: "📣 Toggle mcompand filter", value: "mcompand"},
-                {name: "📣 Toggle phaser filter", value: "phaser"},
-                {name: "📣 Toggle tremolo filter", value: "tremolo"},
-                {name: "📣 Toggle earwax filter", value: "earwax"},
-        
-            ]}]
+            options: [{ name: "percent", description: "10 = 10%", type: "NUMBER", required: true }]
         },
         {
             name: "settings",
-            description: "Select an option",
+            description: "Select an option.",
             type: "SUB_COMMAND",
-            options: [{ name: "options", description: "Select an option", type: "STRING", required: true,
-            choices: [
-                {name: "🔢 Show Queue", value: "queue"},
-                {name: "⏭ Skip Song", value: "skip"},
-                {name: "⏸ Pause Song", value: "pause"},
-                {name: "⏯ Resume Song", value: "resume"},
-                {name: "⏹ Stop Music", value: "stop"},
-                {name: "🔀 Shuffle Queue", value: "shuffle"},
-                {name: "🔃 Toggle AutoPlay Modes", value: "AutoPlay"},
-                {name: "🔼 Add a Related Song", value: "RelatedSong"},
-                {name: "🔁 Toggle Repeat Mode", value: "RepeatMode"},
-                {name: "⏮ Play Previous Song", value: "previous"},
-            ]}]
-        },
+            options: [{
+                name: "options", description: "Select an option.", type: "STRING", required: true,
+                choices: [
+                    { name: "🔢 | View Queue", value: "queue" },
+                    { name: "⏭ | Skip", value: "skip" },
+                    { name: "⏸ | Pause", value: "pause" },
+                    { name: "⏯ | Resume", value: "resume" },
+                    { name: "⏹ | Stop", value: "stop" },
+                    { name: "🔤 | Lyrics", value: "lyrics"},
+                    { name: "🔀 | Shuffle", value: "shuffle" },
+                    { name: "🎦 | Now Playing", value: "nowplaying" },
+                    { name: "🔚 | Clear Queue", value: "clearqueue" },
+                ]
+            }],
+        }
     ],
     /**
-     *
-     * @param {Client} client
-     * @param {CommandInteraction} interaction
-     */
+    * @param {CommandInteraction} interaction 
+    * @param {Client} client 
+    */
     async execute(interaction, client) {
-        const { options, member, guild, channel } = interaction;
+
+        await interaction.deferReply()
+        
+        const { options, member, guild } = interaction;
         const VoiceChannel = member.voice.channel;
 
-        if(!VoiceChannel)
-        return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You must be in a voice channel to be able to use music commands.`)], ephemeral: true});
+        if (!VoiceChannel)
+            return interaction.editReply({ embeds: [client.errorEmbed("You aren't in a voice channel. Join one to be able to play music!")] });
 
-        if(guild.me.voice.channelId && VoiceChannel.id !== guild.me.voice.channelId)
-        return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} I'm already playing music in <#${guild.me.voice.channelId}>.`)], ephemeral: true});
+        if (guild.me.voice.channelId && VoiceChannel.id !== guild.me.voice.channelId)
+            return interaction.editReply({ embeds: [client.errorEmbed(`I'm already playing music in <#${guild.me.voice.channelId}>.`)] });
 
+        if(!guild.me.voice.channelId && options.getSubcommand() != "play") return interaction.editReply({ embeds: [client.errorEmbed("There is nothing playing.")]})
+
+        const player = client.manager.create({
+            guild: interaction.guild.id,
+            voiceChannel: member.voice.channel.id,
+            textChannel: interaction.channelId,
+            selfDeafen: true
+        });
+
+        let res;
         try {
-            switch(options.getSubcommand()) {
-                case "play" : {
-                    client.distube.play( VoiceChannel, options.getString("query"), { textChannel: channel, member: member });
-                    return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setTitle("🎼 Request recieved.")]});
-                }
-                case "volume" : {
-                    const Volume = options.getNumber("percent");
-                    if(!Volume > 100 || Volume < 1)
-                    return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setTitle(`You have to specify a number between 1 and 100. ${client.emojisObj.animated_cross}`)], ephemeral: true});
+            switch (options.getSubcommand()) {
+                case "play": {
+                    const query = interaction.options.getString("query");
+                    res = await player.search(query, interaction.user.username);
 
-                    client.distube.setVolume(VoiceChannel, Volume);
-                    return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setTitle(`📶 Volume has been set to \`${Volume}%\``)]});
-                }
-                case "seek" : {
-                    const queue = await client.distube.getQueue(VoiceChannel);
-                    const Time = options.getNumber("time");
-
-                    if(!queue)
-                    return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setTitle(`There is no queue. ${client.emojisObj.animated_cross}`)]});
-
-                    await queue.seek(Time);
-                    return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setTitle(`⌛ **Seeked to \`${Time}\`**`)]});
-                }
-
-                case "settings" : {
-                    const queue = await client.distube.getQueue(VoiceChannel);
-
-                    if(!queue)
-                    return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setTitle(`There is no queue. ${client.emojisObj.animated_cross}`)]});
-
-                    switch(options.getString("options")) {
-                        case "skip" : 
-                        await queue.skip(VoiceChannel);
-                        return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription("⏭ Song has been skipped.")]});
-
-                        case "stop" : 
-                        await queue.stop(VoiceChannel);
-                        return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription("⏹ Music has been stopped.")]});
-
-                        case "pause" : 
-                        await queue.pause(VoiceChannel);
-                        return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription("⏸ Song has been paused.")]});
-
-                        case "resume" : 
-                        await queue.resume(VoiceChannel);
-                        return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription("▶️ Song has been resumed.")]});
-
-                        case "previous" :
-                        await queue.previous(VoiceChannel);
-                        return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription("⏮ Playing previous track.")]});
-
-                        case "shuffle" : 
-                        await queue.shuffle(VoiceChannel);
-                        return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription("🔀 Queue has been shuffled.")]});
-
-                        case "AutoPlay" : 
-                        let Mode = await queue.toggleAutoplay(VoiceChannel);
-                        return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`🔃 AutoPlay mode has been set to: ${Mode ? "On" : "Off"}`)]});
-
-                        case "RelatedSong" : 
-                        await queue.addRelatedSong(VoiceChannel);
-                        return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription("🈁 A related song has been added to the queue")]});
-
-                        case "RepeatMode" : 
-                        let Mode2 = await client.distube.setRepeatMode(queue);
-                        return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`🔁 Repeat mode has been set to: ${Mode2 = Mode2 ? Mode2 == 2 ? "Queue": "Song" : "Off"}`)]});
-
-                        case "queue" : 
-                        return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setTitle("__Queue__").setDescription(`${queue.songs.slice(0, 10).map((song, id) => `\n**${id + 1}**. ${song.name} - \`${song.formattedDuration}\``)}`)]});      
+                    if (res.loadType === "LOAD_FAILED") {
+                        if (!player.queue.current) player.destroy();
+                        return interaction.editReply({ embeds: [client.errorEmbed("An error has occured while trying to add this song.")] })
                     }
-                    return;
+
+                    if (res.loadType === "NO_MATCHES") {
+                        if (!player.queue.current) player.destroy();
+                        return interaction.editReply({ embeds: [client.errorEmbed("No results found.")] })
+                    }
+
+                    if (res.loadType === "PLAYLIST_LOADED") {
+                        player.connect();
+                        player.queue.add(res.tracks);
+                        if (!player.playing && !player.paused && player.queue.totalSize === res.tracks.length) player.play();
+
+                        return interaction.editReply({ embeds: [client.successEmbed(`**[${res.playlist.name}](${query})** has been added to the queue.`, "⏯", "BLURPLE")] })
+                    }
+
+                    if (res.loadType === "TRACK_LOADED" || res.loadType === "SEARCH_RESULT") {
+                        player.connect();
+                        player.queue.add(res.tracks[0]);
+                    }
+
+                    const enqueueEmbed = client.successEmbed(`Enqueued **[${res.tracks[0].title}](${res.tracks[0].uri})** [${member}]`, "🔢", "BLURPLE")
+
+                    await interaction.editReply({ embeds: [enqueueEmbed] });
+
+                    if (!player.playing && !player.paused && !player.queue.size) player.play()
+
+                    if (player.queue.totalSize > 1)
+                        enqueueEmbed.addField("Position in queue", `${player.queue.size - 0}`);
+                    return interaction.editReply({ embeds: [enqueueEmbed] })
                 }
-                case "filters" : {
-                    const queue = await client.distube.getQueue(VoiceChannel);
+                case "volume": {
+                    const volume = options.getNumber("percent");
+                    if (!player.queue.current) return interaction.editReply({ embeds: [client.errorEmbed("There is nothing playing.")] });
+                    if (volume < 0 || volume > 100) return interaction.editReply({ embeds: [client.errorEmbed(`You can only set the volume from 0 to 100.`)] })
+                    player.setVolume(volume);
 
-                    if(!queue)
-                      return interaction.reply({content: "⛔ There is no queue"});
+                    return interaction.editReply({ embeds: [client.successEmbed(`Volume has been set to **${player.volume}%**.`, "📶", "BLURPLE")] })
+                }
+                case "settings": {
+                    switch (options.getString("options")) {
+                        case "skip": {
+                            if (!player.queue.length) return interaction.editReply({ embeds: [client.errorEmbed("There is nothing in the queue.")] });
+                            await player.stop();
 
-                    if(options.getString("set") == "false") {
-                      await queue.setFilter(false);
-                      return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Turned off all filters.`).addField("Enabled filters", queue.filters.join(", ") || "None")]});
-                    } else {
-                      await queue.setFilter(options.getString("set"));
-                      return interaction.reply({ embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Toggled the ${options.getString("set")} filter.`).addField("Enabled filters", queue.filters.join(", ") || "None")]});
+                            const skipEmbed = new MessageEmbed()
+                                .setColor("BLURPLE")
+                                .setDescription(`🔹 | Skipped.`)
+
+                            return interaction.editReply({ embeds: [skipEmbed] });
+                        }
+                        case "nowplaying": {
+                            if (!player.queue.current) return interaction.editReply({ embeds: [client.errorEmbed("There is nothing playing.")] });
+                            const track = player.queue.current;
+
+                            const npEmbed = new MessageEmbed()
+                                .setColor("BLURPLE")
+                                .setTitle("Now Playing")
+                                .setDescription(`[${track.title}](${track.uri}) [${player.queue.current.requester}]`)
+                            return interaction.editReply({ embeds: [npEmbed] })
+                        }
+                        case "pause": {
+                            if (!player.playing) return interaction.editReply({ embeds: [client.errorEmbed("The music is already paused or nothing is playing.")] });
+
+                            await player.pause(true);
+
+                            return interaction.editReply({ embeds: [client.successEmbed("Paused.", "⏸", "BLURPLE")] })
+                        }
+                        case "resume": {
+                            if(player.playing) return interaction.editReply({ embeds: [client.errorEmbed("Music is already playing.")] });
+                            await player.pause(false);
+
+                            return interaction.editReply({ embeds: [client.successEmbed("Resumed.", "⏯", "BLURPLE")] })
+                        }
+                        case "stop": {
+                            player.destroy()
+
+                            return interaction.editReply({ embeds: [client.successEmbed("Disconnected", "⏹", "BLURPLE")] })
+                        }
+                        case "lyrics": {
+                            if (!player.queue.current) return interaction.editReply({ embeds: [client.errorEmbed("There is nothing playing.")] });
+
+                            const track = player.queue.current;
+                            const trackTitle = track.title.replace("(Official Video)", "").replace("(Official Audio)", "");              
+                            const actualTrack = await gClient.songs.search(trackTitle);
+                            const searches = actualTrack[0];
+                            const lyrics = await searches.lyrics();
+
+                            if(!lyrics) return interaction.editReply({embeds: [client.errorEmbed("The lyrics for this song was not found.")]})
+
+                            const lyricsEmbed = new MessageEmbed()
+                                .setColor("BLURPLE")
+                                .setTitle(`🔹 | Lyrics for **${trackTitle}**`)
+                                .setDescription(`${lyrics.length < 4090 ? lyrics : `${lyrics.substring(0, 4090)}...`}`) 
+
+                            return interaction.editReply({ embeds: [lyricsEmbed] })     
+                        }
+                        case "shuffle": {
+                            if (!player.queue.length) return interaction.editReply({ embeds: [client.errorEmbed("There is nothing in the queue.")] });
+
+                            player.queue.shuffle()
+
+                            return interaction.editReply({ embeds: [client.successEmbed("Shuffled the queue.", "🔀", "BLURPLE")] })
+                        }
+                        case "queue": {
+                            if (!player.queue.length) return interaction.editReply({ embeds: [client.errorEmbed("There is nothing in the queue.")] });
+
+                            const queue = player.queue.map((t, i) => `\`${++i}.\` **${t.title}** [${t.requester}]`);
+                            const chunked = util.chunk(queue, 10).map(x => x.join("\n"));
+
+                            const queueEmbed = new MessageEmbed()
+                                .setColor("BLURPLE")
+                                .setTitle(`Current queue for ${guild.name}`)
+                                .setDescription(chunked[0])
+
+                            return interaction.editReply({ embeds: [queueEmbed] });
+                        }
+                        case "clearqueue":
+                            if (!player.queue.length) return interaction.editReply({ embeds: [client.errorEmbed("There is nothing in the queue.")] });
+
+                            music.queue.splice(0, 1);
+                            
+                            return interaction.editReply({ embeds: [client.successEmbed("The queue has been cleared.", "🔚", "BLURPLE")]})
                     }
                 }
             }
         } catch (e) {
-            const errorEmbed = new MessageEmbed()
-            .setColor("RED")
-            .setTitle(`${client.emojisObj.animated_cross} Error`)
-            .setDescription(`${e}`)
-            return interaction.reply({embeds: [errorEmbed]});
+            console.log(e)
         }
     }
 }

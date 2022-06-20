@@ -1,5 +1,5 @@
 //Base for starting the bot
-const { Client, Collection } = require("discord.js");
+const { Client, Collection, MessageEmbed } = require("discord.js");
 const fs = require("fs");
 const { promisify } = require("util");
 const { glob } = require("glob");
@@ -27,17 +27,29 @@ client.filtersLog = new Collection();
 client.maintenance = false;
 client.customStatus = false;
 
-//Music
-const { DisTube } = require("distube");
-const { SpotifyPlugin } = require("@distube/spotify");
-
-client.distube = new DisTube(client, {
-  emitNewSongOnly: true,
-  leaveOnFinish: true,
-  emitAddListWhenCreatingQueue: false,
-  plugins: [new SpotifyPlugin()],
-});
 module.exports = client;
+
+const { nodes, SpotifyClientID, SpotifySecret } = require("./config.json")
+const Deezer = require("erela.js-deezer");
+const Spotify = require("better-erela.js-spotify").default;
+const Apple = require("better-erela.js-apple").default;
+const { Manager } = require("erela.js");
+
+client.manager = new Manager({
+    nodes,
+    plugins: [
+        new Spotify({
+            clientID: SpotifyClientID,
+            clientSecret: SpotifySecret,
+        }),
+        new Apple(),
+        new Deezer(),
+    ],
+    send: (id, payload) => {
+        let guild = client.guilds.cache.get(id);
+        if (guild) guild.shard.send(payload);
+    },
+});
 
 //Discord Together
 const { DiscordTogether } = require('discord-together'); 
