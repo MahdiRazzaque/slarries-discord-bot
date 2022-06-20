@@ -1,4 +1,4 @@
-const { Client } = require("discord.js");
+const { Client, MessageEmbed } = require("discord.js");
 const mongoose = require("mongoose");
 const Ascii = require("ascii-table");
 const express = require("express");
@@ -11,6 +11,8 @@ module.exports = {
   once: true,
   async execute(client) {
     clientTable = new Ascii("Client")
+
+    //Maintenance
     setInterval(() => {
       if (client.maintenance) {
         client.user.setStatus("dnd");
@@ -22,6 +24,8 @@ module.exports = {
         client.user.setActivity("Slarries Discord Server", { type: "PLAYING" });
       }
     }, 30000);
+
+    //Guilds
     const guilds = new Ascii("Guilds").setHeading("Name", "ID")
     client.guilds.cache.forEach((guild) => {
       guilds.addRow(`${guild.name}`, `${guild.id}`)
@@ -29,6 +33,7 @@ module.exports = {
     clientTable.addRow("Tag", client.user.tag)
     clientTable.addRow("Status", "Ready! 🔹")
 
+    //Database
     if (!process.env.Database) return;
     mongoose.connect(process.env.Database, { useNewUrlParser: true, useUnifiedTopology: true })
       .then(async () => { 
@@ -57,6 +62,26 @@ module.exports = {
     client.emojisObj = emojis;
 
     console.log(emojisTable.toString())
+
+    //Embeds
+    client.successEmbed = (message, emoji, colour) => {
+      successEmbed = new MessageEmbed()
+          .setDescription(`${emoji ? emoji : client.emojisObj.animated_tick} | ${message}`)
+          .setColor(colour ? colour : "GREEN")
+  
+      return successEmbed
+    };
+
+    client.errorEmbed = (message, emoji, colour) => {
+      errorEmbed = new MessageEmbed()
+          .setDescription(`${emoji ? emoji : client.emojisObj.animated_cross} | ${message}`)
+          .setColor(colour ? colour : "RED")
+  
+      return errorEmbed
+    };
+
+    //Erela
+    client.manager.init(client.user.id);
     
     //Always online
     app.get("/", function (req, res) {
