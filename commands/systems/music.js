@@ -162,7 +162,7 @@ module.exports = {
 
                             const lyricsEmbed = new MessageEmbed()
                                 .setColor("BLURPLE")
-                                .setTitle(`🔹 | Lyrics for **${trackTitle}**`)
+                                .setTitle(`Lyrics for **${trackTitle}**`)
                                 .setDescription(`${lyrics.length < 4090 ? lyrics : `${lyrics.substring(0, 4090)}...`}`) 
 
                             return interaction.editReply({ embeds: [lyricsEmbed] })     
