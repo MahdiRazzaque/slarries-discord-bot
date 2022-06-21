@@ -197,7 +197,10 @@ module.exports = {
                 }
             }
         } catch (e) {
-            console.log(e)
+          if(e.message == "No result was found")
+            return interaction.editReply({embeds: [client.errorEmbed("Lyrics for this song couldn't be found.")]})
+
+          return interaction.editReply({embeds: [client.errorEmbed(`An error occured. \n \`\`\`${e.message}\`\`\``)]})
         }
     }
 }

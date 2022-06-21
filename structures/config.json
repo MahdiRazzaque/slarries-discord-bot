@@ -46,7 +46,25 @@
     
     "nodes": [
         {
-            "id": "main",
+            "id": "one",
+            "host": "lavalink.oops.wtf",
+            "port": 443,
+            "password": "www.freelavalink.ga",
+            "retryAmount": 15, 
+            "retryDelay": 6000, 
+            "secure": true
+        },
+        {
+            "id": "two",
+            "host": "connect.freelavalink.ga",
+            "port": 443,
+            "password": "www.freelavalink.ga",
+            "retryAmount": 15, 
+            "retryDelay": 6000, 
+            "secure": true
+        },
+        {
+            "id": "threee",
             "host": "lavalink-replit.mahdirazzaque.repl.co",
             "port": 443,
             "password": "maybeiwasboring",
