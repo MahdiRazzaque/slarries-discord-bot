@@ -162,7 +162,7 @@ module.exports = {
 
                             const lyricsEmbed = new MessageEmbed()
                                 .setColor("BLURPLE")
-                                .setTitle(`🔹 | Lyrics for **${trackTitle}**`)
+                                .setTitle(`Lyrics for **${trackTitle}**`)
                                 .setDescription(`${lyrics.length < 4090 ? lyrics : `${lyrics.substring(0, 4090)}...`}`) 
 
                             return interaction.editReply({ embeds: [lyricsEmbed] })     
@@ -197,7 +197,10 @@ module.exports = {
                 }
             }
         } catch (e) {
-            console.log(e)
+          if(e.message == "No result was found")
+            return interaction.editReply({embeds: [client.errorEmbed("Lyrics for this song couldn't be found.")]})
+
+          return interaction.editReply({embeds: [client.errorEmbed(`An error occured. \n \`\`\`${e.message}\`\`\``)]})
         }
     }
 }

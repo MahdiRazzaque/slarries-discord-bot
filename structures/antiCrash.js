@@ -76,7 +76,7 @@ module.exports = (client) => {
     });
     
     process.on("warning", (warn) => {
-        if(warn.message.includes("DisTubeOptions.youtubeDL is deprecated")) return;
+        if(warn.message.includes("ExperimentalWarning: buffer.Blob is an experimental feature.")) return;
         console.log(warn)
         const warningEmbed = new MessageEmbed()
             .setTitle('Warning')
