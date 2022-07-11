@@ -26,12 +26,12 @@ module.exports = {
 
     if (log) {
       guildBanAdd.setDescription(`\`${log.target.tag}\` has been banned from this guild by \`${log.executor.tag}\` <t:${happen}:R>.`);
-      guildBanRemove.addField("ID", log.target.id)
+      guildBanAdd.addField("ID", log.target.id)
 
       if (log.reason) guildBanAdd.addField("Reason", log.reason)
     } else {
       guildBanAdd.setDescription(`\`${ban.user.tag}\` has been banned from this guild <t:${happen}:R>.`);
-      guildBanRemove.addField("ID", log.target.id)
+      guildBanAdd.addField("ID", log.target.id)
     }
 
     guild_logs.send({ embeds: [guildBanAdd] });

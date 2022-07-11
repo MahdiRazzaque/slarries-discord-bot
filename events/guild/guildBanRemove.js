@@ -21,7 +21,7 @@ module.exports = {
 
     const guildBanRemove = new MessageEmbed()
       .setColor(guild_log_colour)
-      .setTitle("Member Banned 🔨")
+      .setTitle("Member Unbanned 🔨")
       .setTimestamp();
 
     if (log) {

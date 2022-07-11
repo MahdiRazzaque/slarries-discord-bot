@@ -20,7 +20,7 @@ module.exports = {
       name: "reason",
       description: "Provide a reason to ban that member",
       type: "STRING",
-      required: true,
+      required: false,
     },
   ],
   /**
@@ -31,18 +31,11 @@ module.exports = {
   async execute(interaction, client) {    
     const { options } = interaction;
     const Target = options.getMember("target");
-    const Reason = options.getString("reason");
+    const Reason = options.getString("reason") || "No reason provided"
     const guild = interaction.guild;
 
-    const success = new MessageEmbed()
-      .setColor(moderation_embed_colour)
-      .addFields(
-        { name: "Member banned 🔨", value: `${Target}` },
-        { name: "Reason", value: `${Reason}` },
-        { name: "Banned by", value: `${interaction.member.user}` }
-      )
-      .setAuthor({name: `${Target.user.tag}`, iconURL: Target.user.avatarURL({ dynamic: true, size: 512 })})
-      .setThumbnail(Target.user.avatarURL({ dynamic: true, size: 512 }));
+    if(!Target?.id)
+      return interaction.reply({ embeds: [client.errorEmbed("This member was not found.")]})
 
     if(Target.id === interaction.member.id)
       return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You can't ban yourself.`)], ephemeral: true});
@@ -56,17 +49,18 @@ module.exports = {
     if(Target.permissions.has("MANAGE_GUILD"))
       return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You can't ban a moderator.`)], ephemeral: true});
   
-	if(!Target.bannable)
-		return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} I don't have the permissions to ban ${Target}.`)], ephemeral: true});
+	  if(!Target.bannable)
+		  return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} I don't have the permissions to ban ${Target}.`)], ephemeral: true});
 
-
-    if (Reason.length > 512)
+    if (Reason?.length > 512)
 		  return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} Reason can't be more than 512 characters.`)], ephemeral: true});
 
-    Target.send({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle(`👮 You've been banned From ${interaction.guild.name}!`).addFields({name: "Reason", value: Reason}, {name: "Banned by", value: interaction.member.user.tag})]})
+    await Target.send({embeds: [new MessageEmbed().setColor(moderation_embed_colour).setTitle(`👮 You've been banned From ${interaction.guild.name}`).addFields({name: "Reason", value: `\`${Reason}\``}, {name: "Banned by", value: `\`${interaction.member.user.tag}\``})]})
 
-    await delay(1000).then(() => Target.ban({ reason: Reason }));
+    const memberBannedTag = Target.user.tag
 
-    interaction.reply({ embeds: [success] });
+    await Target.ban({ reason: Reason });
+
+    return interaction.reply({ embeds: [client.successEmbed(`\`${memberBannedTag}\` has successfully been banned from this server by \`${interaction.member.user.tag}\``).addFields({name: "Reason", value: `\`${Reason}\``}).setThumbnail(Target.user.avatarURL({ dynamic: true, size: 512 }))] });
   },
 };
