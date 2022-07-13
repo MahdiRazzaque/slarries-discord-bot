@@ -70,7 +70,7 @@ module.exports = {
         },
         {
             name: "refresh",
-            description: "Refresh your channel saved to-do-list, if you believe it is incorrect.",
+            description: "Refresh your channel saved to-do-list, if you believe it is incorrect or if the message was deleted.",
             type: "SUB_COMMAND",
 
         },
@@ -134,7 +134,7 @@ module.exports = {
             var channel = await client.channels.cache.get(data.ChannelID)
             
             if(channel) {
-                var message = await channel.messages.fetch(data.MessageID)
+                var message = await channel.messages.fetch(data.MessageID).catch((e) => {})
                 if(message) 
                     message.edit({embeds: [updatedList]})
             }
@@ -168,16 +168,21 @@ module.exports = {
         } else {
             for (let i = 0; i < List.length; i++) {
                 list += `\`\`\`${i+1}. ${List[i].name} ${List[i].tickedOff ? "✅" : "☐"}\`\`\`\n`
-              }
+            }
+        }
+
+        if(list.length > 4096) {
+            list = ``
+            for (let i = 0; i < List.length; i++) {
+                list += `\`\`\`${i+1}. ${List[i].name.substring(0, Math.floor(List[i].name / 2))} ${List[i].tickedOff ? "✅" : "☐"}\`\`\`\n`
+            }
         }
 
         const toDoList = new MessageEmbed()
             .setColor(system_embed_colour)
             .setTitle(`${interaction.member.nickname ? interaction.member.nickname : interaction.member.displayName}'s to-do list`)
             .setDescription(list)
-
-        if(list.length > 4096)
-            return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription("Your to-do list is too long, please clear it using /to-do-list clear.")], ephemeral})
+            .setFooter({text: "Your to-do list is too long, so each item was cut in half. \n\n Please clear unneeded items by using one of the \`/to-do-list clear\` commands."})
 
         switch(interaction.options.getSubcommand()) {
             case "help":
@@ -196,7 +201,7 @@ module.exports = {
                     `\`•\` **/to-do-list clear**: \`Clear all items in your to-do list.\`` + `\n` +
                     `\`•\` **/to-do-list clear-ticked**: \`Clear items which are ticked off in your to-do list.\`` + `\n` + 
                     `\`•\` **/to-do-list clear-unticked**: \`Clear items which are not ticked off in your to-do list.\`` + `\n` + 
-                    `\`•\` **/to-do-list refresh**: \`Refresh your to-do list message in your dedicated channel, if it exists.\`` + `\n` +
+                    `\`•\` **/to-do-list refresh**: \`Refresh your to-do list message in your dedicated channel, if it exists, and resend the message if the message was deleted..\`` + `\n` +
                     `\`•\` **/to-do-list privacy [T/F]**: \`Enables or disables privacy mode, which hides all your to-do list messages from other users.\`` + `\n` + 
                     `\`•\` **/to-do-list add-messages-to-list [T/F]**: \`Enables or disables if messages sent in your dedicated to-do list channel are automatically added to the list.\`` + `\n` + 
                     `\`•\` **/to-do-list create-channel**: \`Create a channel in which your to-do list will be sent and updated.\`` + `\n` + 
@@ -313,9 +318,42 @@ module.exports = {
             break;
 
             case "refresh":  
-                await updateList()
+                var data = await toDoListDB.findOne({ MemberID: interaction.member.id})
+                        
+                var List = data.List
 
-                return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Your to-do list has been refreshed.`)], ephemeral})
+                var list = ``
+        
+                if(List.length <= 0) {
+                    list = "Empty"
+                } else {
+                    for (let i = 0; i < List.length; i++) {
+                        list += `\`\`\`${i+1}. ${List[i].name} ${List[i].tickedOff ? "✅" : "☐"}\`\`\`\n`
+                    }
+                }
+
+                var updatedList = new MessageEmbed()
+                    .setColor(system_embed_colour)
+                    .setTitle(`${interaction.member.nickname ? interaction.member.nickname : interaction.member.displayName}'s to-do list`)
+                    .setDescription(list)
+
+                var channel = await client.channels.cache.get(data.ChannelID)
+                
+                if(channel) {
+                    var message = await channel.messages.fetch(data.MessageID).catch((e) => {})
+                    if(message) {
+                        message.edit({embeds: [updatedList]})
+                        return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Your to-do list has been refreshed.`)], ephemeral})
+                    } else {
+                        await channel.send({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription("Setting up to-do list...")]}).then(async (message) => {
+                            await toDoListDB.findOneAndUpdate({MemberID: interaction.member.id}, {ChannelID: channel.id, MessageID: message.id})
+                            await updateList()
+                            return interaction.reply({embeds: [new MessageEmbed().setColor(system_embed_colour).setDescription(`${client.emojisObj.animated_tick} Your to-do list has successfully been refreshed and resent as the message was previously deleted.`)], ephemeral})
+                        })
+                    }     
+                } else {
+                    return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} Your to-do list channel was not found. \n\n Please run \`/to-do list create-channel\` to create a new to-do list channel`)], ephemeral})
+                }
             break;
 
             case "privacy":

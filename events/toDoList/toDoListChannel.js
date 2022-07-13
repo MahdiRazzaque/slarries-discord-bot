@@ -33,9 +33,10 @@ module.exports = {
         var channel = await client.channels.cache.get(data.ChannelID)
         
         if(channel) {
-            var message = await channel.messages.fetch(data.MessageID)
-            if(message) 
-                message.edit({embeds: [updatedList]})
+            var toDoListmessage = await channel.messages.fetch(data.MessageID)
+            
+            if(toDoListMessage)
+                toDoListmessage.edit({embeds: [updatedList]})
         }
     }
 
@@ -60,6 +61,17 @@ module.exports = {
     if(message.author.id == client.user.id) return;
     if(message.author.bot) return message.delete();
 
+    try {
+        const toDoListChannel = await client.channels.cache.get(data.ChannelID)
+        const toDoListMessage = await toDoListChannel.messages.fetch(data.MessageID)
+    } catch (error) {
+        const toDoListMessageNotFound = await message.reply({ embeds: [client.errorEmbed("Your to-do list message was not found. \n\n Try refreshing it using the \`/to-do-list refresh\` command.")] })
+        return setTimeout(async () => {
+            await toDoListMessageNotFound.delete()
+            await message.delete()
+        }, 3000)
+    }
+    
     if(data.MessageCreateToAdd && data.MemberID == message.author.id) {
         List.push({"name": message.content, "tickedOff": false})
         await DB.findOneAndUpdate({MemberID: message.author.id}, {List: List})
