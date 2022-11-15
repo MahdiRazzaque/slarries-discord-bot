@@ -39,39 +39,6 @@
     "open_ticket_channel": "916385874697150504",
     "transcripts_channel_id": "922915715797880932",
     "ticketCheckChannelID": "985509932398936164",
-    "ticketCheckMessageID": "985509958923735080",
-
-    "SpotifyClientID": "88f7f73702ec471eb5e9d4b7b90cbc82",
-    "SpotifySecret": "a3b4828dc72645718b2ae58f1bae5f9a",
-    
-    "nodes": [
-        {
-            "id": "one",
-            "host": "lavalink.oops.wtf",
-            "port": 443,
-            "password": "www.freelavalink.ga",
-            "retryAmount": 15, 
-            "retryDelay": 6000, 
-            "secure": true
-        },
-        {
-            "id": "two",
-            "host": "connect.freelavalink.ga",
-            "port": 443,
-            "password": "www.freelavalink.ga",
-            "retryAmount": 15, 
-            "retryDelay": 6000, 
-            "secure": true
-        },
-        {
-            "id": "threee",
-            "host": "lavalink-replit.mahdirazzaque.repl.co",
-            "port": 443,
-            "password": "maybeiwasboring",
-            "retryAmount": 15, 
-            "retryDelay": 6000, 
-            "secure": true
-        }
-    ]
+    "ticketCheckMessageID": "985509958923735080"
   }
   

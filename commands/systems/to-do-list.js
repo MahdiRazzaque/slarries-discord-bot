@@ -171,18 +171,23 @@ module.exports = {
             }
         }
 
+        var listTooLong = false
+
         if(list.length > 4096) {
             list = ``
             for (let i = 0; i < List.length; i++) {
                 list += `\`\`\`${i+1}. ${List[i].name.substring(0, Math.floor(List[i].name / 2))} ${List[i].tickedOff ? "✅" : "☐"}\`\`\`\n`
             }
+            listTooLong = true
         }
 
         const toDoList = new MessageEmbed()
             .setColor(system_embed_colour)
             .setTitle(`${interaction.member.nickname ? interaction.member.nickname : interaction.member.displayName}'s to-do list`)
             .setDescription(list)
-            .setFooter({text: "Your to-do list is too long, so each item was cut in half. \n\n Please clear unneeded items by using one of the \`/to-do-list clear\` commands."})
+
+        if(listTooLong)
+            toDoList.setFooter({text: "Your to-do list is too long, so each item was cut in half. \n\n Please clear unneeded items by using one of the \`/to-do-list clear\` commands."})
 
         switch(interaction.options.getSubcommand()) {
             case "help":

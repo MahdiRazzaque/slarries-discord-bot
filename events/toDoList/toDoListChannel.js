@@ -33,10 +33,10 @@ module.exports = {
         var channel = await client.channels.cache.get(data.ChannelID)
         
         if(channel) {
-            var toDoListmessage = await channel.messages.fetch(data.MessageID)
+            var toDoListMessage = await channel.messages.fetch(data.MessageID)
             
             if(toDoListMessage)
-                toDoListmessage.edit({embeds: [updatedList]})
+                toDoListMessage.edit({embeds: [updatedList]})
         }
     }
 

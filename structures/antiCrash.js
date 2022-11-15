@@ -61,6 +61,7 @@ module.exports = (client) => {
     
     process.on("multipleResolves", (type, promise, reason) => {
       if(reason.toLocaleString().includes("FetchError: request to https://discord.com/api/")) return;
+      if (reason.toLocaleString() === "Error: Cannot perform IP discovery - socket closed") return;
       
         console.log(type, promise, reason)
         const multipleResolvesEmbed = new MessageEmbed()
@@ -76,7 +77,7 @@ module.exports = (client) => {
     });
     
     process.on("warning", (warn) => {
-        if(warn.message.includes("ExperimentalWarning: buffer.Blob is an experimental feature.")) return;
+        if(warn.toLocaleString().includes("DeprecationWarning: DisTubeOptions.youtubeDL is deprecated")) return;
         console.log(warn)
         const warningEmbed = new MessageEmbed()
             .setTitle('Warning')

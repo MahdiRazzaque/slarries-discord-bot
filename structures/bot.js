@@ -29,26 +29,14 @@ client.customStatus = false;
 
 module.exports = client;
 
-const { nodes, SpotifyClientID, SpotifySecret } = require("./config.json")
-const Deezer = require("erela.js-deezer");
-const Spotify = require("better-erela.js-spotify").default;
-const Apple = require("better-erela.js-apple").default;
-const { Manager } = require("erela.js");
+const { DisTube } = require("distube");
+const { SpotifyPlugin } = require("@distube/spotify");
 
-client.manager = new Manager({
-    nodes,
-    plugins: [
-        new Spotify({
-            clientID: SpotifyClientID,
-            clientSecret: SpotifySecret,
-        }),
-        new Apple(),
-        new Deezer(),
-    ],
-    send: (id, payload) => {
-        let guild = client.guilds.cache.get(id);
-        if (guild) guild.shard.send(payload);
-    },
+client.distube = new DisTube(client, {
+  emitNewSongOnly: true,
+  leaveOnFinish: true,
+  emitAddListWhenCreatingQueue: false,
+  plugins: [new SpotifyPlugin()],
 });
 
 //Discord Together

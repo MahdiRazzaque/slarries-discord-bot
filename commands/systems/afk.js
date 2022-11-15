@@ -29,7 +29,7 @@ module.exports = {
     /**
      * @param {CommandInteraction} interaction
      */
-    async execute(interaction) {
+    async execute(interaction, client) {
         const { guild, options, user, createdTimestamp} = interaction;
 
         const Embed = new MessageEmbed()

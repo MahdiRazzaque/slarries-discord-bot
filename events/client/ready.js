@@ -80,9 +80,6 @@ module.exports = {
       return errorEmbed
     };
 
-    //Erela
-    client.manager.init(client.user.id);
-    
     //Always online
     app.get("/", function (req, res) {
       res.write("<h1> Connected as " + client.user.tag + "</h1>");
