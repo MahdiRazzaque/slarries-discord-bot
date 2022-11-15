@@ -11,7 +11,7 @@ function welcome(member) {
       format: 'png'
     }),
     memcount: member.guild.memberCount,
-    discrim: member.user.discriminator, //tag of user #6969
+    discrim: member.user.discriminator,
     name: member.user.username,
     bg: "https://file.coffee/u/bZcr9HMO3Nc-MW.png",
     header: `Welcome to ${member.guild.name}`
