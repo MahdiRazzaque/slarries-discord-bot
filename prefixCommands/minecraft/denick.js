@@ -1,6 +1,4 @@
-const { Message, MessageEmbed, Client, MessageActionRow, MessageSelectMenu } = require("discord.js");
-const { hypixel, errors } = require('../../structures/hypixel');
-const commaNumber = require('comma-number');
+const { Message, MessageEmbed, Client } = require("discord.js");
 const fetch = require("node-fetch-commonjs")
 const { minecraft_embed_colour } = require("../../structures/config.json");
 

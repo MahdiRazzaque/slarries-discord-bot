@@ -1,4 +1,4 @@
-const { CommandInteraction, MessageEmbed, Message } = require("discord.js");
+const { CommandInteraction, MessageEmbed, Client } = require("discord.js");
 const got = require("got");
 const { fun_embed_colour } = require("../../structures/config.json");
 
@@ -11,9 +11,9 @@ module.exports = {
   /**
    *
    * @param {CommandInteraction} interaction
-   * @param {Message} message
+   * @param {Client} client
    */
-  async execute(interaction, message) {   
+  async execute(interaction, client) {   
     got("https://www.reddit.com/r/memes/random/.json").then((response) => {
         const [list] = JSON.parse(response.body);
         const [post] = list.data.children;
