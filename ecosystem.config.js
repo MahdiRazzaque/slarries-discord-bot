@@ -3,9 +3,6 @@ module.exports = {
     name: "Slarries discord bot",
     script: './structures/bot.js',
     watch: '.'
-  }, {
-    script: './service-worker/',
-    watch: ['./service-worker']
   }],
 
   deploy : {

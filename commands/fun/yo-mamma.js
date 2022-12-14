@@ -38,7 +38,7 @@ module.exports = {
     switch(dm) {
         case true:
             try {
-                await target.send({ embeds: [new MessageEmbed().setColor(fun_embed_colour).setDescription(data.joke).setFooter({ text: `Sent by ${interaction.user.tag}`})]})
+                await target.send({ embeds: [new MessageEmbed().setColor(fun_embed_colour).setDescription(`**${data.joke}**`).setFooter({ text: `Sent by ${interaction.user.tag}`})]})
                 return interaction.reply({embeds: [client.successEmbed("The Yo Mamma joke was successfully sent.").addFields({ name: "Joke", value: data.joke})]})
             } catch (error) {
                 return interaction.reply({embeds: [client.errorEmbed(`Could not send a DM to ${target}`).addFields({ name: "Joke", value: data.joke})]})
@@ -47,9 +47,9 @@ module.exports = {
 
         case false:
             if(target)
-                return interaction.reply({ embeds: [new MessageEmbed().setColor(fun_embed_colour).setDescription(data.joke).setFooter({ text: `Sent by ${interaction.user.tag}`})], content: `${target}`})
+                return interaction.reply({ embeds: [new MessageEmbed().setColor(fun_embed_colour).setDescription(`**${data.joke}**`).setFooter({ text: `Sent by ${interaction.user.tag}`})], content: `${target}`})
 
-            return interaction.reply({ embeds: [new MessageEmbed().setColor(fun_embed_colour).setDescription(data.joke)]})
+            return interaction.reply({ embeds: [new MessageEmbed().setColor(fun_embed_colour).setDescription(`**${data.joke}**`)]})
         break;
     }
   },
