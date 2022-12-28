@@ -27,6 +27,9 @@ module.exports = {
     if(!data.success)
         return message.noMentionReply({embeds: [client.errorEmbed("Something went wrong!")]})
 
+    if(!data.player.nick_in_pool)
+        return message.noMentionReply({embeds: [client.errorEmbed("No data was found for this nick!")]})
+
     if(!data.player.latest_nick)
         return message.noMentionReply({embeds: [client.errorEmbed("This person is not nicked!")]})
 
