@@ -17,8 +17,8 @@ function welcome(member) {
     header: `Welcome to ${member.guild.name}`
   });
 
-  const image = 'https://badboy.is-a.dev/api/image/welcomecard?' + params + 
-    "&apikey=DMNP5F9U51VZILZO9C"
+  const image = 'https://api.semant.is-a.dev/image/welcomecard?' + params + 
+    "&apikey=7SVJ4Q15CVWH1T96KG"
 
   return image;
 }
