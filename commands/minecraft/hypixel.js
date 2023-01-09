@@ -9,7 +9,6 @@ const linkDB = require("../../structures/schemas/hypixelLinkingDB");
 module.exports = {
     name: "hypixel",
     description: "Get stats about a hypixel player",
-    whitelist: ["381791690454859778", "733646902083452949", "687292694451716102", "424954210866692099"],
     botCommandChannelOnly: true,
     options: [
         {
