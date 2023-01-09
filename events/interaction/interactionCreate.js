@@ -63,10 +63,6 @@ module.exports = {
       if(!botCommanddata)
         botCommanddata = await serverBotCommandChannelsDB.create({ GuildID: interaction.guild.id, BotCommandChannels: []})
 
-      console.log(botCommanddata)
-
-      console.log(botCommanddata.BotCommandChannels)
-
       if(command.botCommandChannelOnly == true && !owners.includes(interaction.member.id) && !botOwners.includes(interaction.member.id)) {
         if(!botCommanddata.BotCommandChannels.includes(interaction.channel.id)) {
           return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} **This command (/${command.name}) can only be used in bot command channels.**`).addField("Bot command channels", `<#${botCommanddata.BotCommandChannels.map((c) => c).join(">, <#")}>`)], ephemeral: true})
