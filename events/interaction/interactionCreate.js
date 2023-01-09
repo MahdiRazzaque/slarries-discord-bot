@@ -1,7 +1,8 @@
 const { Client, CommandInteraction, MessageEmbed, Collection } = require("discord.js");
 const { owners, botOwners, command_logs_id, botCommandChannels } = require("../../structures/config.json");
 const toDoListDB = require("../../structures/schemas/toDoListDB");
-const DB = require("../../structures/schemas/disabledCommandsDB")
+const DB = require("../../structures/schemas/disabledCommandsDB");
+const serverBotCommandChannelsDB = require("../../structures/schemas/serverBotCommandChannelsDB");
 const { nicerPermissions } = require("../../functions/nicerPermissions.js")
 
 module.exports = {
@@ -57,9 +58,18 @@ module.exports = {
       }
 
       //Bot command channel only check
+      var botCommanddata = await serverBotCommandChannelsDB.findOne({ GuildID: interaction.guild.id})
+
+      if(!botCommanddata)
+        botCommanddata = await serverBotCommandChannelsDB.create({ GuildID: interaction.guild.id, BotCommandChannels: []})
+
+      console.log(botCommanddata)
+
+      console.log(botCommanddata.BotCommandChannels)
+
       if(command.botCommandChannelOnly == true && !owners.includes(interaction.member.id) && !botOwners.includes(interaction.member.id)) {
-        if(!botCommandChannels.includes(interaction.channelId)) {
-          return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} **This command (/${command.name}) can only be used in bot command channels.**`).addField("Bot command channels", `<#${botCommandChannels.map((c) => c).join(">, <#")}>`)], ephemeral: true})
+        if(!botCommanddata.BotCommandChannels.includes(interaction.channel.id)) {
+          return interaction.reply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} **This command (/${command.name}) can only be used in bot command channels.**`).addField("Bot command channels", `<#${botCommanddata.BotCommandChannels.map((c) => c).join(">, <#")}>`)], ephemeral: true})
         }
       }
 
