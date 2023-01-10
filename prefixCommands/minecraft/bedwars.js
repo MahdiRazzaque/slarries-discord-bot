@@ -104,7 +104,7 @@ module.exports = {
         if(message.guild) {
             const M = await message.noMentionReply({embeds: [bedwarsOverall], components: [bedwarsRow]});
 
-            await DB.create({GuildID: message.guildId, MessageID: M.id, Player: player, TypeOfStats: "bedwars", InteractionMemberID: message.author.id})
+            await DB.create({GuildID: message.guildId, ChannelID: message.channel.id, MessageID: M.id, Player: player, TypeOfStats: "bedwars", InteractionMemberID: message.author.id, DateOpened: Date.now()})
     
             setTimeout(async () => {
                 await M.edit({components: []}).catch((e) => {console.log(e)})

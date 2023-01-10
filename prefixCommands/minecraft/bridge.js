@@ -88,7 +88,7 @@ module.exports = {
         if(message.guild) {
             const M = await message.noMentionReply({embeds: [bridgeOverall], components: [bridgeRow]})
 
-            await DB.create({GuildID: message.guildId, MessageID: M.id, Player: player, TypeOfStats: "bridge", InteractionMemberID: message.author.id})
+            await DB.create({GuildID: message.guildId, ChannelID: message.channel.id, MessageID: M.id, Player: player, TypeOfStats: "bridge", InteractionMemberID: message.author.id, DateOpened: Date.now()})
     
             setTimeout(async () => {
                 await M.edit({components: []}).catch(() => {})

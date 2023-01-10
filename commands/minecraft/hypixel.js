@@ -275,7 +275,7 @@ module.exports = {
 
                     const M = await interaction.reply({embeds: [bedwarsOverall], components: [bedwarsRow], fetchReply: true});
 
-                    await DB.create({GuildID: interaction.guildId, MessageID: M.id, Player: player, TypeOfStats: "bedwars", InteractionMemberID: interaction.member.id})
+                    await DB.create({GuildID: interaction.guildId, ChannelID: interaction.channel.id, MessageID: M.id, Player: player, TypeOfStats: "bedwars", InteractionMemberID: interaction.member.id, DateOpened: Date.now()})
 
                     setTimeout(async () => {
                         await interaction.editReply({components: []}).catch(() => {})
@@ -375,11 +375,11 @@ module.exports = {
                             
                             const M = await interaction.reply({embeds: [bridgeOverall], components: [bridgeRow], fetchReply: true})
 
-                            await DB.create({GuildID: interaction.guildId, MessageID: M.id, Player: player, TypeOfStats: "bridge", InteractionMemberID: interaction.member.id})
+                            await DB.create({GuildID: interaction.guildId, ChannelID:interaction.channel.id , MessageID: M.id, Player: player, TypeOfStats: "bridge", InteractionMemberID: interaction.member.id, DateOpened: Date.now()})
         
                             setTimeout(async () => {
                                 await interaction.editReply({components: []}).catch(() => {})
-                                await DB.deleteOne({GuildID: interaction.guildId, MessageID: M.id, Player: player, TypeOfStats: "bridge", InteractionMemberID: interaction.member.id})
+                                await DB.deleteOne({GuildID: interaction.guildId, ChannelID: interaction.channel.id, MessageID: M.id, Player: player, TypeOfStats: "bridge", InteractionMemberID: interaction.member.id, DateOpened: Date.Now()})
                             }, 60 * 1000)
                             
                         }).catch(e => {return errorHandling(e)});

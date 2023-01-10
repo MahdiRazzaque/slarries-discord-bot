@@ -44,7 +44,7 @@ module.exports = {
       });
     
     //Systems
-    ["lockdownSystem", "chatFilterSystem", "giveawaySystem", "ticketSystem"].forEach((system) => {
+    ["lockdownSystem", "chatFilterSystem", "giveawaySystem", "ticketSystem", "hypixelStatsMenuSystem"].forEach((system) => {
         require(`../../systems/${system}`)(client);
     });  
 
