@@ -22,7 +22,8 @@ module.exports = {
             .setTimestamp()
         
         const messageContent = message.content.slice(0, 998) + (message.content.length > 998 ? " ..." : "");
-        dmEmbed.setDescription(`\`\`\`${messageContent}\`\`\``)
+        if(messageContent)
+            dmEmbed.setDescription(`\`\`\`${messageContent}\`\`\``)
 
         if (message.attachments.size >= 1) {
             dmEmbed.addField(`Attachments`, `${message.attachments.map((image) => `[Image](${image.url})`).join(", ")}`)
