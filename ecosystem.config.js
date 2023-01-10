@@ -1,9 +1,16 @@
 module.exports = {
-  apps : [{
+  apps : [
+  {
     name: "Slarries discord bot",
     script: './structures/bot.js',
     watch: '.'
-  }],
+  },
+  {
+	  name: "Lavalink",
+	  script: "java -jar ../lavalink/Lavalink.jar",
+	  watch: "."
+  }
+  ],
 
   deploy : {
     production : {

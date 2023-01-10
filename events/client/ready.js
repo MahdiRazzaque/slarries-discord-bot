@@ -42,6 +42,9 @@ module.exports = {
       .catch((err) => { 
         console.log(err)
       });
+
+    //Erela
+    client.manager.init(client.user.id);
     
     //Systems
     ["lockdownSystem", "chatFilterSystem", "giveawaySystem", "ticketSystem", "hypixelStatsMenuSystem"].forEach((system) => {
