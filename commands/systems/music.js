@@ -31,7 +31,7 @@ module.exports = {
                     { name: "⏸ | Pause", value: "pause" },
                     { name: "⏯ | Resume", value: "resume" },
                     { name: "⏹ | Stop", value: "stop" },
-                    { name: "🔤 | Lyrics", value: "lyrics"},
+                    //{ name: "🔤 | Lyrics", value: "lyrics"},
                     { name: "🔀 | Shuffle", value: "shuffle" },
                     { name: "🎦 | Now Playing", value: "nowplaying" },
                     { name: "🔚 | Clear Queue", value: "clearqueue" },
@@ -149,24 +149,24 @@ module.exports = {
 
                             return interaction.editReply({ embeds: [client.successEmbed("Disconnected", "⏹", "BLURPLE")] })
                         }
-                        case "lyrics": {
-                            if (!player.queue.current) return interaction.editReply({ embeds: [client.errorEmbed("There is nothing playing.")] });
+                        // case "lyrics": {
+                        //     if (!player.queue.current) return interaction.editReply({ embeds: [client.errorEmbed("There is nothing playing.")] });
 
-                            const track = player.queue.current;
-                            const trackTitle = track.title.replace("(Official Video)", "").replace("(Official Audio)", "");              
-                            const actualTrack = await gClient.songs.search(trackTitle);
-                            const searches = actualTrack[0];
-                            const lyrics = await searches.lyrics();
+                        //     const track = player.queue.current;
+                        //     const trackTitle = track.title.replace("(Official Video)", "").replace("(Official Audio)", "");              
+                        //     const actualTrack = await gClient.songs.search(trackTitle);
+                        //     const searches = actualTrack[0];
+                        //     const lyrics = await searches.lyrics();
 
-                            if(!lyrics) return interaction.editReply({embeds: [client.errorEmbed("The lyrics for this song was not found.")]})
+                        //     if(!lyrics) return interaction.editReply({embeds: [client.errorEmbed("The lyrics for this song was not found.")]})
 
-                            const lyricsEmbed = new MessageEmbed()
-                                .setColor("BLURPLE")
-                                .setTitle(`Lyrics for **${trackTitle}**`)
-                                .setDescription(`${lyrics.length < 4090 ? lyrics : `${lyrics.substring(0, 4090)}...`}`) 
+                        //     const lyricsEmbed = new MessageEmbed()
+                        //         .setColor("BLURPLE")
+                        //         .setTitle(`Lyrics for **${trackTitle}**`)
+                        //         .setDescription(`${lyrics.length < 4090 ? lyrics : `${lyrics.substring(0, 4090)}...`}`) 
 
-                            return interaction.editReply({ embeds: [lyricsEmbed] })     
-                        }
+                        //     return interaction.editReply({ embeds: [lyricsEmbed] })     
+                        // }
                         case "shuffle": {
                             if (!player.queue.length) return interaction.editReply({ embeds: [client.errorEmbed("There is nothing in the queue.")] });
 
@@ -197,8 +197,8 @@ module.exports = {
                 }
             }
         } catch (e) {
-          if(e.message == "No result was found")
-            return interaction.editReply({embeds: [client.errorEmbed("Lyrics for this song couldn't be found.")]})
+        //   if(e.message == "No result was found")
+        //     return interaction.editReply({embeds: [client.errorEmbed("Lyrics for this song couldn't be found.")]})
 
           return interaction.editReply({embeds: [client.errorEmbed(`An error occured. \n \`\`\`${e.message}\`\`\``)]})
         }
