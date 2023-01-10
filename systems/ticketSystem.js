@@ -52,7 +52,7 @@ module.exports = async(client) => {
             var memberTags = []
 
             await data.MembersID.forEach(async (member) => {
-                var member = await axios.get(`https://api.badboy.is-a.dev/json/discorduser?id=${member}`)
+                var member = await axios.get(`https://api.badboy.is-a.dev/json/discorduser?id=${member}&apikey=7SVJ4Q15CVWH1T96KG`)
                 
                 if(member) 
                     memberTags.push(member.data.tag)
@@ -61,8 +61,8 @@ module.exports = async(client) => {
                     memberTags.push(`Unknown Member`)
             })     
 
-            const openedMember = await axios.get(`https://api.badboy.is-a.dev/json/discorduser?id=${data.MembersID[0]}`)
-            const claimedMember = await axios.get(`https://api.badboy.is-a.dev/json/discorduser?id=${data.ClaimedBy}`)
+            const openedMember = await axios.get(`https://api.badboy.is-a.dev/json/discorduser?id=${data.MembersID[0]}&apikey=7SVJ4Q15CVWH1T96KG`)
+            const claimedMember = await axios.get(`https://api.badboy.is-a.dev/json/discorduser?id=${data.ClaimedBy}&apikey=7SVJ4Q15CVWH1T96KG`)
 
             const message = await ticketChannel.send({embeds: [new MessageEmbed().setColor("RED").setDescription(`The member who opened this ticket \`${openedMember ? openedMember.data.tag : "Unknown Member"}\` has left the server. \n\nThis channel will now be deleted in 10 seconds and a transcript will automatically be generated.`)]})
 
