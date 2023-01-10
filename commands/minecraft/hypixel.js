@@ -342,6 +342,30 @@ module.exports = {
                                 .addField("Combat", `\`•\` **Kills**: \`${commaNumber(player.stats.duels.bridge.overall.kills)}\`\n \`•\` **Deaths**: \`${commaNumber(player.stats.duels.bridge.overall.deaths)}\`\n \`•\` **KDR**: \`${commaNumber(player.stats.duels.bridge.overall.KDRatio)}\``, true)
                                 .addField("Milstones", `\`•\` **Wins to ${commaNumber(Math.ceil(player.stats.duels.bridge.overall.WLRatio))} WLR**: \`${commaNumber((player.stats.duels.bridge.overall.losses*Math.ceil(player.stats.duels.bridge.overall.WLRatio))-player.stats.duels.bridge.overall.wins)}\`\n \`•\` **Kills to ${commaNumber(Math.ceil(player.stats.duels.bridge.overall.KDRatio))} KDR**: \`${commaNumber((player.stats.duels.bridge.overall.deaths*Math.ceil(player.stats.duels.bridge.overall.KDRatio))-player.stats.duels.bridge.overall.kills)}\``, true)
 
+                            if(player.stats.duels.bridge.overall.wins > 50)
+                                bridgeOverall.setColor("GREY")
+                    
+                            if(player.stats.duels.bridge.overall.wins > 100)
+                                bridgeOverall.setColor("LIGHT_GREY")
+                    
+                            if(player.stats.duels.bridge.overall.wins > 250)
+                                bridgeOverall.setColor("GOLD")
+                    
+                            if(player.stats.duels.bridge.overall.wins > 500)
+                                bridgeOverall.setColor("DARK_AQUA")
+                    
+                            if(player.stats.duels.bridge.overall.wins > 1000)
+                                bridgeOverall.setColor("DARK_GREEN")
+                            
+                            if(player.stats.duels.bridge.overall.wins > 2000)
+                                bridgeOverall.setColor("DARK_RED")
+                            
+                            if(player.stats.duels.bridge.overall.wins > 5000)
+                                bridgeOverall.setColor("GOLD")
+                    
+                            if(player.stats.duels.bridge.overall.wins > 10000)
+                                bridgeOverall.setColor("DARK_PURPLE")
+
                             const bridgeRow = new MessageActionRow().addComponents(
                                 new MessageSelectMenu()
                                     .setCustomId("bridge-stats")

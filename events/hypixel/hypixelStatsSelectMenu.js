@@ -485,62 +485,86 @@ module.exports = {
                         .addField("Combat", `\`•\` **Kills**: \`${commaNumber(player.stats.duels.bridge.ctf.kills)}\`\n \`•\` **Deaths**: \`${commaNumber(player.stats.duels.bridge.ctf.deaths)}\`\n \`•\` **KDR**: \`${commaNumber(player.stats.duels.bridge.ctf.KDRatio)}\``, true)
                         .addField("Milstones", `\`•\` **Wins to ${commaNumber(Math.ceil(player.stats.duels.bridge.ctf.WLRatio))} WLR**: \`${commaNumber((player.stats.duels.bridge.ctf.losses*Math.ceil(player.stats.duels.bridge.ctf.WLRatio))-player.stats.duels.bridge.ctf.wins)}\`\n \`•\` **Kills to ${commaNumber(Math.ceil(player.stats.duels.bridge.ctf.KDRatio))} KDR**: \`${commaNumber((player.stats.duels.bridge.ctf.deaths*Math.ceil(player.stats.duels.bridge.ctf.KDRatio))-player.stats.duels.bridge.ctf.kills)}\``, true)
 
+                    var colour;
+                    if(player.stats.duels.bridge.overall.wins > 50)
+                        colour = "GREY"
+            
+                    if(player.stats.duels.bridge.overall.wins > 100)
+                        colour = "LIGHT_GREY"
+            
+                    if(player.stats.duels.bridge.overall.wins > 250)
+                        colour = "GOLD"
+            
+                    if(player.stats.duels.bridge.overall.wins > 500)
+                        colour = "DARK_AQUA"
+            
+                    if(player.stats.duels.bridge.overall.wins > 1000)
+                        colour = "DARK_GREEN"
+                    
+                    if(player.stats.duels.bridge.overall.wins > 2000)
+                        colour = "DARK_RED"
+                    
+                    if(player.stats.duels.bridge.overall.wins > 5000)
+                        colour = "GOLD"
+            
+                    if(player.stats.duels.bridge.overall.wins > 10000)
+                        colour = "DARK_PURPLE"
+
                     if (interaction.member.id === data.InteractionMemberID) {
                         switch(interaction.values[0]) {
                             case "bridge-overall": 
-                                interaction.message.edit({embeds: [bridgeOverall]})
+                                interaction.message.edit({embeds: [bridgeOverall.setColor(colour)]})
                             break;
                             case "bridge-1v1": 
-                                interaction.message.edit({embeds: [bridge1v1]})
+                                interaction.message.edit({embeds: [bridge1v1.setColor(colour).setColor(colour)]})
                             break;
                             case "bridge-2v2": 
-                                interaction.message.edit({embeds: [bridge2v2]})
+                                interaction.message.edit({embeds: [bridge2v2.setColor(colour).setColor(colour)]})
                             break;
                             case "bridge-3v3": 
-                                interaction.message.edit({embeds: [bridge3v3]})
+                                interaction.message.edit({embeds: [bridge3v3.setColor(colour).setColor(colour)]})
                             break;
                             case "bridge-4v4": 
-                                interaction.message.edit({embeds: [bridge4v4]})
+                                interaction.message.edit({embeds: [bridge4v4.setColor(colour)]})
                             break;
                             case "bridge-2v2v2v2": 
-                                interaction.message.edit({embeds: [bridge2v2v2v2]})
+                                interaction.message.edit({embeds: [bridge2v2v2v2.setColor(colour)]})
                             break;
                             case "bridge-3v3v3v3": 
-                                interaction.message.edit({embeds: [bridge3v3v3v3]})
+                                interaction.message.edit({embeds: [bridge3v3v3v3.setColor(colour)]})
                             break;
                             case "bridge-ctf": 
-                                interaction.message.edit({embeds: [bridgeCtf]})
+                                interaction.message.edit({embeds: [bridgeCtf.setColor(colour)]})
                             break;
                         }
                         interaction.deferUpdate()
                     } else {
                         switch(interaction.values[0]) {
                             case "bridge-overall": 
-                                interaction.reply({embeds: [bridgeOverall], ephemeral: true})
+                                interaction.reply({embeds: [bridgeOverall.setColor(colour)], ephemeral: true})
                             break;
                             case "bridge-1v1": 
-                                interaction.reply({embeds: [bridge1v1], ephemeral: true})
+                                interaction.reply({embeds: [bridge1v1.setColor(colour)], ephemeral: true})
                             break;
                             case "bridge-2v2": 
-                                interaction.reply({embeds: [bridge2v2], ephemeral: true})
+                                interaction.reply({embeds: [bridge2v2.setColor(colour)], ephemeral: true})
                             break;
                             case "bridge-3v3": 
-                                interaction.reply({embeds: [bridge3v3], ephemeral: true})
+                                interaction.reply({embeds: [bridge3v3.setColor(colour)], ephemeral: true})
                             break;
                             case "bridge-4v4": 
-                                interaction.reply({embeds: [bridge4v4], ephemeral: true})
+                                interaction.reply({embeds: [bridge4v4.setColor(colour)], ephemeral: true})
                             break;
                             case "bridge-2v2v2v2": 
-                                interaction.reply({embeds: [bridge2v2v2v2], ephemeral: true})
+                                interaction.reply({embeds: [bridge2v2v2v2.setColor(colour)], ephemeral: true})
                             break;
                             case "bridge-3v3v3v3": 
-                                interaction.reply({embeds: [bridge3v3v3v3], ephemeral: true})
+                                interaction.reply({embeds: [bridge3v3v3v3.setColor(colour)], ephemeral: true})
                             break;
                             case "bridge-ctf": 
-                                interaction.reply({embeds: [bridgeCtf], ephemeral: true})
+                                interaction.reply({embeds: [bridgeCtf.setColor(colour)], ephemeral: true})
                             break;
-                        }
-                        
+                        }                    
                     }     
                 }).catch(e => {return errorHandling(e)});
 
