@@ -11,7 +11,7 @@ module.exports = {
      * @returns 
      */
     execute(message, client) {
-        if(!message.channel.type === "dm" || message.author.bot) return;
+        if(!message.guild || message.author.bot) return;
 
         if(message.content.charAt(0) == "!") return;
 
