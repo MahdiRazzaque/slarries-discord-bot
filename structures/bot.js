@@ -56,7 +56,7 @@ const { DiscordTogether } = require('discord-together');
 client.discordTogether = new DiscordTogether(client);
 
 //Anti Crash
-//require("./antiCrash")(client);
+require("./antiCrash")(client);
 
 //Logging into the bot
 client.login(process.env.TOKEN);
