@@ -10,8 +10,8 @@ module.exports = {
      * @param {Client} client 
      * @returns 
      */
-    execute(message, client) {
-        if(!message.guild || message.author.bot) return;
+    async execute(message, client) {
+        if(message.guild || message.author.bot) return;
 
         if(message.content.charAt(0) == "!") return;
 
@@ -26,7 +26,8 @@ module.exports = {
             dmEmbed.setDescription(`\`\`\`${messageContent}\`\`\``)
 
         if (message.attachments.size >= 1) {
-            dmEmbed.addField(`Attachments`, `${message.attachments.map((image) => `[Image](${image.url})`).join(", ")}`)
+            const attachments = message.attachments.map((image) => `[${image.url.match(/\.[0-9a-z]+$/i)[0].replace(".", "").toUpperCase()}](${image.url})`)
+            dmEmbed.addField(`Attachments`, `${attachments.join(", ")}`)
         }
 
         const dm_logs = client.channels.cache.get(dm_logs_id)
