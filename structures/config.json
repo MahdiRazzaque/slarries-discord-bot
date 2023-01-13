@@ -48,12 +48,10 @@
     "nodes": [
 
         {
-          "id": "two",
+          "id": "one",
           "host": "lava4.horizxon.studio",
           "port": 80,
           "password": "horizxon.studio",
-          "retryAmount": 15, 
-          "retryDelay": 6000, 
           "secure": false
       }
 
