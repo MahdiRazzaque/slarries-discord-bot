@@ -59,25 +59,25 @@ module.exports = (client) => {
         return channel.send({ embeds: [uncaughtExceptionMonitorEmbed] })
     });
     
-    process.on("multipleResolves", (type, promise, reason) => {
-      if(reason.toLocaleString().includes("FetchError: request to https://discord.com/api/")) return;
-      if (reason.toLocaleString() === "Error: Cannot perform IP discovery - socket closed") return;
-      
-        console.log(type, promise, reason)
-        const multipleResolvesEmbed = new MessageEmbed()
-            .setTitle('Multiple Resolves')
-            .setColor('RED')
-            .addField('Type', `\`\`\`${inspect(type, { depth: 0 }).substring(0, 1000)}\`\`\``)
-            .addField('Promise', `\`\`\`${inspect(promise, { depth: 0 }).substring(0, 1000)}\`\`\``)
-            .addField('Reason', `\`\`\`${inspect(reason, { depth: 0 }).substring(0, 1000)}\`\`\``)
-            .setTimestamp()
+    // process.on("multipleResolves", (type, promise, reason) => {
+    //   if(reason?.toLocaleString()?.includes("FetchError: request to https://discord.com/api/")) return;
+    //   if (reason?.toLocaleString() === "Error: Cannot perform IP discovery - socket closed") return;
 
-        // const channel = client.channels.cache.get(error_logs_id)
-        return channel.send({ embeds: [multipleResolvesEmbed] })
-    });
+    //     console.log(type, promise, reason)
+    //     const multipleResolvesEmbed = new MessageEmbed()
+    //         .setTitle('Multiple Resolves')
+    //         .setColor('RED')
+    //         .addField('Type', `\`\`\`${inspect(type, { depth: 0 }).substring(0, 1000)}\`\`\``)
+    //         .addField('Promise', `\`\`\`${inspect(promise, { depth: 0 }).substring(0, 1000)}\`\`\``)
+    //         .addField('Reason', `\`\`\`${inspect(reason, { depth: 0 }).substring(0, 1000)}\`\`\``)
+    //         .setTimestamp()
+
+    //     // const channel = client.channels.cache.get(error_logs_id)
+    //     return channel.send({ embeds: [multipleResolvesEmbed] })
+    // });
     
     process.on("warning", (warn) => {
-        if(warn.toLocaleString().includes("DeprecationWarning: DisTubeOptions.youtubeDL is deprecated")) return;
+        if(warn?.toLocaleString()?.includes("DeprecationWarning: DisTubeOptions.youtubeDL is deprecated")) return;
         console.log(warn)
         const warningEmbed = new MessageEmbed()
             .setTitle('Warning')
