@@ -2,6 +2,7 @@ const { CommandInteraction, MessageEmbed, Client, MessageButton } = require("dis
 const util = require("../../functions/erela.js");
 const genius = require("genius-lyrics");
 const gClient = new genius.Client();
+const { botOwners } = require("../../structures/config.json")
 
 module.exports = {
     name: "music",
@@ -35,6 +36,8 @@ module.exports = {
                     { name: "🔀 | Shuffle", value: "shuffle" },
                     { name: "🎦 | Now Playing", value: "nowplaying" },
                     { name: "🔚 | Clear Queue", value: "clearqueue" },
+                    { name: "🔄 | Repeat Queue", value: "queuerepeat" },
+                    { name: "📈 | Statistics", value: "statistics" },
                 ]
             }],
         }
@@ -50,20 +53,20 @@ module.exports = {
         const { options, member, guild } = interaction;
         const VoiceChannel = member.voice.channel;
 
-        if (!VoiceChannel)
+        if (!VoiceChannel && !["statistics"].includes(options.getString("options")))
             return interaction.editReply({ embeds: [client.errorEmbed("You aren't in a voice channel. Join one to be able to play music!")] });
 
-        if (guild.me.voice.channelId && VoiceChannel.id !== guild.me.voice.channelId)
+        if (guild.me.voice.channelId && VoiceChannel.id !== guild.me.voice.channelId && !["statistics"].includes(options.getString("options")))
             return interaction.editReply({ embeds: [client.errorEmbed(`I'm already playing music in <#${guild.me.voice.channelId}>.`)] });
 
-        if(!guild.me.voice.channelId && options.getSubcommand() != "play") return interaction.editReply({ embeds: [client.errorEmbed("There is nothing playing.")]})
+        if(!guild.me.voice.channelId && options.getSubcommand() != "play" && !["statistics"].includes(options.getString("options"))) return interaction.editReply({ embeds: [client.errorEmbed("There is nothing playing.")]})
 
-        const player = client.manager.create({
+        const player = await client.manager.create({
             guild: interaction.guild.id,
             voiceChannel: member.voice.channel.id,
             textChannel: interaction.channelId,
             selfDeafen: true
-        });
+        })
 
         let res;
         try {
@@ -116,7 +119,8 @@ module.exports = {
                 case "settings": {
                     switch (options.getString("options")) {
                         case "skip": {
-                            if (!player.queue.length) return interaction.editReply({ embeds: [client.errorEmbed("There is nothing in the queue.")] });
+                            if (!player.queue.length && !player.queueRepeat) return interaction.editReply({ embeds: [client.errorEmbed("There is nothing in the queue.")] });
+
                             await player.stop();
 
                             return interaction.editReply({ embeds: [client.successEmbed("Skipped.", "⏭", "BLURPLE")] });
@@ -129,6 +133,8 @@ module.exports = {
                                 .setColor("BLURPLE")
                                 .setTitle("Now Playing")
                                 .setDescription(`[${track.title}](${track.uri}) [${player.queue.current.requester}]`)
+                                .setThumbnail(player.queue.current.thumbnail)
+                                
                             return interaction.editReply({ embeds: [npEmbed] })
                         }
                         case "pause": {
@@ -140,6 +146,7 @@ module.exports = {
                         }
                         case "resume": {
                             if(player.playing) return interaction.editReply({ embeds: [client.errorEmbed("Music is already playing.")] });
+
                             await player.pause(false);
 
                             return interaction.editReply({ embeds: [client.successEmbed("Resumed.", "⏯", "BLURPLE")] })
@@ -184,6 +191,7 @@ module.exports = {
                                 .setColor("BLURPLE")
                                 .setTitle(`Current queue for ${guild.name}`)
                                 .setDescription(chunked[0])
+                                .setFooter({ text: player.queueRepeat ? "Queue repeat is on." : "Queue repeat is off."})
 
                             return interaction.editReply({ embeds: [queueEmbed] });
                         }
@@ -193,6 +201,34 @@ module.exports = {
                             music.queue.splice(0, 1);
                             
                             return interaction.editReply({ embeds: [client.successEmbed("The queue has been cleared.", "🔚", "BLURPLE")]})
+
+                        case "queuerepeat":
+                            if (!player.queue.length) return interaction.editReply({ embeds: [client.errorEmbed("There is nothing in the queue.")] });
+
+                            if(player.queueRepeat) {
+                                await player.setQueueRepeat(false)
+                                return interaction.editReply({ embeds: [client.successEmbed("Queue repeat has been turned off.", "🔄", "BLURPLE")]})
+                            } else {
+                                await player.setQueueRepeat(true)
+                                return interaction.editReply({ embeds: [client.successEmbed("Queue repeat has been turned on.", "🔄", "BLURPLE")]})
+                            }
+
+                        case "statistics":
+                            const node = player.node
+                            if(!node.connected)
+                                return interaction.editReply({embeds: [client.errorEmbed("The client is not connected to any nodes.")]})
+
+                            const statistics = new MessageEmbed()
+                                .setColor("BLURPLE")
+                                .setTitle(`Node statistics for ${node.options.host}`)
+                                .addFields(
+                                    {name: "CPU", value: `\`•\` **Cores**: \`${node.stats.cpu.cores}\` \n\`•\` **Lavalink load**: \`${node.stats.cpu.lavalinkLoad.toFixed(2)}%\` \n\`•\` **System load**: \`${node.stats.cpu.systemLoad.toFixed(2)}%\``, inline: true},
+                                    {name: "Memory", value: `\`•\` **Allocated**: \`${node.stats.memory.allocated}\` \n\`•\` **Free**: \`${node.stats.memory.free}\` \n\`•\` **Used**: \`${node.stats.memory.used}\``, inline: true},
+                                    {name: "Players", value: `\`•\` **Total**: \`${node.stats.players}\` \n\`•\` **Playing**: \`${node.stats.playingPlayers}\``, inline: true},
+                                    {name: "Uptime", value: `${Date.now() - node.stats.uptime}`, inline: true}
+                                )
+
+                            return interaction.editReply({embeds: [statistics]})
                     }
                 }
             }
