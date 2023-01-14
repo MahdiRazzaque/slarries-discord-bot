@@ -40,6 +40,8 @@ module.exports = {
         }
     }
 
+    if(message.content.charAt(0) == "!") return;
+
     const data = await DB.findOne({ ChannelID: message.channel.id})
 
     if(!data) return;

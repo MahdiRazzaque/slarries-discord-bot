@@ -1,7 +1,8 @@
 const { Client, Message, Collection, MessageEmbed } = require("discord.js");
 const { Prefix } = require("../../structures/config.json");
 const { owners, botOwners, command_logs_id, botCommandChannels } = require("../../structures/config.json")
-const DB = require("../../structures/schemas/disabledCommandsDB")
+const DB = require("../../structures/schemas/disabledCommandsDB");
+const toDoListDB = require("../../structures/schemas/toDoListDB");
 
 module.exports = {
   name: "messageCreate",
@@ -22,6 +23,11 @@ module.exports = {
 
     if (!command) return;
 
+    message.noMentionReply = async (options) => {
+      options.allowedMentions = { repliedUser: false };
+      return await message.reply(options);
+    };
+
     //Maintenance check
     if (client.maintenance && message.author.id != "381791690454859778") {
         const Response = new MessageEmbed()
@@ -33,6 +39,20 @@ module.exports = {
     }
 
     if(message.guild) {
+
+      const toDoList = await toDoListDB.findOne({ChannelID: message.channel.id})
+
+      if(toDoList) {
+        if(commandName != "to-do-list") {
+          if(toDoList.ChannelID == message.channel.id) {
+            return await message.noMentionReply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} You can only use \`/to-do-list\` commands in this channel.`)]}).then((sent) => {setTimeout(() => {sent.delete(); message.delete()}, 2500)})
+          }
+            
+        }
+        if(toDoList.MemberID != message.author.id && toDoList.ChannelID == message.channel.id)
+          message.noMentionReply({embeds: [new MessageEmbed().setColor("RED").setDescription(`${client.emojisObj.animated_cross} This isn't your to-do list channel.`)]}).then((sent) => {setTimeout(() => {sent.delete(); message.delete()}, 2500)})
+      }
+
       //Bot command channelonly check
       if(command.botCommandChannelOnly == true && !owners.includes(message.author.id) && !botOwners.includes(message.author.id)) {
         if(!botCommandChannels.includes(message.channel.id)) {
@@ -124,11 +144,6 @@ module.exports = {
 
     timestamps.set(message.author.id, now);
     setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
-
-    message.noMentionReply = async (options) => {
-      options.allowedMentions = { repliedUser: false };
-      return await message.reply(options);
-    };
     
     try {
       command.execute(message, args, commandName, Prefix, client);
