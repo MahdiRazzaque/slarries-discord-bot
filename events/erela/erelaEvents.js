@@ -19,5 +19,5 @@ client.manager
                 await player.destroy()
                 return await client.channels.cache.get(player.textChannel).send({embeds: [client.successEmbed(`Your queue finished so I left the voice channel.`, "🏃‍♂️", "BLURPLE")]})
             }
-        }, 10 * 1000)
+        }, 60 * 1000)
     })
