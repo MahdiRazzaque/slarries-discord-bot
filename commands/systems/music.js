@@ -7,6 +7,7 @@ const { botOwners } = require("../../structures/config.json")
 module.exports = {
     name: "music",
     description: "A complete music system",
+    usage: "/music",
     options: [
         {
             name: "play",
@@ -34,7 +35,8 @@ module.exports = {
                     { name: "⏹ | Stop", value: "stop" },
                     //{ name: "🔤 | Lyrics", value: "lyrics"},
                     { name: "🔀 | Shuffle", value: "shuffle" },
-                    { name: "🎦 | Now Playing", value: "nowplaying" },
+                    { name: "🔁 | Repeat track", value: "repeattrack" },
+                    { name: "🎦 | Now Playing", value: "nowplaying" },                
                     { name: "🔚 | Clear Queue", value: "clearqueue" },
                     { name: "🔄 | Repeat Queue", value: "queuerepeat" },
                     { name: "📈 | Statistics", value: "statistics" },
@@ -61,12 +63,16 @@ module.exports = {
 
         if(!guild.me.voice.channelId && options.getSubcommand() != "play" && !["statistics"].includes(options.getString("options"))) return interaction.editReply({ embeds: [client.errorEmbed("There is nothing playing.")]})
 
-        const player = await client.manager.create({
-            guild: interaction.guild.id,
-            voiceChannel: member.voice.channel.id,
-            textChannel: interaction.channelId,
-            selfDeafen: true
-        })
+        try {
+            var player = await client.manager.create({
+                guild: interaction.guild.id,
+                voiceChannel: member.voice.channel.id,
+                textChannel: interaction.channelId,
+                selfDeafen: true
+            }) 
+        } catch (e) {
+            return interaction.reply({embeds: [client.errorEmbed("An error occured whilst creating the player.")]})
+        }
 
         let res;
         try {
@@ -181,6 +187,18 @@ module.exports = {
 
                             return interaction.editReply({ embeds: [client.successEmbed("Shuffled the queue.", "🔀", "BLURPLE")] })
                         }
+
+                        case "repeattrack":
+                            if (!player.queue.current) return interaction.editReply({ embeds: [client.errorEmbed("There is nothing playing.")] });
+
+                            if(player.trackRepeat) {
+                                await player.setTrackRepeat(false)
+                                return interaction.editReply({ embeds: [client.successEmbed("Track repeat has been turned off.", "🔄", "BLURPLE")]})
+                            } else {
+                                await player.setTrackRepeat(true)
+                                return interaction.editReply({ embeds: [client.successEmbed("Track repeat has been turned on.", "🔄", "BLURPLE")]})
+                            }
+
                         case "queue": {
                             if (!player.queue.length) return interaction.editReply({ embeds: [client.errorEmbed("There is nothing in the queue.")] });
 
@@ -223,9 +241,11 @@ module.exports = {
                                 .setTitle(`Node statistics for ${node.options.host}`)
                                 .addFields(
                                     {name: "CPU", value: `\`•\` **Cores**: \`${node.stats.cpu.cores}\` \n\`•\` **Lavalink load**: \`${node.stats.cpu.lavalinkLoad.toFixed(2)}%\` \n\`•\` **System load**: \`${node.stats.cpu.systemLoad.toFixed(2)}%\``, inline: true},
-                                    {name: "Memory", value: `\`•\` **Allocated**: \`${node.stats.memory.allocated}\` \n\`•\` **Free**: \`${node.stats.memory.free}\` \n\`•\` **Used**: \`${node.stats.memory.used}\``, inline: true},
+                                    {name: "Memory", value: `\`•\` **Allocated**: \`${(node.stats.memory.allocated / 10**9).toFixed(2)}GB\` \n\`•\` **Free**: \`${(node.stats.memory.free / 10**9).toFixed(2)}GB\` \n\`•\` **Used**: \`${(node.stats.memory.used / 10**9).toFixed(2)}GB\``, inline: true},
+                                    {name: "‎", value: "‎", inline: true},
                                     {name: "Players", value: `\`•\` **Total**: \`${node.stats.players}\` \n\`•\` **Playing**: \`${node.stats.playingPlayers}\``, inline: true},
-                                    {name: "Uptime", value: `${Date.now() - node.stats.uptime}`, inline: true}
+                                    {name: "Up since", value: `<t:${Math.trunc((Date.now() - node.stats.uptime) / 1000)}:R>`, inline: true},
+                                    {name: "‎", value: "‎", inline: true},
                                 )
 
                             return interaction.editReply({embeds: [statistics]})

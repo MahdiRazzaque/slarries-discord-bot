@@ -9,6 +9,7 @@ const linkDB = require("../../structures/schemas/hypixelLinkingDB");
 module.exports = {
     name: "hypixel",
     description: "Get stats about a hypixel player",
+    usage: "/hypixel",
     botCommandChannelOnly: true,
     options: [
         {
