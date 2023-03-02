@@ -33,7 +33,7 @@ module.exports = {
                     { name: "⏸ | Pause", value: "pause" },
                     { name: "⏯ | Resume", value: "resume" },
                     { name: "⏹ | Stop", value: "stop" },
-                    //{ name: "🔤 | Lyrics", value: "lyrics"},
+                    { name: "🔤 | Lyrics", value: "lyrics"},
                     { name: "🔀 | Shuffle", value: "shuffle" },
                     { name: "🔁 | Repeat track", value: "repeattrack" },
                     { name: "🎦 | Now Playing", value: "nowplaying" },                
@@ -55,13 +55,13 @@ module.exports = {
         const { options, member, guild } = interaction;
         const VoiceChannel = member.voice.channel;
 
-        if (!VoiceChannel && !["statistics"].includes(options.getString("options")))
+        if (!VoiceChannel)
             return interaction.editReply({ embeds: [client.errorEmbed("You aren't in a voice channel. Join one to be able to play music!")] });
 
-        if (guild.me.voice.channelId && VoiceChannel.id !== guild.me.voice.channelId && !["statistics"].includes(options.getString("options")))
+        if (guild.me.voice.channelId && VoiceChannel.id !== guild.me.voice.channelId)
             return interaction.editReply({ embeds: [client.errorEmbed(`I'm already playing music in <#${guild.me.voice.channelId}>.`)] });
 
-        if(!guild.me.voice.channelId && options.getSubcommand() != "play" && !["statistics"].includes(options.getString("options"))) return interaction.editReply({ embeds: [client.errorEmbed("There is nothing playing.")]})
+        if(!guild.me.voice.channelId && options.getSubcommand() != "play") return interaction.editReply({ embeds: [client.errorEmbed("There is nothing playing.")]})
 
         try {
             var player = await client.manager.create({
@@ -71,7 +71,7 @@ module.exports = {
                 selfDeafen: true
             }) 
         } catch (e) {
-            return interaction.reply({embeds: [client.errorEmbed("An error occured whilst creating the player.")]})
+            return interaction.edit({embeds: [client.errorEmbed("An error occured whilst creating the player.")]})
         }
 
         let res;
@@ -140,6 +140,9 @@ module.exports = {
                                 .setTitle("Now Playing")
                                 .setDescription(`[${track.title}](${track.uri}) [${player.queue.current.requester}]`)
                                 .setThumbnail(player.queue.current.thumbnail)
+
+                            if(player.trackRepeat)
+                                npEmbed.setFooter({ text: "Repeat is enabled."})
                                 
                             return interaction.editReply({ embeds: [npEmbed] })
                         }
@@ -162,24 +165,24 @@ module.exports = {
 
                             return interaction.editReply({ embeds: [client.successEmbed("Disconnected", "⏹", "BLURPLE")] })
                         }
-                        // case "lyrics": {
-                        //     if (!player.queue.current) return interaction.editReply({ embeds: [client.errorEmbed("There is nothing playing.")] });
+                        case "lyrics": {
+                            if (!player.queue.current) return interaction.editReply({ embeds: [client.errorEmbed("There is nothing playing.")] });
 
-                        //     const track = player.queue.current;
-                        //     const trackTitle = track.title.replace("(Official Video)", "").replace("(Official Audio)", "");              
-                        //     const actualTrack = await gClient.songs.search(trackTitle);
-                        //     const searches = actualTrack[0];
-                        //     const lyrics = await searches.lyrics();
+                            const track = player.queue.current;
+                            const trackTitle = track.title.replace("(Official Video)", "").replace("(Official Audio)", "");              
+                            const actualTrack = await gClient.songs.search(trackTitle);
+                            const searches = actualTrack[0];
+                            const lyrics = await searches.lyrics();
 
-                        //     if(!lyrics) return interaction.editReply({embeds: [client.errorEmbed("The lyrics for this song was not found.")]})
+                            if(!lyrics) return interaction.editReply({embeds: [client.errorEmbed("The lyrics for this song was not found.")]})
 
-                        //     const lyricsEmbed = new MessageEmbed()
-                        //         .setColor("BLURPLE")
-                        //         .setTitle(`Lyrics for **${trackTitle}**`)
-                        //         .setDescription(`${lyrics.length < 4090 ? lyrics : `${lyrics.substring(0, 4090)}...`}`) 
+                            const lyricsEmbed = new MessageEmbed()
+                                .setColor("BLURPLE")
+                                .setTitle(`Lyrics for **${trackTitle}**`)
+                                .setDescription(`${lyrics.length < 4090 ? lyrics : `${lyrics.substring(0, 4090)}...`}`) 
 
-                        //     return interaction.editReply({ embeds: [lyricsEmbed] })     
-                        // }
+                            return interaction.editReply({ embeds: [lyricsEmbed] })     
+                        }
                         case "shuffle": {
                             if (!player.queue.length) return interaction.editReply({ embeds: [client.errorEmbed("There is nothing in the queue.")] });
 
@@ -209,7 +212,9 @@ module.exports = {
                                 .setColor("BLURPLE")
                                 .setTitle(`Current queue for ${guild.name}`)
                                 .setDescription(chunked[0])
-                                .setFooter({ text: player.queueRepeat ? "Queue repeat is on." : "Queue repeat is off."})
+
+                            if(player.queueRepeat)
+                                queueEmbed.setFooter({ text: "Queue repeat is on."})
 
                             return interaction.editReply({ embeds: [queueEmbed] });
                         }
