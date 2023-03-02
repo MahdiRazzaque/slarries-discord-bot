@@ -46,15 +46,13 @@
     "SpotifySecret": "a3b4828dc72645718b2ae58f1bae5f9a",
     
     "nodes": [
-
-        {
-          "id": "one",
-          "host": "lava4.horizxon.studio",
-          "port": 80,
-          "password": "horizxon.studio",
-          "secure": false
-      }
-
-    ]
+      {
+       "id": "one",
+       "host": "localhost",
+       "port": 2333,
+       "password": "youshallnotpass",
+       "secure": false
+     }
+   ]
   }
   
