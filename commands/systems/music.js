@@ -33,7 +33,7 @@ module.exports = {
                     { name: "⏸ | Pause", value: "pause" },
                     { name: "⏯ | Resume", value: "resume" },
                     { name: "⏹ | Stop", value: "stop" },
-                    { name: "🔤 | Lyrics", value: "lyrics"},
+                    //{ name: "🔤 | Lyrics", value: "lyrics"},
                     { name: "🔀 | Shuffle", value: "shuffle" },
                     { name: "🔁 | Repeat track", value: "repeattrack" },
                     { name: "🎦 | Now Playing", value: "nowplaying" },                
