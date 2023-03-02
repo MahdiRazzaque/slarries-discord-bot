@@ -1,9 +1,6 @@
 const { Client, MessageEmbed } = require("discord.js");
 const mongoose = require("mongoose");
 const Ascii = require("ascii-table");
-const express = require("express");
-const app = express();
-const port = 3000;
 
 module.exports = {
   name: "ready",
@@ -82,18 +79,5 @@ module.exports = {
   
       return errorEmbed
     };
-
-    //Always online
-    app.get("/", function (req, res) {
-      res.write("<h1> Connected as " + client.user.tag + "</h1>");
-      res.write("<h2> Ready! &#128994 </h2>");
-      res.send();
-    });
-
-    app.listen(port, async () => {
-    console.log(`Slarries Website: http://localhost:${port}`)
-    });
-    console.log(guilds.toString())
-    console.log(clientTable.toString())
   },
 };
