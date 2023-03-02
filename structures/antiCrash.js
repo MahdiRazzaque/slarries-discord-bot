@@ -78,6 +78,9 @@ module.exports = (client) => {
     
     process.on("warning", (warn) => {
         if(warn?.toLocaleString()?.includes("DeprecationWarning: DisTubeOptions.youtubeDL is deprecated")) return;
+		if(warn?.toLocaleString()?.includes("deprecated")) return;
+		if(warn?.toLocaleString()?.includes("mongoose")) return;
+		
         console.log(warn)
         const warningEmbed = new MessageEmbed()
             .setTitle('Warning')
