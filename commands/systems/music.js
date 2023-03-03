@@ -1,8 +1,28 @@
 const { CommandInteraction, MessageEmbed, Client, MessageButton } = require("discord.js");
 const util = require("../../functions/erela.js");
 const genius = require("genius-lyrics");
-const gClient = new genius.Client();
+const gClient = new genius.Client(process.env.genuisAPIKey);
+const axios = require("axios")
+const cheerio = require("cheerio")
 const { botOwners } = require("../../structures/config.json")
+
+async function extractLyrics(url) {
+    const response = await axios.get(url);
+    const $ = cheerio.load(response.data);
+
+    const lyricsContainer = $('[data-lyrics-container="true"]');
+
+    // Replace <br> with newline
+    $("br", lyricsContainer).replaceWith("\n");
+
+    // Replace the elements with their text contents
+    $("a", lyricsContainer).replaceWith((_i, el) => $(el).text());
+
+    // Remove all child elements, leaving only top-level text content
+    lyricsContainer.children().remove();
+
+    return lyricsContainer.text();
+}
 
 module.exports = {
     name: "music",
@@ -33,7 +53,7 @@ module.exports = {
                     { name: "⏸ | Pause", value: "pause" },
                     { name: "⏯ | Resume", value: "resume" },
                     { name: "⏹ | Stop", value: "stop" },
-                    //{ name: "🔤 | Lyrics", value: "lyrics"},
+                    { name: "🔤 | Lyrics", value: "lyrics"},
                     { name: "🔀 | Shuffle", value: "shuffle" },
                     { name: "🔁 | Repeat track", value: "repeattrack" },
                     { name: "🎦 | Now Playing", value: "nowplaying" },                
@@ -63,16 +83,12 @@ module.exports = {
 
         if(!guild.me.voice.channelId && options.getSubcommand() != "play") return interaction.editReply({ embeds: [client.errorEmbed("There is nothing playing.")]})
 
-        try {
-            var player = await client.manager.create({
-                guild: interaction.guild.id,
-                voiceChannel: member.voice.channel.id,
-                textChannel: interaction.channelId,
-                selfDeafen: true
-            }) 
-        } catch (e) {
-            return interaction.edit({embeds: [client.errorEmbed("An error occured whilst creating the player.")]})
-        }
+		var player = await client.manager.create({
+			guild: interaction.guild.id,
+			voiceChannel: member.voice.channel.id,
+			textChannel: interaction.channelId,
+			selfDeafen: true
+		}) 
 
         let res;
         try {
@@ -168,18 +184,24 @@ module.exports = {
                         case "lyrics": {
                             if (!player.queue.current) return interaction.editReply({ embeds: [client.errorEmbed("There is nothing playing.")] });
 
+                            await interaction.editReply({ embeds: [client.successEmbed("Fetching lyrics", client.emojisObj.timer_loading, "BLURPLE")]})
+							
                             const track = player.queue.current;
-                            const trackTitle = track.title.replace("(Official Video)", "").replace("(Official Audio)", "");              
+                            const trackTitle = track.title.replace("(Official Video)", "").replace("(Official Audio)", ""); 
                             const actualTrack = await gClient.songs.search(trackTitle);
-                            const searches = actualTrack[0];
-                            const lyrics = await searches.lyrics();
+                            const data = actualTrack[0];
+                            const url = data.url;
 
-                            if(!lyrics) return interaction.editReply({embeds: [client.errorEmbed("The lyrics for this song was not found.")]})
+                            if(!url) return interaction.editReply({embeds: [client.errorEmbed("The lyrics for this song was not found.")]})
+							
+							const lyrics = await extractLyrics(url)
 
                             const lyricsEmbed = new MessageEmbed()
                                 .setColor("BLURPLE")
-                                .setTitle(`Lyrics for **${trackTitle}**`)
+                                .setTitle(`Lyrics for **${data.fullTitle}**`)
+                                .setThumbnail(data.thumbnail)
                                 .setDescription(`${lyrics.length < 4090 ? lyrics : `${lyrics.substring(0, 4090)}...`}`) 
+                                .setFooter({ text: url })
 
                             return interaction.editReply({ embeds: [lyricsEmbed] })     
                         }
