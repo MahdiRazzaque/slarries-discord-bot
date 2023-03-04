@@ -36,17 +36,17 @@ module.exports = {
         utilities: "⚙️",
         fun: "🥳",
         systems: "💻",
-        music: "🎼"
+        music: "🎼",
+        minecraft: "🧱"
       };
 
       let ccate = [];
       readdirSync("./commands/").forEach((dir) => {
         if (ignored.includes(dir.toLowerCase())) return;
-        const commands = readdirSync(`./commands/${dir}/`).filter((file) =>
-          file.endsWith(".js")
-        );
+        const commands = readdirSync(`./commands/${dir}/`).filter((file) => file.endsWith(".js"));
 
-        if (ignored.includes(dir.toLowerCase())) return;
+        if (ignored.includes(dir.toLowerCase())) 
+          return;
 
         const name = `${emo[dir]} - ${dir}`;
         let nome = dir.toUpperCase();
@@ -66,6 +66,7 @@ module.exports = {
             Use The Drop Down Menu Or Follow Given Commands Bellow
             You Can Also Type /help [command]
             `;
+      
       const embed = new MessageEmbed()
         .setTitle(`Bot Commands`)
         .setDescription(`\`\`\`asciidoc\n${description}\`\`\``)
@@ -76,13 +77,7 @@ module.exports = {
 
       let menus = create_mh(ccate);
 
-      return await interaction
-        .reply({
-          embeds: [embed],
-          components: menus.smenu,
-          fetchReply: true,
-        })
-        .then(async (interactionn) => {
+      return await interaction.reply({ embeds: [embed], components: menus.smenu, fetchReply: true}).then(async (interactionn) => {
           const menuID = menus.sid;
 
           const select = async (interaction) => {
@@ -95,24 +90,31 @@ module.exports = {
             let catts = [];
 
             readdirSync("./commands/").forEach((dir) => {
-              if (dir.toLowerCase() !== value.toLowerCase()) return;
+
+              if (dir.toLowerCase() !== value.toLowerCase()) 
+                return;
+
               const commands = readdirSync(`./commands/${dir}/`).filter(
                 (file) => file.endsWith(".js")
               );
+
               const cmds = commands.map((command) => {
                 let file = require(`../../commands/${dir}/${command}`);
 
-                if (!file.name) return "No command name.";
+                if (!file.name) 
+                  return "No command name.";
 
                 let name = file.name.replace(".js", "");
 
-                if (client.commands.get(name).hidden) return;
+                if (client.commands.get(name).hidden)
+                  return;
 
                 let des = client.commands.get(name).description;
                 let usg = client.commands.get(name).usage;
-                if (!usg) {
+
+                if (!usg) 
                   usg = "No usage provided";
-                }
+                
                 let emo = client.commands.get(name).emoji;
                 let emoe = emo ? `${emo} - ` : ``;
 
@@ -142,36 +144,21 @@ module.exports = {
 
             if (cots.includes(value.toLowerCase())) {
               const combed = new MessageEmbed()
-                .setTitle(
-                  `__${
-                    value.charAt(0).toUpperCase() + value.slice(1)
-                  } Commands__`
-                )
-                .setDescription(
-                  `Use \`/help\` followed by a command name to get more information on a command.\nFor example: \`/help utilities\`.\n\n`
-                )
+                .setTitle(`__${value.charAt(0).toUpperCase() + value.slice(1)} Commands__`)
+                .setDescription(`Use \`/help\` followed by a command name to get more information on a command.\nFor example: \`/help utilities\`.\n\n`)
                 .addFields(catts)
                 .setColor(color);
 
               await interaction.deferUpdate();
 
-              return interaction.editReply({
-                embeds: [combed],
-                components: menus.smenu,
-              });
+              return interaction.editReply({embeds: [combed], components: menus.smenu});
             }
           };
           const filter = (interaction) => {
-            return (
-              !interaction.user.bot &&
-              interaction.user.id == interaction.member.id
-            );
-          };
+            return (!interaction.user.bot && interaction.user.id == interaction.member.id)};
 
-          const collector = interactionn.createMessageComponentCollector({
-            filter,
-            componentType: "SELECT_MENU",
-          });
+          const collector = interactionn.createMessageComponentCollector({ filter, componentType: "SELECT_MENU" });
+
           collector.on("collect", select);
           collector.on("end", () => null);
         });
@@ -179,20 +166,28 @@ module.exports = {
       let catts = [];
 
       readdirSync("./commands/").forEach((dir) => {
-        if (dir.toLowerCase() !== helpcmd.toLowerCase()) return;
+        if (dir.toLowerCase() !== helpcmd.toLowerCase()) 
+          return;
         const commands = readdirSync(`./commands/${dir}/`).filter((file) =>
           file.endsWith(".js")
         );
 
         const cmds = commands.map((command) => {
           let file = require(`../../commands/${dir}/${command}`);
-          if (!file.name) return "No command name.";
+
+          if (!file.name) 
+            return "No command name.";
+
           let name = file.name.replace(".js", "");
-          if (client.commands.get(name).hidden) return;
+
+          if (client.commands.get(name).hidden)
+            return;
+
           let usg = client.commands.get(name).usage;
-          if (!usg) {
+
+          if (!usg) 
             usg = "No usage provided";
-          }
+          
 
           let des = client.commands.get(name).description;
           let emo = client.commands.get(name).emoji;
@@ -221,14 +216,8 @@ module.exports = {
 
       if (cots.includes(helpcmd.toLowerCase())) {
         const combed = new MessageEmbed()
-          .setTitle(
-            `__${
-              helpcmd.charAt(0).toUpperCase() + helpcmd.slice(1)
-            } Commands__`
-          )
-          .setDescription(
-            `Use \`/help\` followed by a command name to get more information on a command.\nFor example: \`/help utilities\`.\n\n`
-          )
+          .setTitle(`__${helpcmd.charAt(0).toUpperCase() + helpcmd.slice(1)} Commands__`)
+          .setDescription(`Use \`/help\` followed by a command name to get more information on a command.\nFor example: \`/help utilities\`.\n\n`)
           .addFields(catts)
           .setColor(color);
 
@@ -237,39 +226,21 @@ module.exports = {
 
       if (!command) {
         const embed = new MessageEmbed()
-          .setTitle(
-            `Invalid command! Make sure you didn't use spaces. Use \`/help\` for all of my commands.`
-          )
+          .setTitle(`Invalid command! Make sure you didn't use spaces. Use \`/help\` for all of my commands.`)
           .setColor("RED");
-        return await interaction.reply({
-          embeds: [embed],
-          allowedMentions: {
-            repliedUser: false,
-          },
-        });
+
+        return await interaction.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
       }
       const embed = new MessageEmbed()
         .setTitle("Command Details:")
-        .addField(
-          "Command:",
-          command.name ? `\`${command.name}\`` : "No name for this command."
-        )
-        .addField(
-          "Usage:",
-          command.usage ? `\`${command.usage}\`` : `\`/${command.name}\``
-        )
-        .addField(
-          "Command Description:",
-          command.description
-            ? command.description
-            : "No description for this command."
-        )
+        .addField("Command:", command.name ? `\`${command.name}\`` : "No name for this command.")
+        .addField("Usage:", command.usage ? `\`${command.usage}\`` : `\`/${command.name}\`` )
+        .addField("Command Description:", command.description ? command.description : "No description for this command.")
         .setFooter({text: `Requested by ${mbr}`, iconURL: interaction.user.displayAvatarURL({dynamic: true})})
         .setTimestamp()
         .setColor(color);
-      return await interaction.reply({
-        embeds: [embed],
-      });
+
+      return await interaction.reply({ embeds: [embed] });
     }
   },
 };
