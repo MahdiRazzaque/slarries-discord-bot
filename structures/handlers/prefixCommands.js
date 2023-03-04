@@ -26,7 +26,12 @@ module.exports = async (client, PG, Ascii) => {
     prefixCommandsArray.push(command);
 
     Table.setHeading(`Name`, `Status`, `Reason`);
-    await Table.addRow(command.name, "🔹 Success");
+
+    if (!command.usage) {
+      Table.addRow(command.name, "🔔 WARNING", "Missing a usage");
+    } else {
+      await Table.addRow(command.name, "🔹 SUCCESSFUL");
+    }    
   });
   console.log(Table.toString());
 };
