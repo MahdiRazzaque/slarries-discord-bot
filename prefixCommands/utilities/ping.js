@@ -4,6 +4,7 @@ module.exports = {
   name: "ping",
   aliases: ["latency", "lag"],
   description: "Check the bots ping",
+  usage: "!ping",
   cooldown: 5,
   botCommandChannelOnly: true,
   ownerOnly: false,

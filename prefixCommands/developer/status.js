@@ -8,6 +8,7 @@ module.exports = {
   aliases: [],
   permission: "ADMINISTRATOR",
   description: "Displays the status of the client and database connection.",
+  usage: "!status",
   botCommandChannelOnly: false,
   ownerOnly: false,
   botOwnerOnly: true,

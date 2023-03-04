@@ -10,6 +10,7 @@ module.exports = {
   name: "bedwars",
   aliases: ["bedwar", "bw"],
   description: "Get the bedwars stats of a player.",
+  usage: "!bedwars",
   cooldown: 5,
   botCommandChannelOnly: true,
   ownerOnly: false,

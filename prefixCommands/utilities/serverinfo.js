@@ -4,7 +4,7 @@ const moment = require('moment');
 module.exports = {
     name: "serverinfo",
     description: 'Sends data about the server.',
-    usage: "/serverinfo",
+    usage: "!serverinfo",
     cooldown: 5,
     botCommandChannelOnly: true,
     ownerOnly: false,

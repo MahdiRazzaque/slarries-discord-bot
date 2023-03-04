@@ -10,6 +10,7 @@ module.exports = {
   name: "bridge",
   aliases: ["b"],
   description: "Get the bridge stats of a player.",
+  usage: "!bridge",
   cooldown: 5,
   botCommandChannelOnly: true,
   ownerOnly: false,

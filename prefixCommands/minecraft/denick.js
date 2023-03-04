@@ -6,6 +6,7 @@ module.exports = {
   name: "denick",
   aliases: [],
   description: "Denick a player.",
+  usage: "!denick",
   cooldown: 5,
   botCommandChannelOnly: true,
   ownerOnly: false,
