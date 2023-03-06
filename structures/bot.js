@@ -27,6 +27,7 @@ const { nodes, SpotifyClientID, SpotifySecret } = require("./config.json")
 const Deezer = require("erela.js-deezer");
 const Spotify = require("better-erela.js-spotify").default;
 const Apple = require("better-erela.js-apple").default;
+const filter  = require("erela.js-filters");
 const { Manager } = require("erela.js");
 
 client.manager = new Manager({
@@ -38,6 +39,7 @@ client.manager = new Manager({
         }),
         new Apple(),
         new Deezer(),
+        new filter(),
     ],
     send: (id, payload) => {
         let guild = client.guilds.cache.get(id);

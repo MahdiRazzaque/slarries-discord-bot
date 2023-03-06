@@ -62,7 +62,27 @@ module.exports = {
                     { name: "📈 | Statistics", value: "statistics" },
                 ]
             }],
-        }
+        },
+        {
+            name: "filters",
+            description: "Toggle filters",
+            type: "SUB_COMMAND",
+            options: [{ name: "set", description: "Choose a filter", type: "STRING", required: true,
+            choices: [
+                {name: "💡 Show enabled filter.", value: "enabled"},
+                {name: "🔌 Turn off all filters.", value: "false"},
+                {name: "📣 Toggle nightcore filter.", value: "nightcore"},
+                {name: "📣 Toggle vaporwave filter.", value: "vaporwave"},
+                {name: "📣 Toggle bassboost filter.", value: "bassboost"},
+                {name: "📣 Toggle pop filter.", value: "pop"},
+                {name: "📣 Toggle soft filter.", value: "soft"},
+                {name: "📣 Toggle treblebass filter.", value: "treblebass"},
+                {name: "📣 Toggle eightD filter.", value: "eightd"},
+                {name: "📣 Toggle karaoke filter.", value: "karaoke"},
+                {name: "📣 Toggle vibrato filter.", value: "vibrato"},
+                {name: "📣 Toggle tremolo filter.", value: "tremolo"},       
+            ]}]
+        },
     ],
     /**
     * @param {CommandInteraction} interaction 
@@ -130,6 +150,7 @@ module.exports = {
                         enqueueEmbed.addField("Position in queue", `${player.queue.size - 0}`);
                     return interaction.editReply({ embeds: [enqueueEmbed] })
                 }
+
                 case "volume": {
                     const volume = options.getNumber("percent");
                     if (!player.queue.current) return interaction.editReply({ embeds: [client.errorEmbed("There is nothing playing.")] });
@@ -138,6 +159,85 @@ module.exports = {
 
                     return interaction.editReply({ embeds: [client.successEmbed(`Volume has been set to **${player.volume}%**.`, "📶", "BLURPLE")] })
                 }
+
+                case "filters": {
+                    switch(options.getString("set")) {
+
+                        case "enabled":
+                            const enabledFiltersEmbed = new MessageEmbed().setColor("BLURPLE").setTitle("Enabled filter:")
+                            var enabledFilter = "None"
+                            const filters = [player.nightcore, player.vaporwave, player.bassboost, player.pop, player.soft, player.treblebass, player.eightD, player.karaoke, player.vibrato, player.tremolo]
+                            filtersNames = ["Nightcore", "Vaporwave", "Bassboost", "Pop", "Soft", "Treblebass", "EightD", "Karaoke", "Vibrato", "Eremolo"]
+
+                            for (let i = 0; i < filters.length; i++) {
+                                if(filters[i]) {
+                                    enabledFilter = filtersNames[i]
+                                    break;
+                                }      
+                            }
+
+                            enabledFiltersEmbed.setDescription(`${enabledFilter}`)
+
+                            return interaction.editReply({embeds: [enabledFiltersEmbed]})
+                        break;
+
+                        case "false":
+                            await player.reset();
+                            return interaction.editReply({ embeds: [client.successEmbed(`All filters have been disabled.`, "🔌", "BLURPLE")] })
+                        break;
+
+                        case "nightcore":
+                            player.nightcore ? player.nightcore = false : player.nightcore = true
+                            return interaction.editReply({ embeds: [client.successEmbed(`Nightcore filter has been ${player.nightcore ? "enabled" : "disabled"}.`, "📣", "BLURPLE")] })
+                        break;
+
+                        case "vaporwave":
+                            player.vaporwave ? player.vaporwave = false : player.vaporwave = true
+                            return interaction.editReply({ embeds: [client.successEmbed(`Vaporwave filter has been ${player.vaporwave ? "enabled" : "disabled"}.`, "📣", "BLURPLE")] })
+                        break;
+
+                        case "bassboost":
+                            player.bassboost ? player.bassboost = false : player.bassboost = true
+                            return interaction.editReply({ embeds: [client.successEmbed(`Bassboost filter has been ${player.bassboost ? "enabled" : "disabled"}.`, "📣", "BLURPLE")] })
+                        break;
+
+                        case "pop":
+                            player.pop ? player.pop = false : player.pop = true
+                            return interaction.editReply({ embeds: [client.successEmbed(`Pop filter has been ${player.nightcore ? "enabled" : "disabled"}.`, "📣", "BLURPLE")] })
+                        break;
+
+                        case "soft":
+                            player.soft ? player.soft = false : player.soft = true
+                            return interaction.editReply({ embeds: [client.successEmbed(`Soft filter has been ${player.soft ? "enabled" : "disabled"}.`, "📣", "BLURPLE")] })
+                        break;
+
+                        case "treblebass":
+                            player.treblebass ? player.treblebass = false : player.treblebass = true
+                            return interaction.editReply({ embeds: [client.successEmbed(`Treblebass filter has been ${player.treblebass ? "enabled" : "disabled"}.`, "📣", "BLURPLE")] })
+                        break;
+
+                        case "eightd":
+                            player.eightD ? player.eightD = false : player.eightD = true
+                            return interaction.editReply({ embeds: [client.successEmbed(`EightD filter has been ${player.eightD ? "enabled" : "disabled"}.`, "📣", "BLURPLE")] })
+                        break;
+
+                        case "karaoke":
+                            player.karaoke ? player.karaoke = false : player.karaoke = true
+                            return interaction.editReply({ embeds: [client.successEmbed(`Karaoke filter has been ${player.karaoke ? "enabled" : "disabled"}.`, "📣", "BLURPLE")] })
+                        break;
+                        
+                        case "vibrato":
+                            player.vibrato ? player.vibrato = false : player.vibrato = true
+                            return interaction.editReply({ embeds: [client.successEmbed(`Vibrato filter has been ${player.vibrato ? "enabled" : "disabled"}.`, "📣", "BLURPLE")] })
+                        break;
+
+                        case "tremolo":
+                            player.tremolo ? player.tremolo = false : player.tremolo = true
+                            return interaction.editReply({ embeds: [client.successEmbed(`Tremolo filter has been ${player.tremolo ? "enabled" : "disabled"}.`, "📣", "BLURPLE")] })
+                        break;                       
+                    }
+                }
+
                 case "settings": {
                     switch (options.getString("options")) {
                         case "skip": {
@@ -154,8 +254,8 @@ module.exports = {
                             const npEmbed = new MessageEmbed()
                                 .setColor("BLURPLE")
                                 .setTitle("Now Playing")
-                                .setDescription(`[${track.title}](${track.uri}) [${player.queue.current.requester}]`)
-                                .setThumbnail(player.queue.current.thumbnail)
+                                .setDescription(`[${track.title}](${track.uri}) [${track.requester}]`)
+                                .setThumbnail(track.thumbnail)
 
                             if(player.trackRepeat)
                                 npEmbed.setFooter({ text: "Repeat is enabled."})

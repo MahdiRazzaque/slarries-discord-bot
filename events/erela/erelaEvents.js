@@ -21,3 +21,8 @@ client.manager
             }
         }, 60 * 1000)
     })
+    .on("trackStart", (player, track) => {
+        const channel = client.channels.cache.get(player.textChannel);
+        
+        return channel.send({ embeds: [new MessageEmbed().setColor("BLURPLE").setTitle("Now playing").setDescription(`\`${track.title.replace("(OFFICIAL VIDEO)", "")}\`, requested by \`${track.requester}\`.`).setThumbnail(track.thumbnail)] });
+    });
