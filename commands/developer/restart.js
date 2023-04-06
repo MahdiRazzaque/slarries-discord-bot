@@ -29,7 +29,7 @@ module.exports = {
         });
         console.log("Ready! 🟢");
         console.log("======================================================================")
-        interaction.editReply({embeds: [new MessageEmbed().setColor(developer_embed_colour).setDescription(`${client.emojisObj.animated_tick} Successfully restarted.`)]})
+        return interaction.editReply({embeds: [new MessageEmbed().setColor(developer_embed_colour).setDescription(`${client.emojisObj.animated_tick} Successfully restarted.`)]})
       });
   },
 };
