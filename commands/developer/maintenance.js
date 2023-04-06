@@ -1,6 +1,6 @@
 const { CommandInteraction, MessageEmbed } = require("discord.js");
-const fs = require("fs");
 const { developer_embed_colour } = require("../../structures/config.json");
+const botConfigDB = require("../../structures/schemas/botConfigDB")
 
 module.exports = {
   name: "maintenance",
@@ -13,29 +13,18 @@ module.exports = {
    *
    * @param {CommandInteraction} interaction
    */
-  execute(interaction, client) {    
-    if (client.maintenance === false &&interaction.user.id == "381791690454859778") {
-      client.maintenance = true;
+  async execute(interaction, client) {
+    const botConfig = await botConfigDB.findOne({ BotID: client.user.id })
 
-      const bot = new MessageEmbed()
-        .setColor(developer_embed_colour)
-        .setTitle(`${client.emojisObj.animated_tick} Maintenance mode has been **enabled**. `)
-        .setDescription(`👷‍♂️ The bot has been put into maintenance mode. 👷‍♂️`)
-        .setTimestamp();
+    botConfig.MaintenanceMode = botConfig.MaintenanceMode ? false : true
+    await botConfig.save()
 
-      return interaction.reply({ embeds: [bot], ephemeral: true });
-    }
+    const maintenanceModeEmbed = new MessageEmbed()
+      .setColor(developer_embed_colour)
+      .setTitle(`Maintenance mode 👷‍♂️`)
+      .setDescription(`Maintenance mode has been ${botConfig.MaintenanceMode ? "enabled" : "disabled"}.`)
+      .setTimestamp();
 
-    if (client.maintenance && interaction.user.id == "381791690454859778") {
-      client.maintenance = false;
-
-      const bot = new MessageEmbed()
-        .setColor("RED")
-        .setTitle(`${client.emojisObj.animated_tick} Maintenance mode has been **disabled**.`)
-        .setDescription(`👷‍♂️ The bot has been taken out of maintenance mode. 👷‍♂️`)
-        .setTimestamp();
-
-      return interaction.reply({ embeds: [bot]});
-    }
+    return interaction.reply({ embeds: [maintenanceModeEmbed]});
   },
 };

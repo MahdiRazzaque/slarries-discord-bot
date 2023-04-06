@@ -2,6 +2,7 @@ const { Client, Message, Collection, MessageEmbed } = require("discord.js");
 const { Prefix } = require("../../structures/config.json");
 const { owners, botOwners, command_logs_id, botCommandChannels } = require("../../structures/config.json")
 const DB = require("../../structures/schemas/disabledCommandsDB");
+const botConfigDB = require("../../structures/schemas/botConfigDB")
 const toDoListDB = require("../../structures/schemas/toDoListDB");
 
 module.exports = {
@@ -29,13 +30,14 @@ module.exports = {
     };
 
     //Maintenance check
-    if (client.maintenance && message.author.id != "381791690454859778") {
-        const Response = new MessageEmbed()
-            .setTitle("👷‍♂️ MAINTENANCE 👷‍♂️")
-            .setDescription("Sorry the bot will be back shortly when everything is working correctly.")
-            .setColor("RED");
+    const botConfig = await botConfigDB.findOne({ BotID: client.user.id })
+    if (botConfig.MaintenanceMode && message.author.id != "381791690454859778") {
+      const Response = new MessageEmbed()
+        .setTitle("👷‍♂️ MAINTENANCE 👷‍♂️")
+        .setDescription("Sorry the bot will be back shortly when everything is working correctly.")
+        .setColor("RED");
     
-        return message.reply({ embeds: [Response], ephemeral: true });
+        return message.noMentionReply({ embeds: [Response] });
     }
 
     if(message.guild) {

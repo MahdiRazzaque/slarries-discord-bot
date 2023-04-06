@@ -2,6 +2,7 @@ const { Client, CommandInteraction, MessageEmbed, Collection } = require("discor
 const { owners, botOwners, command_logs_id, botCommandChannels } = require("../../structures/config.json");
 const toDoListDB = require("../../structures/schemas/toDoListDB");
 const DB = require("../../structures/schemas/disabledCommandsDB");
+const botConfigDB = require("../../structures/schemas/botConfigDB")
 const serverBotCommandChannelsDB = require("../../structures/schemas/serverBotCommandChannelsDB");
 const { nicerPermissions } = require("../../functions/nicerPermissions.js")
 
@@ -14,13 +15,14 @@ module.exports = {
    */
   async execute(interaction, client) {
     //Maintenance check
-    if (client.maintenance && interaction.user.id != "381791690454859778") {
+    const botConfig = await botConfigDB.findOne({ BotID: client.user.id })
+    if (botConfig.MaintenanceMode && interaction.user.id != "381791690454859778") {
       const Response = new MessageEmbed()
         .setTitle("👷‍♂️ MAINTENANCE 👷‍♂️")
         .setDescription("Sorry the bot will be back shortly when everything is working correctly.")
         .setColor("RED");
 
-      return interaction.reply({ embeds: [Response], ephemeral: true });
+      return interaction.reply({ embeds: [Response] });
     }
 
     if (interaction.isCommand() || interaction.isContextMenu()) {

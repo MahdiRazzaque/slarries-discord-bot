@@ -1,26 +1,18 @@
 const { Client, MessageEmbed } = require("discord.js");
 const mongoose = require("mongoose");
+const botConfigDB = require("../../structures/schemas/botConfigDB")
 const Ascii = require("ascii-table");
 
 module.exports = {
   name: "ready",
   disabled: false,
   once: true,
+  /**
+   * 
+   * @param {Client} client 
+   */
   async execute(client) {
     clientTable = new Ascii("Client")
-
-    //Maintenance
-    setInterval(() => {
-      if (client.maintenance) {
-        client.user.setStatus("dnd");
-        client.user.setActivity("Maintenance");
-        return;
-      }
-      if (!client.maintenance && !client.customStatus){
-        client.user.setStatus("online");
-        client.user.setActivity("Slarries Discord Server", { type: "PLAYING" });
-      }
-    }, 30000);
 
     //Guilds
     const guilds = new Ascii("Guilds").setHeading("Name", "ID")
@@ -39,6 +31,22 @@ module.exports = {
       .catch((err) => { 
         console.log(err)
       });
+
+    //Bot config
+    var botConfig = await botConfigDB.findOne({BotID: client.user.id})
+    if(!botConfig)
+     botConfig = await botConfigDB.create({BotID: client.user.id, MaintenanceMode: false})
+
+    //Maintenance
+    setInterval(async () => {
+      const botConfig = await botConfigDB.findOne({ BotID: client.user.id })
+      if (botConfig.MaintenanceMode) {
+        client.user.setPresence({ activities: [{name: "Maintenance", type: "WATCHING"}], status: 'dnd'})
+      }
+      if (!botConfig.MaintenanceMode && !client.customStatus){
+        client.user.setPresence({ activities: [{name: "Slarries Discord Server", type: "WATCHING"}], status: 'online'})
+      }
+    }, 3000);
 
     //Erela
     client.manager.init(client.user.id);
