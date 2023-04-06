@@ -3,7 +3,6 @@ const DB = require("../structures/schemas/hypixelStatsInteractionDB");
 module.exports = (client) => {
     DB.find().then((documents) => {
         documents.forEach(async (doc) => {
-            console.log("DOC FOUND")
             if((Date.now() - doc.DateOpened) > 60000) {
                 var channel = await client.channels.cache.get(doc.ChannelID)
             
