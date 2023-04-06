@@ -50,7 +50,7 @@
        "id": "one",
        "host": "localhost",
        "port": 2333,
-       "password": "youshallnotpass",
+       "password": "$limyBrass49",
        "secure": false
      }
    ]
