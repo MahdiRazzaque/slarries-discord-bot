@@ -296,7 +296,7 @@ module.exports = {
                         .setThumbnail(`https://crafatar.com/avatars/${player.uuid}?overlay&size=256`)
                         .addField("General Stats", `\`•\` **Coins**: \`${commaNumber(player.stats.bedwars.coins)}\` \n\`•\` **Star**: \`[${commaNumber(player.stats.bedwars.level)}✫]\` \n\`•\` **Loot Chests**: \`${commaNumber(player.stats.bedwars.lootChests.normal + player.stats.bedwars.lootChests.christmas + player.stats.bedwars.lootChests.easter + player.stats.bedwars.lootChests.halloween + player.stats.bedwars.lootChests.golden || "0")}\` `, true)
                         .addField("Games", `\`•\` **WS**: \`${commaNumber(player.stats.bedwars.dream.voidless.fours.winstreak)}\` \n\`•\` **Wins**: \`${commaNumber(player.stats.bedwars.dream.voidless.fours.wins)}\` \n\`•\` **Losses**: \`${commaNumber(player.stats.bedwars.dream.voidless.fours.losses)}\` \n\`•\` **WLR**: \`${commaNumber(player.stats.bedwars.dream.voidless.fours.WLRatio)}\` `, true)
-                        .addField("Combat", `\`•\` **Kills**: \`${commaNumber(player.stats.bedwars.dream.voidless.fours.kills)}\` \n\`•\` **Deaths**: \`${commaNumber(player.stats.bedwars.dream.voidless.fours.deaths)}\` \n\`•\` **KDR**: \`${commaNumber(player.stats.bedwars.dream.voidless.KDRatio)}\` `, true)
+                        .addField("Combat", `\`•\` **Kills**: \`${commaNumber(player.stats.bedwars.dream.voidless.fours.kills)}\` \n\`•\` **Deaths**: \`${commaNumber(player.stats.bedwars.dream.voidless.fours.deaths)}\` \n\`•\` **KDR**: \`${commaNumber(player.stats.bedwars.dream.voidless.fours.KDRatio)}\` `, true)
                         .addField("Finals", `\`•\` **Final Kills**: \`${commaNumber(player.stats.bedwars.dream.voidless.fours.finalKills)}\` \n\`•\` **Final Deaths**: \`${commaNumber(player.stats.bedwars.dream.voidless.fours.finalDeaths)}\` \n\`•\` **FKDR**: \`${commaNumber(player.stats.bedwars.dream.voidless.fours.finalKDRatio)}\` `, true)
                         .addField("Beds", `\`•\` **Broken**: \`${commaNumber(player.stats.bedwars.dream.voidless.fours.beds.broken)}\` \n\`•\` **Lost**: \`${commaNumber(player.stats.bedwars.dream.voidless.fours.beds.lost)}\` \n\`•\` **BBLR**: \`${commaNumber(player.stats.bedwars.dream.voidless.fours.beds.BLRatio)}\` `, true)
                         .addField("Averages per game", `\`•\` **Kills**: \`${commaNumber(player.stats.bedwars.dream.voidless.fours.avg.kills)}\` \n\`•\` **Final Kills**: \`${commaNumber(player.stats.bedwars.dream.voidless.fours.avg.finalKills)}\` \n\`•\` **Beds Broken**: \`${commaNumber(player.stats.bedwars.dream.voidless.fours.avg.bedsBroken)}\` `, true)
@@ -408,7 +408,6 @@ module.exports = {
                             break;
                         }
                     }
-
                 }).catch(e => {return errorHandling(e)});
             break;
             case "bridge":
