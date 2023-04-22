@@ -34,6 +34,9 @@ module.exports = (client) => {
     });
     
     process.on("uncaughtException", (err, origin) => {
+        if(reason?.toLocaleString()?.includes("FetchError: request to https://discord.com/api/")) return;
+        if (reason?.toLocaleString() === "Error: Cannot perform IP discovery - socket closed") return;
+
         console.log(err, origin)
         const uncaughtExceptionEmbed = new MessageEmbed()
             .setTitle('Uncaught Exception/Catch')
@@ -47,6 +50,9 @@ module.exports = (client) => {
     });
     
     process.on("uncaughtExceptionMonitor", (err, origin) => {
+        if(reason?.toLocaleString()?.includes("FetchError: request to https://discord.com/api/")) return;
+        if (reason?.toLocaleString() === "Error: Cannot perform IP discovery - socket closed") return;
+
         console.log(err, origin)
         const uncaughtExceptionMonitorEmbed = new MessageEmbed()
             .setTitle('Uncaught Exception Monitor')
