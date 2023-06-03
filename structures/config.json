@@ -46,15 +46,8 @@
     "SpotifySecret": "a3b4828dc72645718b2ae58f1bae5f9a",
     
     "nodes": [
-      {
-       "id": "ip",
-       "host": "141.147.80.90",
-       "port": 2333,
-       "password": "$limyBrass49",
-       "secure": false
-     },
      {
-      "id": "local",
+      "id": "one",
       "host": "localhost",
       "port": 2333,
       "password": "$limyBrass49",
