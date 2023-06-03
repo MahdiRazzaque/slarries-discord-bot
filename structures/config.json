@@ -47,12 +47,19 @@
     
     "nodes": [
       {
-       "id": "one",
-       "host": "localhost",
+       "id": "ip",
+       "host": "141.147.80.90",
        "port": 2333,
        "password": "$limyBrass49",
        "secure": false
-     }
+     },
+     {
+      "id": "local",
+      "host": "localhost",
+      "port": 2333,
+      "password": "$limyBrass49",
+      "secure": false
+    }
    ]
   }
   
