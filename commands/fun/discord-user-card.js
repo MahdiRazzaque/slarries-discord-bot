@@ -22,9 +22,9 @@ module.exports = {
    * @param {Client} client
    */
   async execute(interaction, client) {
-    const user = interaction.options.getUser("member") || interaction.user
+    const user = interaction.options.getUser("member") || interaction.user;
 
-    interaction.reply({embeds: [new MessageEmbed().setColor(fun_embed_colour).setDescription(`Generating image ${client.emojisObj.timer_loading}`)]})
+    await interaction.reply({embeds: [new MessageEmbed().setColor(fun_embed_colour).setDescription(`Generating image ${client.emojisObj.timer_loading}`)]})
 
     const image = await profileImage(user.id);
 
