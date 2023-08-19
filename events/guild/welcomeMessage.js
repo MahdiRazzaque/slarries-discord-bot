@@ -1,26 +1,8 @@
 const { Client, MessageEmbed, MessageAttachment, GuildMember } = require("discord.js");
-//const Captcha = require("@haileybot/captcha-generator");
+Captcha = require("@haileybot/captcha-generator");
 
 function delay(time) {
   return new Promise((resolve) => setTimeout(resolve, time));
-}
-
-function welcome(member) {
-  const params = new URLSearchParams({
-    avatar: member.displayAvatarURL({
-      format: 'png'
-    }),
-    memcount: member.guild.memberCount,
-    discrim: member.user.discriminator,
-    name: member.user.username,
-    bg: "https://file.coffee/u/bZcr9HMO3Nc-MW.png",
-    header: `Welcome to ${member.guild.name}`
-  });
-
-  const image = 'https://api.semant.is-a.dev/image/welcomecard?' + params + 
-    "&apikey=7SVJ4Q15CVWH1T96KG"
-
-  return image;
 }
 
 module.exports = {
@@ -39,7 +21,7 @@ module.exports = {
 
       const welcomeMessage = new MessageEmbed()
       .setColor("AQUA")
-      .setImage("attachment://welcome.png")
+      .setDescription(`# Welcome to Slarries`)
       .addFields(
         { name: "Rules", value: "<#916385873120079916>", inline: true },
         { name: "Verify", value: "<#916661502163963964>", inline: true },
@@ -49,9 +31,9 @@ module.exports = {
     const channel = client.channels.cache.get("916385873120079914")
 
     delay(1000)
-    .then(() => channel.send({ embeds: [welcomeMessage], files: [new MessageAttachment(welcome(member), "attachment://welcome.png")]}))
+    .then(() => channel.send({ embeds: [welcomeMessage]}))
     .then(() => channel.send(`${member.user}`));
-  
+        
   // let captcha = new Captcha();
 
   //  const captchaAttachment = new MessageAttachment(captcha.JPEGStream, "captcha.jpeg");
@@ -77,6 +59,7 @@ module.exports = {
 
   //    if(response) {
   //      member.roles.add("916385872562229325")
+  //      member.roles.remove("931883459834699817")
   //      member.send({embeds: [new MessageEmbed().setColor("GREEN").setDescription(`You have been verified in ${guild.name}`)]});
         
   //    }
