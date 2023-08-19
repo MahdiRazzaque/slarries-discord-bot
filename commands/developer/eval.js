@@ -4,7 +4,7 @@ const { developer_embed_colour } = require("../../structures/config.json")
 module.exports = {
     name: 'eval',
     description: 'Evaluate some code',
-    usage: "/eva;",
+    usage: "/eval",
     userPermissions: ["ADMINISTRATOR"],
     disabled: false,
     botOwnerOnly: true,
