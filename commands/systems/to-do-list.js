@@ -198,7 +198,7 @@ module.exports = {
                     `\`•\` **/to-do-list help**: \`Displays this embed.\`` + `\n` +
                     `\`•\` **/to-do-list show**: \`Sends your current to-do list.\`` + `\n` +
                     `\`•\` **/to-do-list add [item]**: \`Adds an item to your to-do list.\`` + `\n` +
-                    `\`•\` **/to-do-list remove [item]**: \`Removes an item to your to-do list.\`` + `\n` +
+                    `\`•\` **/to-do-list remove [item-number]**: \`Removes an item to your to-do list.\`` + `\n` +
                     `\`•\` **/to-do-list tick [item-number]**: \`Tick an item off in your to-do list.\`` + `\n` +
                     `\`•\` **/to-do-list untick [item-number]**: \`Untick an item in your to-do list.\`` + `\n` +
                     `\`•\` **/to-do-list tick-all**: \`Tick off all items in your to-do list.\`` + `\n` +
@@ -206,7 +206,7 @@ module.exports = {
                     `\`•\` **/to-do-list clear**: \`Clear all items in your to-do list.\`` + `\n` +
                     `\`•\` **/to-do-list clear-ticked**: \`Clear items which are ticked off in your to-do list.\`` + `\n` + 
                     `\`•\` **/to-do-list clear-unticked**: \`Clear items which are not ticked off in your to-do list.\`` + `\n` + 
-                    `\`•\` **/to-do-list refresh**: \`Refresh your to-do list message in your dedicated channel, if it exists, and resend the message if the message was deleted..\`` + `\n` +
+                    `\`•\` **/to-do-list refresh**: \`Refresh your to-do list message in your dedicated channel, if it exists, and resend the message if the message was deleted.\`` + `\n` +
                     `\`•\` **/to-do-list privacy [T/F]**: \`Enables or disables privacy mode, which hides all your to-do list messages from other users.\`` + `\n` + 
                     `\`•\` **/to-do-list add-messages-to-list [T/F]**: \`Enables or disables if messages sent in your dedicated to-do list channel are automatically added to the list.\`` + `\n` + 
                     `\`•\` **/to-do-list create-channel**: \`Create a channel in which your to-do list will be sent and updated.\`` + `\n` + 
