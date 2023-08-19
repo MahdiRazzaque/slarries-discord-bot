@@ -1,5 +1,5 @@
 const { Client, MessageEmbed, MessageAttachment, GuildMember } = require("discord.js");
-Captcha = require("@haileybot/captcha-generator");
+//Captcha = require("@haileybot/captcha-generator");
 
 function delay(time) {
   return new Promise((resolve) => setTimeout(resolve, time));
