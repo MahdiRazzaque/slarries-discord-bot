@@ -62,34 +62,36 @@ module.exports = {
                 var memberTags = []
 
                 await data.MembersID.forEach(async (member) => {
-                    var member = await axios.get(`https://api.badboy.is-a.dev/json/discorduser?id=${member}`)
+                    var member = await client.users.fetch(member)
                     
                     if(member) 
-                        memberTags.push(member.data.tag)
+                        memberTags.push(member.username)
 
                     if(!member)
                         memberTags.push(`Unknown Member`)
                 })
 
-                const openedMember = await axios.get(`https://api.badboy.is-a.dev/json/discorduser?id=${data.MembersID[0]}`)
-                const claimedMember = await axios.get(`https://api.badboy.is-a.dev/json/discorduser?id=${data.ClaimedBy}`)
+                console.log(data.MembersID[0])
+                const openedMember = await client.users.fetch(data.MembersID[0])
+                console.log(openedMember)
+                const claimedMember = await client.users.fetch(data.ClaimedBy).catch(() => {})
 
                 const transcriptEmbed = new MessageEmbed()
                 .setColor("BLUE")
                 .setTitle(`Ticket Closed | ID: ${data.TicketID}`)
                 .addFields(
                     {name: "Type", value: `${data.Type}`, inline: true},
-                    {name: "Opened by", value: `\`${openedMember ? openedMember.data.tag : "Unknown Member"}\``, inline: true},
-                    {name: "Claimed by", value: data.ClaimedBy ? `\`${claimedMember.data.tag}\`` : "`No one claimed this ticket`" , inline: true},
+                    {name: "Opened by", value: `\`${openedMember ? openedMember.username : "Unknown Member"}\``, inline: true},
+                    {name: "Claimed by", value: data.ClaimedBy ? `\`${claimedMember.username}\`` : "`No one claimed this ticket`" , inline: true},
                     {name: "Open time", value: `<t:${data.OpenTime}:R>`, inline: true},
                     {name: "Closed time", value: `<t:${parseInt(Date.now() / 1000)}:R>`, inline: true},
-                    {name: "Closed by", value: `\`${interaction.member.user.tag}\``, inline: true},
+                    {name: "Closed by", value: `\`${interaction.user.username}\``, inline: true},
                     {name: "Members", value: `\`${memberTags.join(`\`\n\``)}\``, inline: true},
                 )
                     
                 async function dmMembers(members) {
                     members.forEach(async(member) => {
-                        var fetchedMember = await interaction.guild.members.fetch(member).catch((e) => {})
+                        var fetchedMember = await interaction.guild.members.fetch(member).catch(() => {})
 
                         if(fetchedMember)
                             await fetchedMember.send({embeds: [transcriptEmbed.setTitle(`Ticket closed in ${interaction.guild.name} | ID: ${data.TicketID}`)], files: [attachment]}).catch((e) => {})

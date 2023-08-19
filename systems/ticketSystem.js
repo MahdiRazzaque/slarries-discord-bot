@@ -52,17 +52,17 @@ module.exports = async(client) => {
             var memberTags = []
 
             await data.MembersID.forEach(async (member) => {
-                var member = await axios.get(`https://api.badboy.is-a.dev/json/discorduser?id=${member}&apikey=7SVJ4Q15CVWH1T96KG`)
+                var member = await client.users.fetch(member)
                 
                 if(member) 
-                    memberTags.push(member.data.tag)
+                    memberTags.push(member.username)
 
                 if(!member)
                     memberTags.push(`Unknown Member`)
             })     
 
-            const openedMember = await axios.get(`https://api.badboy.is-a.dev/json/discorduser?id=${data.MembersID[0]}&apikey=7SVJ4Q15CVWH1T96KG`)
-            const claimedMember = await axios.get(`https://api.badboy.is-a.dev/json/discorduser?id=${data.ClaimedBy}&apikey=7SVJ4Q15CVWH1T96KG`)
+            const openedMember = await client.users.fetch(data.MembersID[0])
+            const claimedMember = await client.users.fetch(data.ClaimedBy).catch(() => {})
 
             const message = await ticketChannel.send({embeds: [new MessageEmbed().setColor("RED").setDescription(`The member who opened this ticket \`${openedMember ? openedMember.data.tag : "Unknown Member"}\` has left the server. \n\nThis channel will now be deleted in 10 seconds and a transcript will automatically be generated.`)]})
 
@@ -71,8 +71,8 @@ module.exports = async(client) => {
             .setTitle(`Ticket Closed | ID: ${data.TicketID}`)
             .addFields(
                 {name: "Type", value: `${data.Type}`, inline: true},
-                {name: "Opened by", value: `\`${openedMember ? openedMember.data.tag : "Unknown Member"}\``, inline: true},
-                {name: "Claimed by", value: data.ClaimedBy ? `\`${claimedMember.data.tag}\`` : "`No one claimed this ticket`" , inline: true},
+                {name: "Opened by", value: `\`${openedMember ? openedMember.username : "Unknown Member"}\``, inline: true},
+                {name: "Claimed by", value: data.ClaimedBy ? `\`${claimedMember.username}\`` : "`No one claimed this ticket`" , inline: true},
                 {name: "Open time", value: `<t:${data.OpenTime}:R>`, inline: true},
                 {name: "Closed time", value: `<t:${parseInt(Date.now() / 1000)}:R>`, inline: true},
                 {name: "Closed by", value: `\`${memberTags[0]} leaving the server.\``, inline: true},
