@@ -26,7 +26,7 @@ module.exports = {
             dmEmbed.setDescription(`\`\`\`${messageContent}\`\`\``)
 
         if (message.attachments.size >= 1) {
-            const attachments = message.attachments.map((image) => `[${image.url.match(/\.[0-9a-z]+$/i)[0].replace(".", "").toUpperCase()}](${image.url})`)
+            const attachments = message.attachments.map((image) => `[${image.url.match(/\.([a-z]{3,4})\?/i)[1].replace(".", "").toUpperCase()}](${image.url})`)
             dmEmbed.addField(`Attachments`, `${attachments.join(", ")}`)
         }
 
