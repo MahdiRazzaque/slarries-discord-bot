@@ -32,7 +32,7 @@ module.exports = {
     const dm = interaction.options.getBoolean("dm");
     const target = interaction.options.getUser("target");
         
-    const response = await fetch("https://api.yomomma.info/")
+    const response = await fetch("https://www.yomama-jokes.com/api/v1/jokes/random/")
     const data = await response.json()
 
     switch(dm) {

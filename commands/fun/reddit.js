@@ -20,7 +20,7 @@ module.exports = {
    *
    * @param {CommandInteraction} interaction
    */
-  async execute(interaction) {            
+  async execute(interaction, client) {            
     const { options } = interaction;
 
     const url = "https://meme-api.herokuapp.com/gimme/";
