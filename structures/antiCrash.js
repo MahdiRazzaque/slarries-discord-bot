@@ -3,9 +3,8 @@ const { error_logs_id } = require('./config.json')
 const { MessageEmbed, WebhookClient } = require('discord.js')
 const { inspect } = require("util")
 
-// const channel = new WebhookClient({url: "https://discordapp.com/api/webhooks/970704079812714497/JNoGDbm8WTJYpH3qfptH-q-WxHJ4prO5CdbdBXH6S0tBC63UKq0dDLcRTVunlIpUcjVy"})
-
-const channel = new WebhookClient({id: "970704079812714497", token: "JNoGDbm8WTJYpH3qfptH-q-WxHJ4prO5CdbdBXH6S0tBC63UKq0dDLcRTVunlIpUcjVy"})
+// TODO: Import webhook from .env
+const channel = new WebhookClient({id: "ADD_ID", token: "ADD_TOKEN"})
 
 
 module.exports = (client) => {
